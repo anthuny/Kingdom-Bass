@@ -8,13 +8,19 @@ public class Path : MonoBehaviour
 
     [HideInInspector]
     public float pathLength;
+    [HideInInspector]
+    public float pathWidth;
+
+    public int segment;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         rend = GetComponentInChildren<Renderer>();
 
         pathLength = rend.bounds.size.z;
+        pathWidth = rend.bounds.size.x;
+        //Debug.Log(pathWidth);
     }
 
     // Update is called once per frame

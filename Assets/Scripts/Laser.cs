@@ -88,7 +88,7 @@ public class Laser : MonoBehaviour
             pos.z = transform.position.z;
 
             pos.x = player.gameObject.transform.position.x;
-            pos.y = player.gameObject.GetComponent<Player>().nearestPath.transform.position.y + 0.01f;
+            //pos.y = player.gameObject.GetComponent<Player>().nearestPath.transform.position.y + 0.01f;
             go.transform.position = pos;
             Destroy(gameObject);
         }

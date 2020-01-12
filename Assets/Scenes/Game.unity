@@ -432,10 +432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  nearestPath: {fileID: 0}
-  spawnedPath: 0
   speed: 25
-  pathPoint: 2
 --- !u!54 &922654301
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1198,7 +1195,12 @@ MonoBehaviour:
   paths: []
   path: {fileID: 5871511927652730948, guid: 97c15b1eb4f8d0d4ebc11fa923d0c0ec, type: 3}
   pathStartSpawn: {fileID: 1212677939}
+  initialPathSpawnLoc: {x: 500, y: 500, z: 500}
   totalPaths: 0
+  maxLanes: 3
+  totalSegments: 0
+  pathDestroySegment: 2
+  spawnPathDist: 45
 --- !u!4 &1943673111
 Transform:
   m_ObjectHideFlags: 0
