@@ -34,7 +34,8 @@ public class Jet : MonoBehaviour
 
         // Get shoot cooldown before shooting once, so laser
         // doesn't spawn instantly when game starts  
-        StartCoroutine(GetShootCooldown());
+
+        //StartCoroutine(GetShootCooldown());
     }
 
     void Aim()

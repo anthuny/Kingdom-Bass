@@ -12,6 +12,7 @@ public class Path : MonoBehaviour
     public float pathWidth;
 
     public int segment;
+    public int laneNumber;
 
     // Start is called before the first frame update
     void Awake()

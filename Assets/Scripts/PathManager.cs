@@ -13,13 +13,24 @@ public class PathManager : MonoBehaviour
     bool justSpawnedPaths;
     private GameObject pathToDestroy;
 
-    private GameObject initialPath;
-    private GameObject nearestPath;
+
+    [HideInInspector]
+    public GameObject initialPath;
+    [HideInInspector]
+    public GameObject nearestPath;
     private GameObject oldNearestPath;
+    private GameObject segmentHolder;
 
     public int totalPaths;
     public int maxLanes;
     public int totalSegments;
+    public float movementLockTime;
+    public float playerEvadeStr;
+
+        [HideInInspector]
+    public List<int> laneNumbers = new List<int>();
+    [HideInInspector]
+    public int maxPathNumber;
 
     public int pathDestroySegment;
 
@@ -29,6 +40,9 @@ public class PathManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Assign this variable as an EGO
+        segmentHolder = new GameObject();
+
         player = FindObjectOfType<Player>();
         initialPath = Instantiate(path, initialPathSpawnLoc, Quaternion.identity);
         initialPath.name = "initialPath DEBUG";
@@ -54,24 +68,48 @@ public class PathManager : MonoBehaviour
         // Increase the amount of segments
         totalSegments++;
 
+        //Spawn a segment holder
+        GameObject segmentHolderGO = Instantiate(segmentHolder, pathStartSpawn);
+        segmentHolderGO.name = "Segment" + totalSegments.ToString();
+
         for (int i = 1; i <= maxLanes; i++)
         {
             // Spawn the first path
             GameObject go = Instantiate(path, new Vector3(width, 0, pathStartSpawn.transform.position.z), Quaternion.identity);
 
+            // Set the path's parent to SegmentHolder Go
+            go.transform.parent = segmentHolderGO.transform;
+
             // Add the spawned path into a list
             paths.Add(go);
+
+            // Increase total path count 
+            totalPaths = paths.Count - 1;
 
             // Declare the segment the spawned path belongs to
             go.GetComponent<Path>().segment = totalSegments;
 
-            // Increase total path count 
-            totalPaths = paths.Count - 1;
+            // Declare what lane number each path is
+            go.GetComponent<Path>().laneNumber = i;
+
+            // Set the name of the path
+            go.name = "Path " + i;
 
             // Increase width
             width += initialPath.GetComponent<Path>().pathWidth;
         }
 
+        if (nearestPath)
+        {
+            // Determine the largest path number in each segment
+            foreach (Transform i in nearestPath.transform.parent)
+            {
+                laneNumbers.Add(i.GetComponent<Path>().laneNumber);
+            }
+
+            laneNumbers.Sort();
+            maxPathNumber = laneNumbers[laneNumbers.Count - 1];
+        }
 
     }
 
@@ -88,26 +126,46 @@ public class PathManager : MonoBehaviour
             // Increase the amount of segments
             totalSegments++;
 
+            //Spawn a segment holder
+            GameObject segmentHolderGO = Instantiate(segmentHolder, pathStartSpawn);
+            segmentHolderGO.name = "Segment" + totalSegments.ToString();
+
             // Do this for the amount of lanes
             for (int i = 1; i <= maxLanes; i++)
             {
                 // Spawn the path
                 GameObject go = Instantiate(path, new Vector3(width, 0, pathLength * (totalSegments - 1)), Quaternion.identity);
 
+                // Set the path's parent to SegmentHolder Go
+                go.transform.parent = segmentHolderGO.transform;
+
                 //Add the spawned path into a list
                 paths.Add(go);
+
+                // Increase total path count 
+                totalPaths = paths.Count - 1;
 
                 // Declare the segment the spawned path belongs to
                 go.GetComponent<Path>().segment = totalSegments;
 
-                // Increase total path count 
-                totalPaths = paths.Count - 1;
+                // Declare what lane number each path is
+                go.GetComponent<Path>().laneNumber = i;
+
+                // Set the name of the path
+                go.name = "Path " + i;
 
                 // Increase the width so the lanes spawn next to the last spawned one
                 width += initialPath.GetComponent<Path>().pathWidth;
             }
 
+            // Determine the largest path number in each segment
+            foreach (Transform i in nearestPath.transform.parent)
+            {
+                laneNumbers.Add(i.GetComponent<Path>().laneNumber);
+            }
 
+            laneNumbers.Sort();
+            maxPathNumber = laneNumbers[laneNumbers.Count - 1];
         }
     }
 
@@ -115,7 +173,6 @@ public class PathManager : MonoBehaviour
     // as a percentage
     float TrackPlayerDistance()
     {
-
         if (!nearestPath)
         {
             return 0;
@@ -123,7 +180,9 @@ public class PathManager : MonoBehaviour
 
         float pathLength = nearestPath.GetComponent<Path>().pathLength;
         float playerCurrentDist = player.transform.position.z;
-        float percentTravelled = (playerCurrentDist / (pathLength * totalSegments)) * 100;
+
+        //float percentTravelled = (playerCurrentDist / (pathLength * totalSegments)) * 100;
+        float percentTravelled = Mathf.InverseLerp(pathLength * (totalSegments - 1), (pathLength * totalSegments), playerCurrentDist)  * 100;
 
         return percentTravelled;
     }
@@ -149,6 +208,9 @@ public class PathManager : MonoBehaviour
         {
             oldNearestPath = nearestPath;
             justSpawnedPaths = false;
+
+            //Remove all elements inside the pathNumbers list for the current segment
+            laneNumbers.Clear();
         }
     }
 
@@ -166,32 +228,12 @@ public class PathManager : MonoBehaviour
         if (Physics.Raycast(new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z - (pathLength * pathDestroySegment)), Vector3.down, out hit))
         {
             pathToDestroy = hit.collider.gameObject;
-
-            // Send a RayCast Right of this hit path
-            RaycastHit hit2;
-            if (Physics.Raycast(pathToDestroy.transform.position, Vector3.right, out hit2, 10))
-            {
-                Destroy(hit2.collider.gameObject);
-            }
-
-            // Send a RayCast Left of this hit path
-            RaycastHit hit3;
-            if (Physics.Raycast(pathToDestroy.transform.position, Vector3.left, out hit3, 10))
-            {
-                Destroy(hit3.collider.gameObject);
-            }
-
-            Invoke("DestroyImpossiblePath", 0.05f);
+            Destroy(pathToDestroy.transform.parent.gameObject);
         }
         else
         {
             return;
         }
-    }
-
-    void DestroyImpossiblePath()
-    {
-        Destroy(pathToDestroy);
     }
 }
 
