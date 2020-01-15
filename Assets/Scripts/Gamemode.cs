@@ -12,6 +12,10 @@ public class Gamemode : MonoBehaviour
 
     public float jetDistance;
 
+    public float playerEvadeStr;
+
+    public float startTime;
+
 
     // Start is called before the first frame update
     void Start()
@@ -30,5 +34,11 @@ public class Gamemode : MonoBehaviour
         jetZ = jetDistance + player.transform.position.z;
 
         jet.transform.position = new Vector3(0, jetY, jetZ);
+    }
+
+    public void SpawnNote()
+    {
+        //Move each note into correct position
+
     }
 }

@@ -105,19 +105,19 @@ public class Player : MonoBehaviour
         if (movingRight)
         {
             movingLeft = false;
-            rb.AddForce(Vector3.right * pm.playerEvadeStr);
+            rb.AddForce(Vector3.right * gm.playerEvadeStr);
         }
 
         if (movingLeft)
         {
             movingRight = false;
-            rb.AddForce(Vector3.left * pm.playerEvadeStr);
+            rb.AddForce(Vector3.left * gm.playerEvadeStr);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.tag == "Hit")
+        if (other.transform.tag == "Note")
         {
             //Jet Shoots at player
             gm.jet.GetComponent<Jet>().Shoot();
@@ -126,13 +126,13 @@ public class Player : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.transform.tag == "Hit")
+        if (other.transform.tag == "Note")
         {
             //Player hitting the hit
             if (Input.GetKey(KeyCode.Space))
             {
                 // Spawn hit particle effect
-                Instantiate(gm.jet.GetComponent<Jet>().hitParticle, other.transform.position, other.transform.rotation);
+                Instantiate(gm.jet.GetComponent<Jet>().hitParticle, other.transform.position, transform.rotation);
             }
         }
     }

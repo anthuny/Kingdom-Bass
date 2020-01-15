@@ -12,7 +12,7 @@ public class PathManager : MonoBehaviour
     float pathLength;
     bool justSpawnedPaths;
     private GameObject pathToDestroy;
-
+    private Gamemode gm;
 
     [HideInInspector]
     public GameObject initialPath;
@@ -24,8 +24,7 @@ public class PathManager : MonoBehaviour
     public int totalPaths;
     public int maxLanes;
     public int totalSegments;
-    public float movementLockTime;
-    public float playerEvadeStr;
+
 
         [HideInInspector]
     public List<int> laneNumbers = new List<int>();
@@ -40,6 +39,7 @@ public class PathManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gm = FindObjectOfType<Gamemode>();
         //Assign this variable as an EGO
         segmentHolder = new GameObject();
 
@@ -78,7 +78,7 @@ public class PathManager : MonoBehaviour
             GameObject go = Instantiate(path, new Vector3(width, 0, pathStartSpawn.transform.position.z), Quaternion.identity);
 
             // Set the path's parent to SegmentHolder Go
-            go.transform.parent = segmentHolderGO.transform;
+            go.transform.SetParent(segmentHolderGO.transform);
 
             // Add the spawned path into a list
             paths.Add(go);
@@ -111,6 +111,9 @@ public class PathManager : MonoBehaviour
             maxPathNumber = laneNumbers[laneNumbers.Count - 1];
         }
 
+        //Spawn note
+        gm.SpawnNote();
+
     }
 
     void SpawnPaths()
@@ -137,7 +140,7 @@ public class PathManager : MonoBehaviour
                 GameObject go = Instantiate(path, new Vector3(width, 0, pathLength * (totalSegments - 1)), Quaternion.identity);
 
                 // Set the path's parent to SegmentHolder Go
-                go.transform.parent = segmentHolderGO.transform;
+                go.transform.SetParent(segmentHolderGO.transform);
 
                 //Add the spawned path into a list
                 paths.Add(go);

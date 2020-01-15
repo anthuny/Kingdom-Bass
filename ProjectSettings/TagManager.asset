@@ -5,7 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Path
-  - Hit
+  - Note
   layers:
   - Default
   - TransparentFX
