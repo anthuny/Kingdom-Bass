@@ -20,13 +20,14 @@ public class PathManager : MonoBehaviour
     public GameObject nearestPath;
     private GameObject oldNearestPath;
     private GameObject segmentHolder;
+    public GameObject currentSegment;
 
     public int totalPaths;
     public int maxLanes;
     public int totalSegments;
 
 
-        [HideInInspector]
+    [HideInInspector]
     public List<int> laneNumbers = new List<int>();
     [HideInInspector]
     public int maxPathNumber;

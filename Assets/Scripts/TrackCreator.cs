@@ -5,6 +5,7 @@ using UnityEngine;
 public class TrackCreator : MonoBehaviour
 {
     private Gamemode gm;
+    private PathManager pm;
     public TextAsset song1;
     [TextArea(3, 10)]
     public string song1Text;
@@ -71,6 +72,7 @@ public class TrackCreator : MonoBehaviour
         audioSource.Play();
 
         gm = FindObjectOfType<Gamemode>();
+        pm = FindObjectOfType<PathManager>();
         
         song1Text = song1.text;
         
@@ -151,18 +153,141 @@ public class TrackCreator : MonoBehaviour
 
     void SpawnNotes()
     {
+        // Declare what the current segment is
+        pm.currentSegment = pm.nearestPath.transform.parent.gameObject;
+        Path path = pm.initialPath.GetComponent<Path>();
+
         //Re-position the notes
         for (int i = 0; i < notes.transform.childCount; i++)
         {
+            // If the note is not active, set it active
             if (!notes.transform.GetChild(i).gameObject.activeSelf)
             {
                 notes.transform.GetChild(i).gameObject.SetActive(true);
 
-                // Re-position i into correct lane here
-                // Continue reading off this source: https://www.gamasutra.com/blogs/YuChao/20170316/293814/Music_Syncing_in_Rhythm_Games.php
+                // Find the note's name that equals the correct code
+                if (notes.transform.GetChild(i).name.Contains(lane1Code))
+                {
+                    //  Loop through all paths in the current segment
+                    for (int x = 0; x < pm.currentSegment.transform.childCount; x++)
+                    {
+                        // If the lane number equals the correct one
+                        if (pm.currentSegment.transform.GetChild(x).gameObject.GetComponent<Path>().laneNumber == int.Parse(lane1Code))
+                        {
+                            // move the note to the correct lane
+                            notes.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, pm.currentSegment.transform.GetChild(x).transform.position.z + path.pathLength);
+
+                            // Turn the note online, so that it can be moved in the lane
+                            notes.transform.GetChild(i).GetComponent<Note>().online = true;
+
+                            // Determine what the pathwidth is so that the notes are in the correct X axis for their destination
+                            notes.transform.GetChild(i).GetComponent<Note>().pathWidth = path.pathWidth * x;
+
+                            // Set the starting position variable for the note to it's position after it has been moved to starting position
+                            notes.transform.GetChild(i).GetComponent<Note>().startingPos = notes.transform.GetChild(i).GetComponent<Note>().transform.position;
+                        }
+                    }
+                }
+
+                // Find the note's name that equals the correct code
+                else if (notes.transform.GetChild(i).name.Contains(lane2Code))
+                {
+                    //  Loop through all paths in the current segment
+                    for (int x = 0; x < pm.currentSegment.transform.childCount; x++)
+                    {
+                        // If the lane number equals the correct one
+                        if (pm.currentSegment.transform.GetChild(x).gameObject.GetComponent<Path>().laneNumber == int.Parse(lane2Code))
+                        {
+                            // move the note to the correct lane
+                            notes.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, pm.currentSegment.transform.GetChild(x).transform.position.z + path.pathLength);
+
+                            //Turn the note online, so that it can be moved in the lane
+                            notes.transform.GetChild(i).GetComponent<Note>().online = true;
+
+                            // Determine what the pathwidth is so that the notes are in the correct X axis for their destination
+                            notes.transform.GetChild(i).GetComponent<Note>().pathWidth = path.pathWidth * x;
+
+                            // Set the starting position variable for the note to it's position after it has been moved to starting position
+                            notes.transform.GetChild(i).GetComponent<Note>().startingPos = notes.transform.GetChild(i).GetComponent<Note>().transform.position;
+                        }
+                    }
+                }
+
+                // Find the note's name that equals the correct code
+                else if (notes.transform.GetChild(i).name.Contains(lane3Code))
+                {
+                    //  Loop through all paths in the current segment
+                    for (int x = 0; x < pm.currentSegment.transform.childCount; x++)
+                    {
+                        // If the lane number equals the correct one
+                        if (pm.currentSegment.transform.GetChild(x).gameObject.GetComponent<Path>().laneNumber == int.Parse(lane3Code))
+                        {
+                            // move the note to the correct lane
+                            notes.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, pm.currentSegment.transform.GetChild(x).transform.position.z + path.pathLength);
+
+                            //Turn the note online, so that it can be moved in the lane
+                            notes.transform.GetChild(i).GetComponent<Note>().online = true;
+
+                            // Determine what the pathwidth is so that the notes are in the correct X axis for their destination
+                            notes.transform.GetChild(i).GetComponent<Note>().pathWidth = path.pathWidth * x;
+
+                            // Set the starting position variable for the note to it's position after it has been moved to starting position
+                            notes.transform.GetChild(i).GetComponent<Note>().startingPos = notes.transform.GetChild(i).GetComponent<Note>().transform.position;
+                        }
+                    }
+                }
+
+                // Find the note's name that equals the correct code
+                else if (notes.transform.GetChild(i).name.Contains(lane4Code))
+                {
+                    //  Loop through all paths in the current segment
+                    for (int x = 0; x < pm.currentSegment.transform.childCount; x++)
+                    {
+                        // If the lane number equals the correct one
+                        if (pm.currentSegment.transform.GetChild(x).gameObject.GetComponent<Path>().laneNumber == int.Parse(lane4Code))
+                        {
+                            // move the note to the correct lane
+                            notes.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, pm.currentSegment.transform.GetChild(x).transform.position.z + path.pathLength);
+
+                            //Turn the note online, so that it can be moved in the lane
+                            notes.transform.GetChild(i).GetComponent<Note>().online = true;
+
+                            // Determine what the pathwidth is so that the notes are in the correct X axis for their destination
+                            notes.transform.GetChild(i).GetComponent<Note>().pathWidth = path.pathWidth * x;
+
+                            // Set the starting position variable for the note to it's position after it has been moved to starting position
+                            notes.transform.GetChild(i).GetComponent<Note>().startingPos = notes.transform.GetChild(i).GetComponent<Note>().transform.position;
+                        }
+                    }
+                }
+
+                // Find the note's name that equals the correct code
+                else if (notes.transform.GetChild(i).name.Contains(lane5Code))
+                {
+                    //  Loop through all paths in the current segment
+                    for (int x = 0; x < pm.currentSegment.transform.childCount; x++)
+                    {
+                        // If the lane number equals the correct one
+                        if (pm.currentSegment.transform.GetChild(x).gameObject.GetComponent<Path>().laneNumber == int.Parse(lane5Code))
+                        {
+                            // move the note to the correct lane
+                            notes.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, pm.currentSegment.transform.GetChild(x).transform.position.z + path.pathLength);
+
+                            //Turn the note online, so that it can be moved in the lane
+                            notes.transform.GetChild(i).GetComponent<Note>().online = true;
+
+                            // Determine what the pathwidth is so that the notes are in the correct X axis for their destination
+                            notes.transform.GetChild(i).GetComponent<Note>().pathWidth = path.pathWidth * x;
+
+                            // Set the starting position variable for the note to it's position after it has been moved to starting position
+                            notes.transform.GetChild(i).GetComponent<Note>().startingPos = notes.transform.GetChild(i).GetComponent<Note>().transform.position;
+                        }
+                    }
+                }
+
+                // Ensure that the for loop stops after 1 note was activated.
                 return;
             }
-
         }
     }
 
@@ -178,7 +303,6 @@ public class TrackCreator : MonoBehaviour
         // Then spawn a note
         if (nextIndex < allNotes.Count && (allNotes[nextIndex] + BeatsShownInAdvance) < trackPosInBeats)
         {
-            Debug.Log("Spawning note");
             nextIndex++;
 
             SpawnNotes();
