@@ -304,7 +304,6 @@ public class TrackCreator : MonoBehaviour
         if (nextIndex < allNotes.Count && (allNotes[nextIndex] + BeatsShownInAdvance) < trackPosInBeats)
         {
             nextIndex++;
-
             SpawnNotes();
         }
 

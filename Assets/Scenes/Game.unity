@@ -241,7 +241,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 476736891}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.01, z: 63.1}
+  m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -814,6 +814,7 @@ MonoBehaviour:
   jetDistance: 375
   playerEvadeStr: 600
   startTime: 3
+  noteDeathZone: 0
 --- !u!4 &1393232046
 Transform:
   m_ObjectHideFlags: 0
@@ -864,7 +865,7 @@ MonoBehaviour:
   trackPosInBeats: 0
   dspTrackTime: 0
   audioSource: {fileID: 0}
-  BeatsShownInAdvance: 5
+  BeatsShownInAdvance: 3
 --- !u!82 &1393232048
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1366,6 +1367,7 @@ MonoBehaviour:
   initialPathSpawnLoc: {x: 500, y: 500, z: 500}
   initialPath: {fileID: 0}
   nearestPath: {fileID: 0}
+  currentSegment: {fileID: 0}
   totalPaths: 0
   maxLanes: 5
   totalSegments: 0

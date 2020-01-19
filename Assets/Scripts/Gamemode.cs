@@ -16,6 +16,8 @@ public class Gamemode : MonoBehaviour
 
     public float startTime;
 
+    public float noteDeathZone;
+
 
     // Start is called before the first frame update
     void Start()
