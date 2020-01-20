@@ -32,8 +32,6 @@ public class TrackCreator : MonoBehaviour
 
     public List<float> allNotes = new List<float>();
 
-    private string lane1NoteCode;
-
     public GameObject notes;
     public GameObject noteVisual;
 
@@ -46,16 +44,24 @@ public class TrackCreator : MonoBehaviour
     public float dspTrackTime;
     public AudioSource audioSource;
 
-    private int nextIndex = 0;
+    public float t = 0;
+    //private int nextIndex = 0;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
-    public float BeatsShownInAdvance;
+    public int beatsBeforeStart;
+    public int beatsShownInAdvance;
+
+    private float timer;
+    public float timeToWait;
+    bool spawnedOnce;
+    GameObject player;
+
+    public float noteTimeToArriveMult;
+    public bool tIsReady;
 
     // Start is called before the first frame update
     void Start()
     {
-
-
         // Load the audiosource atteched to this gameobject
         audioSource = GetComponent<AudioSource>();
 
@@ -65,12 +71,7 @@ public class TrackCreator : MonoBehaviour
         // Assign what beatsshowninadvance is 
         //BeatsShownInAdvance *= secPerBeat;
 
-        // Record the time when the music starts
-        dspTrackTime = (float)AudioSettings.dspTime;
-
-        // Start the music
-        audioSource.Play();
-
+        player = FindObjectOfType<Player>().gameObject;
         gm = FindObjectOfType<Gamemode>();
         pm = FindObjectOfType<PathManager>();
         
@@ -78,8 +79,6 @@ public class TrackCreator : MonoBehaviour
         
         // References each line
         lines = song1Text.Split("\n"[0]);
-
-        lane1NoteCode = lane1Code + noteCode;
 
         for (int i = 0; i < lines.Length; i++)
         {
@@ -153,7 +152,22 @@ public class TrackCreator : MonoBehaviour
 
     void SpawnNotes()
     {
-        // Declare what the current segment is
+        // Declare what the current segment is if it hasn't been done already.
+        if (!pm.currentSegment)
+        {
+            //Find the path the player is on
+            RaycastHit hit;
+            if (Physics.Raycast(player.transform.position, Vector3.down, out hit))
+            {
+                //Debug.DrawRay(player.transform.position, Vector3.down, Color.green);
+                pm.nearestPath = hit.collider.gameObject;
+            }
+            else
+            {
+                //Debug.DrawRay(player.transform.position, Vector3.down, Color.red);
+                return;
+            }
+        }
         pm.currentSegment = pm.nearestPath.transform.parent.gameObject;
         Path path = pm.initialPath.GetComponent<Path>();
 
@@ -175,7 +189,10 @@ public class TrackCreator : MonoBehaviour
                         if (pm.currentSegment.transform.GetChild(x).gameObject.GetComponent<Path>().laneNumber == int.Parse(lane1Code))
                         {
                             // move the note to the correct lane
-                            notes.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, pm.currentSegment.transform.GetChild(x).transform.position.z + path.pathLength);
+                            notes.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, path.pathLength);
+
+                            // Set the starting position variable for the note to it's position after it has been moved to starting position
+                            notes.transform.GetChild(i).GetComponent<Note>().startingPos.z = notes.transform.GetChild(i).GetComponent<Note>().transform.position.z;
 
                             // Turn the note online, so that it can be moved in the lane
                             notes.transform.GetChild(i).GetComponent<Note>().online = true;
@@ -183,8 +200,9 @@ public class TrackCreator : MonoBehaviour
                             // Determine what the pathwidth is so that the notes are in the correct X axis for their destination
                             notes.transform.GetChild(i).GetComponent<Note>().pathWidth = path.pathWidth * x;
 
-                            // Set the starting position variable for the note to it's position after it has been moved to starting position
-                            notes.transform.GetChild(i).GetComponent<Note>().startingPos = notes.transform.GetChild(i).GetComponent<Note>().transform.position;
+
+
+                            notes.transform.GetChild(i).GetComponent<Note>().beatOfThisNote = (int)Mathf.Round(trackPosInBeats) + beatsShownInAdvance;
                         }
                     }
                 }
@@ -209,6 +227,8 @@ public class TrackCreator : MonoBehaviour
 
                             // Set the starting position variable for the note to it's position after it has been moved to starting position
                             notes.transform.GetChild(i).GetComponent<Note>().startingPos = notes.transform.GetChild(i).GetComponent<Note>().transform.position;
+
+                            notes.transform.GetChild(i).GetComponent<Note>().beatOfThisNote = (int)Mathf.Round(trackPosInBeats) + beatsShownInAdvance;
                         }
                     }
                 }
@@ -233,6 +253,8 @@ public class TrackCreator : MonoBehaviour
 
                             // Set the starting position variable for the note to it's position after it has been moved to starting position
                             notes.transform.GetChild(i).GetComponent<Note>().startingPos = notes.transform.GetChild(i).GetComponent<Note>().transform.position;
+
+                            notes.transform.GetChild(i).GetComponent<Note>().beatOfThisNote = (int)Mathf.Round(trackPosInBeats) + beatsShownInAdvance;
                         }
                     }
                 }
@@ -257,6 +279,8 @@ public class TrackCreator : MonoBehaviour
 
                             // Set the starting position variable for the note to it's position after it has been moved to starting position
                             notes.transform.GetChild(i).GetComponent<Note>().startingPos = notes.transform.GetChild(i).GetComponent<Note>().transform.position;
+
+                            notes.transform.GetChild(i).GetComponent<Note>().beatOfThisNote = (int)Mathf.Round(trackPosInBeats) + beatsShownInAdvance;
                         }
                     }
                 }
@@ -281,6 +305,8 @@ public class TrackCreator : MonoBehaviour
 
                             // Set the starting position variable for the note to it's position after it has been moved to starting position
                             notes.transform.GetChild(i).GetComponent<Note>().startingPos = notes.transform.GetChild(i).GetComponent<Note>().transform.position;
+
+                            notes.transform.GetChild(i).GetComponent<Note>().beatOfThisNote = (int)Mathf.Round(trackPosInBeats) + beatsShownInAdvance;
                         }
                     }
                 }
@@ -293,19 +319,65 @@ public class TrackCreator : MonoBehaviour
 
     private void Update()
     {
-        // Determine how many seconds since the track started
-        trackPos = (float)(AudioSettings.dspTime - dspTrackTime);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            audioSource.Play();
+        }
+
+        trackPos = audioSource.time;
+
+        // Determine the time in seconds (timeToWait) it takes for 1 note to reach the player
+        // find the average of this number over many itterations to get a more accurate number - TODO:
+        if (t <= 1 && audioSource.isPlaying && trackPosInBeats < 1)
+        {
+            tIsReady = false;
+            t = trackPosInBeats - Mathf.FloorToInt(trackPosInBeats);    
+            Mathf.Clamp01(t);
+            timeToWait += Time.deltaTime;
+        }
+        else
+        {
+            tIsReady = true;
+        }
 
         // Determine how many beats since the song started
-        trackPosInBeats = trackPos / secPerBeat;
+        trackPosInBeats = (trackPos / secPerBeat);
 
         // Wait for the track position in beats to reach a beat.
         // Then spawn a note
-        if (nextIndex < allNotes.Count && (allNotes[nextIndex] + BeatsShownInAdvance) < trackPosInBeats)
+        /*
+        if (nextIndex < allNotes.Count && (allNotes[nextIndex] + (beatsBeforeStart)) < trackPosInBeats)
         {
             nextIndex++;
             SpawnNotes();
         }
+        */
+        // SPAWNING NOTES
 
+        
+        if (audioSource.isPlaying && tIsReady)
+        {
+            // Spawn the first note.
+            if (!spawnedOnce)
+            {
+                spawnedOnce = true;
+                SpawnNotes();
+            }
+
+            // Wait for secPerBeat duration to spawn the second note. 
+            // This code is where you determine how many notes you want to be able to see at a time.
+            // To do this, decrease the amount of time secPerBeat is.
+            if (timer > (secPerBeat))
+            {
+                timer -= (secPerBeat);
+                SpawnNotes();
+            }
+            timer += Time.deltaTime;
+        }
+
+        // anthony - the value secPerBeat is divided by. use that to maybe times how fast the notes are.
+
+
+        
     }
 }

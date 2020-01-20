@@ -585,13 +585,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.1170215, y: -0, z: -0, w: 0.99312943}
-  m_LocalPosition: {x: 0, y: 1.348, z: -1.626}
+  m_LocalRotation: {x: 0.1236917, y: -0, z: -0, w: 0.9923207}
+  m_LocalPosition: {x: 0, y: 2.38, z: -3.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 922654302}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 13.440001, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 14.210001, y: 0, z: 0}
 --- !u!1 &989507029
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,6 +815,7 @@ MonoBehaviour:
   playerEvadeStr: 600
   startTime: 3
   noteDeathZone: 0
+  noteSpeed: 1
 --- !u!4 &1393232046
 Transform:
   m_ObjectHideFlags: 0
@@ -865,7 +866,12 @@ MonoBehaviour:
   trackPosInBeats: 0
   dspTrackTime: 0
   audioSource: {fileID: 0}
-  BeatsShownInAdvance: 3
+  t: 0
+  beatsBeforeStart: 15
+  beatsShownInAdvance: 0
+  timeToWait: 0
+  noteTimeToArriveMult: 4
+  tIsReady: 0
 --- !u!82 &1393232048
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1365,6 +1371,7 @@ MonoBehaviour:
   path: {fileID: 5871511927652730948, guid: 97c15b1eb4f8d0d4ebc11fa923d0c0ec, type: 3}
   pathStartSpawn: {fileID: 1212677939}
   initialPathSpawnLoc: {x: 500, y: 500, z: 500}
+  pathLength: 0
   initialPath: {fileID: 0}
   nearestPath: {fileID: 0}
   currentSegment: {fileID: 0}

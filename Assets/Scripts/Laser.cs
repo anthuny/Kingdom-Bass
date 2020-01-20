@@ -27,7 +27,7 @@ public class Laser : MonoBehaviour
 
     private void Update()
     {
-        Launch();
+        //Launch();
     }
     void LookAtPlayer()
     {

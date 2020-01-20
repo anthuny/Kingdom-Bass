@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
         if (Input.GetKey("d") && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber)
         {
             movingRight = true;
-
+            //print(pm.maxPathNumber);
         }
 
         // If:
@@ -84,6 +84,7 @@ public class Player : MonoBehaviour
         if (!movingLeft && !movingRight)
         {
             nearestLaneNumber = pm.nearestPath.GetComponent<Path>().laneNumber;
+            //Debug.Log(nearestLaneNumber);
         }
 
         // After moving Right. Stop the player from moving into the next lane

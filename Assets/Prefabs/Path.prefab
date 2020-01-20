@@ -234,6 +234,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathLength: 0
+  pathWidth: 0
+  segment: 0
+  laneNumber: 0
 --- !u!65 &6686562235756582726
 BoxCollider:
   m_ObjectHideFlags: 0

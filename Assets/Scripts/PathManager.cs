@@ -9,7 +9,8 @@ public class PathManager : MonoBehaviour
     public GameObject path;
     public Transform pathStartSpawn;
     public Vector3 initialPathSpawnLoc;
-    float pathLength;
+    [HideInInspector]
+    public float pathLength;
     bool justSpawnedPaths;
     private GameObject pathToDestroy;
     private Gamemode gm;
@@ -38,6 +39,7 @@ public class PathManager : MonoBehaviour
     public int spawnPathDist;
 
     // Start is called before the first frame update
+
     void Start()
     {
         gm = FindObjectOfType<Gamemode>();
@@ -98,18 +100,6 @@ public class PathManager : MonoBehaviour
 
             // Increase width
             width += initialPath.GetComponent<Path>().pathWidth;
-        }
-
-        if (nearestPath)
-        {
-            // Determine the largest path number in each segment
-            foreach (Transform i in nearestPath.transform.parent)
-            {
-                laneNumbers.Add(i.GetComponent<Path>().laneNumber);
-            }
-
-            laneNumbers.Sort();
-            maxPathNumber = laneNumbers[laneNumbers.Count - 1];
         }
 
         //Spawn note
@@ -215,6 +205,21 @@ public class PathManager : MonoBehaviour
 
             //Remove all elements inside the pathNumbers list for the current segment
             laneNumbers.Clear();
+        }
+
+
+        // Search for the nearest path
+        if (nearestPath)
+        {
+            // Determine the largest path number in each segment
+            foreach (Transform i in nearestPath.transform.parent)
+            {
+                laneNumbers.Add(i.GetComponent<Path>().laneNumber);
+            }
+
+            laneNumbers.Sort();
+
+            maxPathNumber = laneNumbers[laneNumbers.Count - 1];
         }
     }
 

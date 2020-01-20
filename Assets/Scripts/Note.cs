@@ -10,10 +10,10 @@ public class Note : MonoBehaviour
     public int beatOfThisNote;
     public bool online;
     public Vector3 startingPos;
-    Path path;
     public float pathWidth;
-    float t;
-    float trackPosInBeats;
+    public bool canMove;
+    private Player player;
+
 
     // Start is called before the first frame update
     void Start()
@@ -21,23 +21,23 @@ public class Note : MonoBehaviour
         pm = FindObjectOfType<PathManager>();
         tc = FindObjectOfType<TrackCreator>();
         gm = FindObjectOfType<Gamemode>();
-        path = pm.initialPath.GetComponent<Path>();
+        player = FindObjectOfType<Player>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        beatOfThisNote = (int)Mathf.Round(tc.trackPosInBeats);
-        //Debug.Log("Beat of this note : " + beatOfThisNote);
-        //Debug.Log("Track pos in Beats : " + tc.trackPosInBeats);
-        //Debug.Log("beats shown in advance : " + tc.BeatsShownInAdvance);
+        // Determine the speed the note needs to use to get to the player on the beat
+        gm.noteSpeed = pm.pathLength / (tc.timeToWait * tc.noteTimeToArriveMult);
 
-        t = ((tc.BeatsShownInAdvance - (beatOfThisNote - tc.trackPosInBeats)) / tc.BeatsShownInAdvance);
-        t = Mathf.Clamp01(t);
-        transform.position = Vector3.Lerp(startingPos, new Vector3(pathWidth, 0.01f, 0), t);
-
-        //Debug.Log(((tc.BeatsShownInAdvance - (beatOfThisNote - tc.trackPosInBeats)) / tc.BeatsShownInAdvance));
-
+        // Move the note toward the player
+        transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
+       
+        //Destroy the note when it reaches the player
+        if (transform.position.z <= player.gameObject.transform.position.z)
+        {
+            Destroy(gameObject);
+        }
     }
    
 }
