@@ -25,6 +25,7 @@ public class PathManager : MonoBehaviour
 
     public int totalPaths;
     public int maxLanes;
+    public GameObject middlePath;
     public int totalSegments;
 
 
@@ -40,6 +41,12 @@ public class PathManager : MonoBehaviour
 
     // Start is called before the first frame update
 
+    private void Awake()
+    {
+        initialPath = Instantiate(path, initialPathSpawnLoc, Quaternion.identity);
+        initialPath.name = "initialPath DEBUG";
+    }
+
     void Start()
     {
         gm = FindObjectOfType<Gamemode>();
@@ -47,8 +54,7 @@ public class PathManager : MonoBehaviour
         segmentHolder = new GameObject();
 
         player = FindObjectOfType<Player>();
-        initialPath = Instantiate(path, initialPathSpawnLoc, Quaternion.identity);
-        initialPath.name = "initialPath DEBUG";
+
 
         SpawnFirstPath();
 
@@ -100,6 +106,13 @@ public class PathManager : MonoBehaviour
 
             // Increase width
             width += initialPath.GetComponent<Path>().pathWidth;
+
+            if (i == Mathf.Floor(maxLanes / 2))
+            {
+                middlePath = go;
+                player.GetComponent<Player>().RepositionPlayer(go);
+
+            }
         }
 
         //Spawn note

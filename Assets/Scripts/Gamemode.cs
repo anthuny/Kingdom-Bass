@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Gamemode : MonoBehaviour
 {
@@ -16,8 +17,13 @@ public class Gamemode : MonoBehaviour
 
     public float startTime;
 
-    public float noteDeathZone;
+    [HideInInspector]
     public float noteSpeed;
+
+    public int score = 0;
+    private int oldScore;
+
+    public Text scoreText;
 
 
     // Start is called before the first frame update
@@ -26,8 +32,7 @@ public class Gamemode : MonoBehaviour
         player = FindObjectOfType<Player>().gameObject;
         jet = FindObjectOfType<Jet>().gameObject;
 
-        //float jetZ = jet.transform.position.z;
-        //float jetY = jet.transform.position.y;
+        UpdateUI();
 
     }
 
@@ -37,11 +42,23 @@ public class Gamemode : MonoBehaviour
         jetZ = jetDistance + player.transform.position.z;
 
         jet.transform.position = new Vector3(0, jetY, jetZ);
+
+        // If there is a change in score, Update the UI
+        if (score != oldScore)
+        {
+            oldScore = score;
+            UpdateUI();
+        }
     }
 
     public void SpawnNote()
     {
         //Move each note into correct position
 
+    }
+
+    void UpdateUI()
+    {
+        scoreText.text = "Score | " + score.ToString();
     }
 }

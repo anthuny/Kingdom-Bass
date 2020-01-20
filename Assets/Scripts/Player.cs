@@ -10,15 +10,11 @@ public class Player : MonoBehaviour
     private PathManager pm;
 
     private float pathWidth;
-    public float speed;
-    private bool doneOnce;
 
     private bool movingRight;
     private bool movingLeft;
-
+    [HideInInspector]
     public int nearestLaneNumber;
-
-    private float t;
 
     // Start is called before the first frame update
     void Start()
@@ -27,14 +23,27 @@ public class Player : MonoBehaviour
         gm = FindObjectOfType<Gamemode>();
         pm = FindObjectOfType<PathManager>();
 
-        StartCoroutine("AssignPathWidth");
-
+        pathWidth = pm.initialPath.GetComponent<Path>().pathWidth;
     }
 
-    IEnumerator AssignPathWidth()
+    public void RepositionPlayer(GameObject go)
     {
-        yield return new WaitForSeconds(0.1f);
-        pathWidth = pm.initialPath.GetComponent<Path>().pathWidth;
+        Vector3 p = transform.position;
+        p.x = go.GetComponent<Path>().laneNumber * pm.initialPath.GetComponent<Path>().pathWidth;
+        transform.position = p;
+
+        //Find the path the player is on
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit))
+        {
+            //Debug.DrawRay(player.transform.position, Vector3.down, Color.green);
+            pm.nearestPath = hit.collider.gameObject;
+        }
+        else
+        {
+            //Debug.DrawRay(player.transform.position, Vector3.down, Color.red);
+            return;
+        }
     }
 
     // Update is called once per frame
@@ -42,6 +51,8 @@ public class Player : MonoBehaviour
     {
         Inputs();
         Movement();
+
+        //Debug.Log(nearestLaneNumber);
     }
 
     void Inputs()
@@ -78,13 +89,12 @@ public class Player : MonoBehaviour
         Vector3 playerPos = transform.position;
 
         // Adding movement in the forward direction of the player
-        rb.velocity = new Vector3(0, 0, 1) * speed;
+        rb.velocity = Vector3.zero;
 
         // If not moving, Reference the nearest lane number.
         if (!movingLeft && !movingRight)
         {
             nearestLaneNumber = pm.nearestPath.GetComponent<Path>().laneNumber;
-            //Debug.Log(nearestLaneNumber);
         }
 
         // After moving Right. Stop the player from moving into the next lane
@@ -122,6 +132,39 @@ public class Player : MonoBehaviour
         {
             //Jet Shoots at player
             gm.jet.GetComponent<Jet>().Shoot();
+        }
+
+        if (other.transform.tag == "NoteWall")
+        {
+            // Ensure that the player enters the note from the correct direction
+            // If the player does. Recieve points.
+            // If not, nothing happens atm.
+            switch (other.transform.parent.GetComponent<Note>().arrowDir)
+            {
+                case "left":
+                    if (other.transform.parent.GetComponent<Note>().laneNumber < nearestLaneNumber)
+                    {
+                        other.gameObject.SetActive(false);
+                        gm.score++;
+                    }
+                    break;
+
+                case "right":
+                    if (other.transform.parent.GetComponent<Note>().laneNumber > nearestLaneNumber)
+                    {
+                        other.gameObject.SetActive(false);
+                        gm.score++;
+                    }
+                    break;
+
+                case "up":
+                    if (other.transform.parent.GetComponent<Note>().laneNumber == nearestLaneNumber)
+                    {
+                        other.gameObject.SetActive(false);
+                        gm.score++;
+                    }
+                    break;
+            }
         }
     }
 

@@ -40,6 +40,7 @@ public class Jet : MonoBehaviour
 
     void Aim()
     {
+        /*
         //Rotate gunholder to look at aim position
         aimPos = player.transform.position + (player.GetComponent<Player>().rb.velocity) * laserForwardInf;
 
@@ -53,11 +54,13 @@ public class Jet : MonoBehaviour
         go.transform.rotation = aimHolder.rotation;
 
         // Get new shot cooldown
-        StartCoroutine(GetShootCooldown());
+        //StartCoroutine(GetShootCooldown());
+        */
     }
 
     public void Shoot()
     {
+        /*
         //Rotate gunholder to look at aim position
         shootPos = player.transform.position;
 
@@ -70,6 +73,7 @@ public class Jet : MonoBehaviour
         go2.GetComponent<Laser>().jet = GetComponent<Jet>();
         go2.transform.rotation = shootHolder.rotation;
         go2.GetComponent<Laser>().isLaser = true;
+        */
     }
 
 
@@ -79,6 +83,6 @@ public class Jet : MonoBehaviour
 
         yield return new WaitForSeconds(shootCD);
 
-        Aim();
+        //Aim();
     }
 }

@@ -1,19 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Note : MonoBehaviour
 {
     private TrackCreator tc;
     private PathManager pm;
     private Gamemode gm;
-    public int beatOfThisNote;
-    public bool online;
+
+    [HideInInspector]
     public Vector3 startingPos;
+    [HideInInspector]
     public float pathWidth;
-    public bool canMove;
+    [HideInInspector]
     private Player player;
 
+    public string arrowDir;
+
+
+    public int laneNumber;
+      
+
+    public GameObject leftWall, rightWall, forwardWall;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +31,37 @@ public class Note : MonoBehaviour
         tc = FindObjectOfType<TrackCreator>();
         gm = FindObjectOfType<Gamemode>();
         player = FindObjectOfType<Player>();
+
+        Sprite leftArrow = Resources.Load<Sprite>("Sprites/T_LeftArrow") as Sprite;
+        Sprite rightArrow = Resources.Load<Sprite>("Sprites/T_RightArrow") as Sprite;
+        Sprite upArrow = Resources.Load<Sprite>("Sprites/T_UpArrow") as Sprite;
+
+        leftWall.SetActive(false);
+        rightWall.SetActive(false);
+        forwardWall.SetActive(false);
+
+        //Determine the direction of the arrow on the note
+        switch (arrowDir)
+        {
+            case "left":
+                transform.GetChild(1).GetComponentInChildren<Image>().sprite = leftArrow;
+                rightWall.SetActive(true);
+                break;
+
+            case "right":
+                transform.GetChild(1).GetComponentInChildren<Image>().sprite = rightArrow;
+                leftWall.SetActive(true);
+                break;
+
+            case "up":
+                transform.GetChild(1).GetComponentInChildren<Image>().sprite = upArrow;
+                forwardWall.SetActive(true);
+                break;
+
+            default:
+                Debug.Log(this.gameObject.name + "does not have an arrow direction");
+                break;
+        }
     }
 
     // Update is called once per frame
