@@ -45,16 +45,19 @@ public class Note : MonoBehaviour
         {
             case "left":
                 transform.GetChild(1).GetComponentInChildren<Image>().sprite = leftArrow;
+                transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalArrowC;
                 rightWall.SetActive(true);
                 break;
 
             case "right":
                 transform.GetChild(1).GetComponentInChildren<Image>().sprite = rightArrow;
+                transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalArrowC;
                 leftWall.SetActive(true);
                 break;
 
             case "up":
                 transform.GetChild(1).GetComponentInChildren<Image>().sprite = upArrow;
+                transform.GetChild(1).GetComponentInChildren<Image>().color = gm.upArrowC;
                 forwardWall.SetActive(true);
                 break;
 
@@ -68,7 +71,8 @@ public class Note : MonoBehaviour
     void Update()
     {
         // Determine the speed the note needs to use to get to the player on the beat
-        gm.noteSpeed = pm.pathLength / (tc.timeToWait * tc.noteTimeToArriveMult);
+        //gm.noteSpeed = pm.pathLength / (tc.timeToWait * tc.noteTimeToArriveMult);
+        gm.noteSpeed = pm.pathLength / (tc.secPerBeat * tc.noteTimeToArriveMult);
 
         // Move the note toward the player
         transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;

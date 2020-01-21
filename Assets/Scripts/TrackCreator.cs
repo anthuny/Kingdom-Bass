@@ -190,7 +190,7 @@ public class TrackCreator : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !audioSource.isPlaying)
+        if (Input.GetKeyDown(KeyCode.Space) && !audioSource.isPlaying && tIsReady)
         {
             audioSource.Play();
         }

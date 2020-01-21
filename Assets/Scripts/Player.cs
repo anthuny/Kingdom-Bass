@@ -61,7 +61,7 @@ public class Player : MonoBehaviour
         //      player is pressing D
         //      playing is NOT moving left or right already
         //      player is not in the most RIGHT lane
-        if (Input.GetKey("d") && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber)
+        if (Input.GetKeyDown("d") && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber)
         {
             movingRight = true;
             //print(pm.maxPathNumber);
@@ -71,7 +71,7 @@ public class Player : MonoBehaviour
         //      player is pressing A
         //      playing is NOT moving left or right already
         //      player is not in the most LEFT lane
-        if (Input.GetKey("a") && !movingRight && !movingLeft && nearestLaneNumber != 1)
+        if (Input.GetKeyDown("a") && !movingRight && !movingLeft && nearestLaneNumber != 1)
         {
             movingLeft = true;
         }

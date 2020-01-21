@@ -25,6 +25,10 @@ public class Gamemode : MonoBehaviour
 
     public Text scoreText;
 
+    public Color horizontalArrowC;
+    public Color upArrowC;
+
+
 
     // Start is called before the first frame update
     void Start()

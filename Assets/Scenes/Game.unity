@@ -373,7 +373,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -192}
+  m_AnchoredPosition: {x: -656, y: -10}
   m_SizeDelta: {x: 1838.1001, y: 456.40002}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &505919970
@@ -889,11 +889,13 @@ MonoBehaviour:
   jetZ: 0
   jetY: 0
   jetDistance: 375
-  playerEvadeStr: 600
+  playerEvadeStr: 1200
   startTime: 3
   noteSpeed: 1
   score: 0
   scoreText: {fileID: 505919970}
+  horizontalArrowC: {r: 0, g: 0.2677474, b: 1, a: 1}
+  upArrowC: {r: 1, g: 0, b: 0, a: 1}
 --- !u!4 &1393232046
 Transform:
   m_ObjectHideFlags: 0
@@ -952,7 +954,7 @@ MonoBehaviour:
   beatsBeforeStart: 15
   beatsShownInAdvance: 0
   timeToWait: 0
-  noteTimeToArriveMult: 5
+  noteTimeToArriveMult: 4
   tIsReady: 0
 --- !u!82 &1393232048
 AudioSource:
