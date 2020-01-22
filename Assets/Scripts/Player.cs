@@ -16,6 +16,9 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public int nearestLaneNumber;
 
+    bool playerHitLaunch;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -97,28 +100,49 @@ public class Player : MonoBehaviour
             nearestLaneNumber = pm.nearestPath.GetComponent<Path>().laneNumber;
         }
 
-        // After moving Right. Stop the player from moving into the next lane
-        if (movingRight && playerPos.x >= pathWidth * nearestLaneNumber)
-        {
-            playerPos.x = pathWidth * nearestLaneNumber;
-            transform.position = playerPos;
-            movingRight = false;
-        }
-
         // After moving Left. Stop the player from moving into the next lane
-        if (movingLeft && playerPos.x <= pathWidth * (nearestLaneNumber - 2))
+        if (movingLeft && playerPos.x <= pathWidth * (nearestLaneNumber - 2) && !playerHitLaunch)
         {
             playerPos.x = pathWidth * (nearestLaneNumber - 2);
             transform.position = playerPos;
             movingLeft = false;
         }
 
+        // After moving Right. Stop the player from moving into the next lane
+        if (movingRight && playerPos.x >= pathWidth * nearestLaneNumber && !playerHitLaunch)
+        {
+            playerPos.x = pathWidth * nearestLaneNumber;
+            transform.position = playerPos;
+            movingRight = false;
+        }
+
+        // If the player moved left to contact a launch note. Do not stop the player at the next lane. Let them reach the end lane
+        if (movingRight && playerPos.x >= ((pathWidth * pm.laneNumbers[0]) - pathWidth) && playerHitLaunch)
+        {
+            playerPos.x = 6;
+            transform.position = playerPos;
+            movingRight = false;
+            playerHitLaunch = false;
+        }
+
+        // If the player moved right to contact a launch note. Do not stop the player at the next lane. Let them reach the end lane
+        if (movingLeft && playerPos.x <= ((pathWidth * pm.maxLanes) - pathWidth) && playerHitLaunch)
+        {
+            playerPos.x = 0;
+            transform.position = playerPos;
+            movingLeft = false;
+            playerHitLaunch = false;
+        }
+
+        // Functionality of moving right
         if (movingRight)
         {
             movingLeft = false;
             rb.AddForce(Vector3.right * gm.playerEvadeStr);
         }
 
+
+        // Functionality of moving left
         if (movingLeft)
         {
             movingRight = false;
@@ -145,6 +169,11 @@ public class Player : MonoBehaviour
                     if (other.transform.parent.GetComponent<Note>().laneNumber < nearestLaneNumber)
                     {
                         other.gameObject.SetActive(false);
+                        if (other.transform.parent.GetComponent<Note>().isLaunch)
+                        {
+                            playerHitLaunch = true;
+                            StartCoroutine(Camera.main.GetComponent<CameraBehaviour>().RollCamera("left"));
+                        }
                         gm.score++;
                     }
                     break;
@@ -153,6 +182,11 @@ public class Player : MonoBehaviour
                     if (other.transform.parent.GetComponent<Note>().laneNumber > nearestLaneNumber)
                     {
                         other.gameObject.SetActive(false);
+                        if (other.transform.parent.GetComponent<Note>().isLaunch)
+                        {
+                            playerHitLaunch = true;
+                            StartCoroutine(Camera.main.GetComponent<CameraBehaviour>().RollCamera("right"));
+                        }
                         gm.score++;
                     }
                     break;

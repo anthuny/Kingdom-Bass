@@ -23,12 +23,15 @@ public class Gamemode : MonoBehaviour
     public int score = 0;
     private int oldScore;
 
+    public float distPercArrowLock;
+
     public Text scoreText;
+    public float launchRotAmount;
+    public float launchRotTime;
 
-    public Color horizontalArrowC;
+    public Color horizontalNoteArrowC;
+    public Color horizontalLaunchArrowC;
     public Color upArrowC;
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -53,12 +56,6 @@ public class Gamemode : MonoBehaviour
             oldScore = score;
             UpdateUI();
         }
-    }
-
-    public void SpawnNote()
-    {
-        //Move each note into correct position
-
     }
 
     void UpdateUI()

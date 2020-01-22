@@ -8,7 +8,7 @@ public class Path : MonoBehaviour
 
     [HideInInspector]
     public float pathLength;
-    [HideInInspector]
+
     public float pathWidth;
 
     public int segment;

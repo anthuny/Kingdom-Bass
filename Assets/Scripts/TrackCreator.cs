@@ -11,7 +11,7 @@ public class TrackCreator : MonoBehaviour
     [TextArea(3, 10)]
     public string song1Text;
 
-    public string[] laneCodes = new string[] {"lane1Code", "lane2Code", "lane2Code", "lane2Code", "lane2Code", "lane2Code", "lane2Code", "lane2Code"};
+    public string[] laneCodes = new string[] {"lane1Code", "lane2Code", "lane3Code", "lane4Code", "lane5Code", "lane6Code", "lane7Code", "lane8Code"};
 
     // Lane codes
     public string lane1Code, lane2Code, lane3Code, lane4Code, lane5Code, lane6Code, lane7Code, lane8Code;
@@ -20,11 +20,16 @@ public class TrackCreator : MonoBehaviour
     public string noteCode;
 
     public List<float> allNotes = new List<float>();
+    public List<int> noteEighthCount = new List<int>();
 
     public GameObject notes;
     public GameObject noteVisual;
+    public float maxNoteIntervalsEachBeat;
 
     public float trackBpm;
+
+    public string noteType1Code;
+    public string noteType2Code;
 
     public float secPerBeat;
     public float trackPos;
@@ -40,13 +45,17 @@ public class TrackCreator : MonoBehaviour
 
     private float timer;
     public float timeToWait;
-    bool spawnedOnce;
+    bool doneOnce;
     GameObject player;
+    bool inIntro;
     
     public float noteTimeToArriveMult;
     public bool tIsReady;
 
     XmlDocument levelDataXml;
+
+
+    private int nextIndex = 0;
 
     private void Awake()
     {
@@ -92,7 +101,7 @@ public class TrackCreator : MonoBehaviour
 
 
 
-    public void SpawnNotes(string noteType, string laneNumber, string arrowD)
+    public void SpawnNotes(string noteType, string laneNumber, string arrowD, string EighthWait)
     {
         // Checks for notes in each lane, If it belongs in a lane, make it belong there 
         // This is currently only going to work for lanes 
@@ -111,9 +120,24 @@ public class TrackCreator : MonoBehaviour
 
                 // Parent this note to the notes object 
                 go.transform.SetParent(notes.transform);
+                
+                // Set the note to be of type note
+                if (noteType == noteType1Code)
+                {
+                    go.GetComponent<Note>().isNote = true;
+                }
+
+                // Set the note to be of type launch
+                else if (noteType == noteType2Code)
+                {
+                    go.GetComponent<Note>().isLaunch = true;
+                }
 
                 // Set the arrow direction of the note
                 go.GetComponent<Note>().arrowDir = arrowD;
+
+                // Set the amount of eighthwaits the note is to perfom
+                go.GetComponent<Note>().eighthWait = int.Parse(EighthWait);
 
                 // Set the lane number of the note 
                 go.GetComponent<Note>().laneNumber = i;
@@ -121,8 +145,11 @@ public class TrackCreator : MonoBehaviour
                 // Disable the note
                 go.SetActive(false);
 
-                // Add the note to allNotes list | TODO: Do I need this?
+                // Add the note to allNotes list | This is needed for the dynamic spawning times if using it.
                 allNotes.Add(i);
+
+                // Add the eightth wait for each note to noteEightCount list
+                noteEighthCount.Add(int.Parse(EighthWait));
 
                 // Exit the function immediately
                 return;
@@ -194,46 +221,52 @@ public class TrackCreator : MonoBehaviour
         {
             audioSource.Play();
         }
-
-        trackPos = audioSource.time;
-
-        // Determine the time in seconds (timeToWait) it takes for 1 note to reach the player
-        // find the average of this number over many itterations to get a more accurate number - TODO:
-        if (t <= 1 && audioSource.isPlaying && trackPosInBeats < 1)
-        {
-            tIsReady = false;
-            t = trackPosInBeats - Mathf.FloorToInt(trackPosInBeats);    
-            Mathf.Clamp01(t);
-            timeToWait += Time.deltaTime;
-
-        }
         else
         {
             tIsReady = true;
         }
 
+        trackPos = audioSource.time;
+
         // Determine how many beats since the song started
-        trackPosInBeats = (trackPos / secPerBeat);
+        trackPosInBeats = (trackPos / secPerBeat) + 1;
 
         if (audioSource.isPlaying && tIsReady)
         {
-            // Spawn the first note.
-            if (!spawnedOnce)
+            // Wait for amount in beatsBeforeStart before allowing notes to spawn
+            if (trackPosInBeats >= beatsBeforeStart)
             {
-                spawnedOnce = true;
+                inIntro = false;
+                SetTimerToZero();
+            }
+            else
+            {
+                inIntro = true;
+            }
+
+            // Wait for secPerBeat * individual note intival to spawn a note
+            // Ensure no notes spawn beyond the last
+            // Ensures intro is over before starting
+            if (nextIndex < allNotes.Count && timer > secPerBeat * (maxNoteIntervalsEachBeat / noteEighthCount[nextIndex]) && !inIntro)
+            {
+                // Reset timer
+                timer -= secPerBeat * (maxNoteIntervalsEachBeat / noteEighthCount[nextIndex]);
+
+                nextIndex++;
                 AssignNotes();
             }
 
-            // Wait for secPerBeat duration to spawn the second note. 
-            // This code is where you determine how many notes you want to be able to see at a time.
-            // To do this, decrease the amount of time secPerBeat is.
-            if (timer > (secPerBeat))
-            {
-                timer -= (secPerBeat);
-                AssignNotes();
-            }
             timer += Time.deltaTime;
         }       
+
+        void SetTimerToZero()
+        {
+            if (!doneOnce)
+            {
+                doneOnce = true;
+                timer = 0;
+            }
+        }
     }
 
     class GetNote
@@ -241,6 +274,7 @@ public class TrackCreator : MonoBehaviour
         public string noteType { get; private set; }
         public string noteLane { get; private set; }
         public string noteArrowD { get; private set; }
+        public string noteEighthWait { get; private set; }
 
         TrackCreator tc;
 
@@ -250,12 +284,14 @@ public class TrackCreator : MonoBehaviour
             noteType = curNoteNode["Note_Type"].InnerText;
             noteLane = curNoteNode["Note_Lane"].InnerText;
             noteArrowD = curNoteNode["Note_ArrowD"].InnerText;
+            noteEighthWait = curNoteNode["Note_EighthWait"].InnerText;
 
             XmlNode NoteNode = curNoteNode.SelectSingleNode("Note_Type");
             XmlNode laneNode = curNoteNode.SelectSingleNode("Note_Lane");
             XmlNode arrowDNode = curNoteNode.SelectSingleNode("Note_ArrowD");
+            XmlNode EighthWaitNode = curNoteNode.SelectSingleNode("Note_EighthWait");
 
-            tc.SpawnNotes(NoteNode.InnerText, laneNode.InnerText, arrowDNode.InnerText);
+            tc.SpawnNotes(NoteNode.InnerText, laneNode.InnerText, arrowDNode.InnerText, EighthWaitNode.InnerText);
         }
     }
 }

@@ -25,7 +25,7 @@ public class PathManager : MonoBehaviour
 
     public int totalPaths;
     public int maxLanes;
-    public GameObject middlePath;
+    public GameObject middleLane;
     public int totalSegments;
 
 
@@ -64,7 +64,6 @@ public class PathManager : MonoBehaviour
 
     private void Update()
     {
-        SpawnPaths();
         FindNearestPath();
         DestroyPathsBehind();
     }
@@ -109,70 +108,10 @@ public class PathManager : MonoBehaviour
 
             if (i == Mathf.Floor(maxLanes / 2))
             {
-                middlePath = go;
+                middleLane = go;
                 player.GetComponent<Player>().RepositionPlayer(go);
 
             }
-        }
-
-        //Spawn note
-        gm.SpawnNote();
-
-    }
-
-    void SpawnPaths()
-    {
-        // If the player passes a certain distance on a segment
-        // Spawn more segments in front of the segement they are on.
-        if (TrackPlayerDistance() > spawnPathDist && !justSpawnedPaths)
-        {
-            justSpawnedPaths = true;
-            float width = 0;
-            pathLength = paths[totalPaths].GetComponent<Path>().pathLength;
-
-            // Increase the amount of segments
-            totalSegments++;
-
-            //Spawn a segment holder
-            GameObject segmentHolderGO = Instantiate(segmentHolder, pathStartSpawn);
-            segmentHolderGO.name = "Segment" + totalSegments.ToString();
-
-            // Do this for the amount of lanes
-            for (int i = 1; i <= maxLanes; i++)
-            {
-                // Spawn the path
-                GameObject go = Instantiate(path, new Vector3(width, 0, pathLength * (totalSegments - 1)), Quaternion.identity);
-
-                // Set the path's parent to SegmentHolder Go
-                go.transform.SetParent(segmentHolderGO.transform);
-
-                //Add the spawned path into a list
-                paths.Add(go);
-
-                // Increase total path count 
-                totalPaths = paths.Count - 1;
-
-                // Declare the segment the spawned path belongs to
-                go.GetComponent<Path>().segment = totalSegments;
-
-                // Declare what lane number each path is
-                go.GetComponent<Path>().laneNumber = i;
-
-                // Set the name of the path
-                go.name = "Path " + i;
-
-                // Increase the width so the lanes spawn next to the last spawned one
-                width += initialPath.GetComponent<Path>().pathWidth;
-            }
-
-            // Determine the largest path number in each segment
-            foreach (Transform i in nearestPath.transform.parent)
-            {
-                laneNumbers.Add(i.GetComponent<Path>().laneNumber);
-            }
-
-            laneNumbers.Sort();
-            maxPathNumber = laneNumbers[laneNumbers.Count - 1];
         }
     }
 
