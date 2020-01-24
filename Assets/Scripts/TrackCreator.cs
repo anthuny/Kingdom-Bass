@@ -37,6 +37,8 @@ public class TrackCreator : MonoBehaviour
     public float dspTrackTime;
     public AudioSource audioSource;
 
+    float lastBeat;
+
     private float t = 0;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
@@ -45,18 +47,18 @@ public class TrackCreator : MonoBehaviour
 
     private float timer;
     public float timeToWait;
-    bool doneOnce;
+    //bool doneOnce;
     GameObject player;
-    bool inIntro;
+    //bool inIntro;
     
-    public float noteTimeToArriveMult;
-    public bool tIsReady;
+    //public float noteTimeToArriveMult;
+    //public bool tIsReady;
 
     XmlDocument levelDataXml;
 
 
     private int nextIndex = 0;
-
+    int nextIndex2 = 0;
     private void Awake()
     {
         TextAsset xmlTextAsset = Resources.Load<TextAsset>("LevelData");
@@ -65,7 +67,7 @@ public class TrackCreator : MonoBehaviour
     }
 
     void Start()
-    {
+    {      
         // Load the audiosource atteched to this gameobject
         audioSource = GetComponent<AudioSource>();
 
@@ -205,6 +207,9 @@ public class TrackCreator : MonoBehaviour
 
                                 // Determine what the pathwidth is so that the notes are in the correct X axis for their destination
                                 notes.transform.GetChild(i).GetComponent<Note>().pathWidth = path.pathWidth * x;
+
+                                // Allow the note to move when ready
+                                notes.transform.GetChild(i).GetComponent<Note>().canMove = true;
                             }
                         }
                     }
@@ -217,56 +222,40 @@ public class TrackCreator : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !audioSource.isPlaying && tIsReady)
+        if (Input.GetKeyDown(KeyCode.Space) && !audioSource.isPlaying)
         {
+
+            dspTrackTime = (float)AudioSettings.dspTime;
+
             audioSource.Play();
         }
-        else
-        {
-            tIsReady = true;
-        }
 
-        trackPos = audioSource.time;
+        trackPos = (float)(AudioSettings.dspTime - dspTrackTime);
 
         // Determine how many beats since the song started
         trackPosInBeats = (trackPos / secPerBeat) + 1;
 
-        if (audioSource.isPlaying && tIsReady)
+        if (audioSource.isPlaying)
         {
-            // Wait for amount in beatsBeforeStart before allowing notes to spawn
-            if (trackPosInBeats >= beatsBeforeStart)
-            {
-                inIntro = false;
-                SetTimerToZero();
-            }
-            else
-            {
-                inIntro = true;
-            }
 
             // Wait for secPerBeat * individual note intival to spawn a note
             // Ensure no notes spawn beyond the last
             // Ensures intro is over before starting
-            if (nextIndex < allNotes.Count && timer > secPerBeat * (maxNoteIntervalsEachBeat / noteEighthCount[nextIndex]) && !inIntro)
-            {
-                // Reset timer
-                timer -= secPerBeat * (maxNoteIntervalsEachBeat / noteEighthCount[nextIndex]);
 
-                nextIndex++;
+            // - WIP - this works perfectly I think. Just need to change how notes move to interpolation
+            if (trackPos > (lastBeat + secPerBeat) * beatsShownInAdvance)
+            {
+                //Debug.Log("beat");
+                //Debug.Log("trackPos is " + trackPos);
+                //Debug.Log("LastBeat is " + lastBeat);
+                //Debug.Log("SecperBeat is " + secPerBeat);
+                Debug.Log("Beat happened " + Time.frameCount);
+
+                lastBeat += secPerBeat;
+
                 AssignNotes();
             }
-
-            timer += Time.deltaTime;
         }       
-
-        void SetTimerToZero()
-        {
-            if (!doneOnce)
-            {
-                doneOnce = true;
-                timer = 0;
-            }
-        }
     }
 
     class GetNote

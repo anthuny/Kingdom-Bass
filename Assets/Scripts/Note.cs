@@ -24,6 +24,8 @@ public class Note : MonoBehaviour
     public int eighthWait;
 
     private bool doneOnce;
+    private bool doneOnce2;
+    private bool doneOnce3;
 
 
     public int laneNumber;
@@ -40,6 +42,14 @@ public class Note : MonoBehaviour
     public Vector3 playerPos;
 
     private float t;
+
+
+    private float startTime;
+    private float goalTime;
+    private float newGoalTime;
+    private float curTime = 0;
+
+    public bool canMove;
 
     // Start is called before the first frame update
     void Start()
@@ -58,7 +68,7 @@ public class Note : MonoBehaviour
         wallLengths = rend.bounds.size.z;
 
         // Set the size of the wall to be based off the noteTimeToArriveMult (the smaller the value, the larger the walls).
-        wallLengths /= tc.noteTimeToArriveMult / 4;
+        wallLengths /= tc.beatsShownInAdvance / 2;
 
         Vector3 scale = leftWall.transform.localScale;
         scale.z = wallLengths;
@@ -125,24 +135,66 @@ public class Note : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!canMove)
+        {
+            return;
+        }
+
+        if (canMove && !doneOnce)
+        {
+            doneOnce = true;
+            //Debug.Log("Note spawned " + Time.frameCount);
+
+            startTime = tc.trackPos;
+            //Debug.Log("startTime is " + startTime);
+            goalTime = (startTime + tc.secPerBeat) * tc.beatsShownInAdvance;
+            //Debug.Log("goalTime is " + goalTime);
+            //curTime = startTime;
+        }
+        // Calculate the percantage of completion of the note on the lane
         percDistance = Mathf.Abs((transform.position.z - player.transform.position.z) / pm.pathLength) * 100;
 
         // Determine the speed the note needs to use to get to the player on the beat
         //gm.noteSpeed = pm.pathLength / (tc.timeToWait * tc.noteTimeToArriveMult);
-        gm.noteSpeed = pm.pathLength / (tc.secPerBeat * tc.noteTimeToArriveMult);
+        gm.noteSpeed = pm.pathLength / (tc.secPerBeat * tc.beatsShownInAdvance);
 
-        if (!hitEnd)
+        if (t <= 1)
         {
-            // Move the note toward the player
-            transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
+            Vector3 pos;
+            pos = Vector3.Lerp(new Vector3(transform.position.x, transform.position.y, startingPos.z),
+                            new Vector3(transform.position.x, transform.position.y, player.transform.position.z), t);
+            transform.position = pos;
         }
 
-        // When the note gets to the player. Make it continue going in the same direction for 2 seconds.
-        if (transform.position.z <= player.gameObject.transform.position.z)
+
+        newGoalTime = goalTime - startTime;
+
+        if (curTime <= newGoalTime)
         {
-            hitEnd = true;
-            Invoke("DestroyNote", (tc.secPerBeat * tc.noteTimeToArriveMult) / 3);
+            curTime += Time.deltaTime;
+            t = curTime / newGoalTime;
+        }
+
+        if (t >= 1)
+        {
+
+            doneOnce2 = true;
             transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
+            hitEnd = true;
+        }
+
+        if (doneOnce2 && !doneOnce3)
+        {
+            Debug.Log(newGoalTime);
+            doneOnce3 = true;
+            Debug.Log("Note Landing frame count " + Time.frameCount);
+        }
+
+        if (hitEnd)
+        {
+            hitEnd = false;
+
+            Invoke("DestroyNote", (tc.secPerBeat * tc.beatsShownInAdvance) / 3);
         }
     }
     void DestroyNote()

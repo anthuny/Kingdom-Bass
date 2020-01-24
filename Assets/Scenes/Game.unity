@@ -682,6 +682,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edf8230a6f409d143b26b0d7bb4939d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  easeType: 0
+  loopType: 0
 --- !u!1 &989507029
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,6 +911,7 @@ MonoBehaviour:
   distPercArrowLock: 60
   scoreText: {fileID: 505919970}
   launchRotAmount: 8
+  launchRotTime: 0
   horizontalNoteArrowC: {r: 0.3820755, g: 0.64505035, b: 1, a: 1}
   horizontalLaunchArrowC: {r: 0, g: 1, b: 0.023826122, a: 1}
   upArrowC: {r: 1, g: 0, b: 0, a: 1}
@@ -971,8 +974,8 @@ MonoBehaviour:
   trackPosInBeats: 0
   dspTrackTime: 0
   audioSource: {fileID: 1393232048}
-  beatsBeforeStart: 1
-  beatsShownInAdvance: 0
+  beatsBeforeStart: 4
+  beatsShownInAdvance: 1
   timeToWait: 0
   noteTimeToArriveMult: 4
   tIsReady: 0
