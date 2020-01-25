@@ -974,11 +974,11 @@ MonoBehaviour:
   trackPosInBeats: 0
   dspTrackTime: 0
   audioSource: {fileID: 1393232048}
-  beatsBeforeStart: 4
-  beatsShownInAdvance: 1
+  beatsBeforeStart: 1
+  noteTimeTaken: 6
+  noteSpawnFrequency: 2
+  noteHitBoxDifficult: 5
   timeToWait: 0
-  noteTimeToArriveMult: 4
-  tIsReady: 0
 --- !u!82 &1393232048
 AudioSource:
   m_ObjectHideFlags: 0

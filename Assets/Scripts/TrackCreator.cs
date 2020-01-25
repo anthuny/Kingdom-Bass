@@ -43,7 +43,14 @@ public class TrackCreator : MonoBehaviour
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
     public int beatsBeforeStart;
-    public int beatsShownInAdvance;
+    [Tooltip("The amount of beats that must happen for the note to get to the end")]
+    public float noteTimeTaken;
+    [Tooltip("The amount of beats for a note to spawn")]
+    public float noteSpawnFrequency;
+    [Tooltip("As this number is lowered, the window of opportunity for hitting notes is smaller")]
+    public float noteHitBoxDifficult;
+
+    private bool canStart;
 
     private float timer;
     public float timeToWait;
@@ -59,6 +66,10 @@ public class TrackCreator : MonoBehaviour
 
     private int nextIndex = 0;
     int nextIndex2 = 0;
+
+    public float m_LastBeat;
+    public float nextBeat;
+    public float currentBeat;
     private void Awake()
     {
         TextAsset xmlTextAsset = Resources.Load<TextAsset>("LevelData");
@@ -234,8 +245,15 @@ public class TrackCreator : MonoBehaviour
 
         // Determine how many beats since the song started
         trackPosInBeats = (trackPos / secPerBeat) + 1;
-
-        if (audioSource.isPlaying)
+        
+        // TODO - beats before start is currently broken. It spawns 2 notes when the value is too high
+        // And doesn't work correctly when the value is too low
+        if (audioSource.isPlaying && trackPosInBeats > beatsBeforeStart)
+        {
+            canStart = true;
+            //Debug.Log(trackPosInBeats);
+        }
+        if (audioSource.isPlaying && canStart)
         {
 
             // Wait for secPerBeat * individual note intival to spawn a note
@@ -243,18 +261,27 @@ public class TrackCreator : MonoBehaviour
             // Ensures intro is over before starting
 
             // - WIP - this works perfectly I think. Just need to change how notes move to interpolation
-            if (trackPos > (lastBeat + secPerBeat) * beatsShownInAdvance)
+            if (trackPos > (lastBeat + secPerBeat) * noteSpawnFrequency)
             {
+
                 //Debug.Log("beat");
                 //Debug.Log("trackPos is " + trackPos);
                 //Debug.Log("LastBeat is " + lastBeat);
                 //Debug.Log("SecperBeat is " + secPerBeat);
-                Debug.Log("Beat happened " + Time.frameCount);
+                //Debug.Log("Beat happened " + trackPos);
+
 
                 lastBeat += secPerBeat;
 
                 AssignNotes();
+
+                currentBeat = Mathf.FloorToInt(trackPosInBeats);
             }
+
+            nextBeat = currentBeat + 1;
+            m_LastBeat = currentBeat;
+            //Debug.Log("next beat " + nextBeat);
+            //Debug.Log("m_Last beat " + m_LastBeat);
         }       
     }
 

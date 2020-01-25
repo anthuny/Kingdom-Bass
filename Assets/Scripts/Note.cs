@@ -68,7 +68,7 @@ public class Note : MonoBehaviour
         wallLengths = rend.bounds.size.z;
 
         // Set the size of the wall to be based off the noteTimeToArriveMult (the smaller the value, the larger the walls).
-        wallLengths /= tc.beatsShownInAdvance / 2;
+        wallLengths /= tc.noteTimeTaken / tc.noteHitBoxDifficult;
 
         Vector3 scale = leftWall.transform.localScale;
         scale.z = wallLengths;
@@ -140,6 +140,8 @@ public class Note : MonoBehaviour
             return;
         }
 
+
+
         if (canMove && !doneOnce)
         {
             doneOnce = true;
@@ -147,16 +149,15 @@ public class Note : MonoBehaviour
 
             startTime = tc.trackPos;
             //Debug.Log("startTime is " + startTime);
-            goalTime = (startTime + tc.secPerBeat) * tc.beatsShownInAdvance;
+            goalTime = startTime + (tc.secPerBeat * tc.noteTimeTaken);
             //Debug.Log("goalTime is " + goalTime);
-            //curTime = startTime;
         }
         // Calculate the percantage of completion of the note on the lane
         percDistance = Mathf.Abs((transform.position.z - player.transform.position.z) / pm.pathLength) * 100;
 
         // Determine the speed the note needs to use to get to the player on the beat
         //gm.noteSpeed = pm.pathLength / (tc.timeToWait * tc.noteTimeToArriveMult);
-        gm.noteSpeed = pm.pathLength / (tc.secPerBeat * tc.beatsShownInAdvance);
+        gm.noteSpeed = pm.pathLength / (tc.secPerBeat * tc.noteTimeTaken);
 
         if (t <= 1)
         {
@@ -165,7 +166,6 @@ public class Note : MonoBehaviour
                             new Vector3(transform.position.x, transform.position.y, player.transform.position.z), t);
             transform.position = pos;
         }
-
 
         newGoalTime = goalTime - startTime;
 
@@ -185,16 +185,15 @@ public class Note : MonoBehaviour
 
         if (doneOnce2 && !doneOnce3)
         {
-            Debug.Log(newGoalTime);
             doneOnce3 = true;
-            Debug.Log("Note Landing frame count " + Time.frameCount);
+            //Debug.Log("Note Landing frame count " + Time.frameCount);
         }
 
         if (hitEnd)
         {
             hitEnd = false;
 
-            Invoke("DestroyNote", (tc.secPerBeat * tc.beatsShownInAdvance) / 3);
+            Invoke("DestroyNote", (tc.secPerBeat * tc.noteTimeTaken) / 3);
         }
     }
     void DestroyNote()

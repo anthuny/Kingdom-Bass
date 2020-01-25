@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public Rigidbody rb;
     private Gamemode gm;
     private PathManager pm;
+    private TrackCreator tc;
 
     private float pathWidth;
 
@@ -15,6 +16,8 @@ public class Player : MonoBehaviour
     private bool movingLeft;
     [HideInInspector]
     public int nearestLaneNumber;
+
+    private bool passedBeat;
 
     bool playerHitLaunch;
 
@@ -25,6 +28,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         gm = FindObjectOfType<Gamemode>();
         pm = FindObjectOfType<PathManager>();
+        tc = FindObjectOfType<TrackCreator>();
 
         pathWidth = pm.initialPath.GetComponent<Path>().pathWidth;
     }
@@ -137,14 +141,52 @@ public class Player : MonoBehaviour
         // Functionality of moving right
         if (movingRight)
         {
+            float a = tc.trackPosInBeats - tc.m_LastBeat;
+            float b = tc.nextBeat - tc.trackPosInBeats;
+            if (a > b)
+            {
+                passedBeat = true;
+            }
+            else
+            {
+                passedBeat = false;
+            }
+
+            Debug.Log("trackPosInbeats is " + tc.trackPosInBeats);
+            Debug.Log("a is " + a);
+            Debug.Log("b is " + b);
+            if (passedBeat)
+            {
+                Debug.Log(tc.trackPosInBeats);
+            }
+            //Debug.Log(passedBeat);
             movingLeft = false;
             rb.AddForce(Vector3.right * gm.playerEvadeStr);
+            
         }
 
 
         // Functionality of moving left
         if (movingLeft)
         {
+            /*
+            float a = tc.trackPosInBeats - tc.m_LastBeat;
+            float b = tc.nextBeat - tc.trackPosInBeats;
+            if (a > b)
+            {
+                passedBeat = true;
+            }
+            else
+            {
+                passedBeat = false;
+            }
+
+            if (passedBeat)
+            {
+                Debug.Log(tc.trackPosInBeats);
+            }
+            Debug.Log(passedBeat);
+            */
             movingRight = false;
             rb.AddForce(Vector3.left * gm.playerEvadeStr);
         }
