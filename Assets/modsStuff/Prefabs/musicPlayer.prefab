@@ -1,0 +1,3244 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &326448063
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 326448064}
+  - component: {fileID: 326448065}
+  m_Layer: 0
+  m_Name: path4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &326448064
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326448063}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4233956582565266498}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &326448065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326448063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bcfd659583d1be4990b163aab0c2b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabNote: {fileID: 4334764893633965273, guid: bc768a359bf8ecb46a3cdb6a4e6223c8,
+    type: 3}
+--- !u!1 &1557588379
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1557588380}
+  - component: {fileID: 1557588381}
+  m_Layer: 0
+  m_Name: path2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1557588380
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557588379}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4233956582565266498}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1557588381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557588379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bcfd659583d1be4990b163aab0c2b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabNote: {fileID: 1768020541579866389, guid: bd5c20a3da0b1f4499e5f36de939dd38,
+    type: 3}
+--- !u!1 &1632744960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1632744961}
+  - component: {fileID: 1632744962}
+  m_Layer: 0
+  m_Name: path1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1632744961
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632744960}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4233956582565266498}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1632744962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632744960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bcfd659583d1be4990b163aab0c2b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabNote: {fileID: 8463792665588460583, guid: 394cfa325cddb7c4daca39e54cbfed9f,
+    type: 3}
+--- !u!1 &1729681048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1729681049}
+  - component: {fileID: 1729681050}
+  m_Layer: 0
+  m_Name: path3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1729681049
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729681048}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4233956582565266498}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1729681050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729681048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bcfd659583d1be4990b163aab0c2b63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabNote: {fileID: 3098952619117584364, guid: df80958c20f7d8343beac38ce677dae0,
+    type: 3}
+--- !u!1 &5639695436972215213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4233956582565266498}
+  - component: {fileID: 4420718246814448759}
+  m_Layer: 0
+  m_Name: musicPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4233956582565266498
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5639695436972215213}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 14.873153, y: 11.329824, z: 24.554605}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1632744961}
+  - {fileID: 1557588380}
+  - {fileID: 1729681049}
+  - {fileID: 326448064}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4420718246814448759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5639695436972215213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77ac47e33da7f6c419a0fdeb1a0ec7b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicAsset: {fileID: 11400000, guid: 74a47d60e5d823147a34d9a5f71f0c3b, type: 2}
+  music: {fileID: 8300000, guid: 6c2e85d421054674ab8c172134a31fb2, type: 3}
+  pathPrefabs:
+  - {fileID: 1632744962}
+  - {fileID: 1557588381}
+  - {fileID: 1729681050}
+  - {fileID: 326448065}
+  pathSpread: 2
+  pathLength: 10
+  notes:
+  - spawnTime: 0
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 0.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 1
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 1.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 2
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 2.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 3
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 3.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 4
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 4.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 5.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 6
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 6.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 7
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 7.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 8
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 8.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 9
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 9.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 10
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 10.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 11
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 11.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 12
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 12.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 13
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 13.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 14
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 14.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 15
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 15.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 16
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 16.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 17
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 17.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 18
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 18.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 19
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 19.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 20
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 20.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 21
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 21.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 22
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 22.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 23
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 23.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 24
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 24.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 25
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 25.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 26
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 26.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 27
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 27.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 28
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 28.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 29
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 29.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 30
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 30.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 31
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 31.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 32
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 32.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 33
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 33.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 34
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 34.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 35
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 35.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 36
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 36.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 37
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 37.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 38
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 38.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 39
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 39.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 40
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 40.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 41
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 41.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 42
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 42.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 43
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 43.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 44
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 44.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 45
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 45.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 46
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 46.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 47
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 47.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 48
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 48.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 49
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 49.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 50
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 50.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 51
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 51.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 52
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 52.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 53
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 53.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 54
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 54.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 55
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 55.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 56
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 56.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 57
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 57.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 58
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 58.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 59
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 59.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 60
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 60.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 61
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 61.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 62
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 62.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 63
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 63.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 64
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 64.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 65
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 65.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 66
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 66.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 67
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 67.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 68
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 68.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 69
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 69.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 70
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 70.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 71
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 71.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 72
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 72.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 73
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 73.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 74
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 74.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 75
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 75.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 76
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 76.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 77
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 77.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 78
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 78.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 79
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 79.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 80
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 80.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 81
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 81.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 82
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 82.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 83
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 83.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 84
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 84.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 85
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 85.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 86
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 86.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 87
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 87.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 88
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 88.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 89
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 89.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 90
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 90.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 91
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 91.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 92
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 92.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 93
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 93.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 94
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 94.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 95
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 95.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 96
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 96.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 97
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 97.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 98
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 98.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 99
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 99.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 100
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 100.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 101
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 101.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 102
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 102.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 103
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 103.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 104
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 104.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 105
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 105.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 106
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 106.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 107
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 107.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 108
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 108.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 109
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 109.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 110
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 110.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 111
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 111.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 112
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 112.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 113
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 113.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 114
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 114.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 115
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 115.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 116
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 116.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 117
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 117.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 118
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 118.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 119
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 119.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 120
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 120.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 121
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 121.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 122
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 122.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 123
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 123.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 124
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 124.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 125
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 125.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 126
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 126.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 127
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 127.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 128
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 128.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 129
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 129.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 130
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 130.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 131
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 131.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 132
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 132.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 133
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 133.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 134
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 134.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 135
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 135.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 136
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 136.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 137
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 137.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 138
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 138.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 139
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 139.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 140
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 140.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 141
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 141.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 142
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 142.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 143
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 143.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 144
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 144.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 145
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 145.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 146
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 146.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 147
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 147.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 148
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 148.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 149
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 149.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 150
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 150.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 151
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 151.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 152
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 152.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 153
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 153.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 154
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 154.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 155
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 155.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 156
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 156.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 157
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 157.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 158
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 158.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 159
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 159.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 160
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 160.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 161
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 161.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 162
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 162.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 163
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 163.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 164
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 164.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 165
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 165.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 166
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 166.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 167
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 167.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 168
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 168.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 169
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 169.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 170
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 170.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 171
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 171.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 172
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 172.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 173
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 173.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 174
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 174.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 175
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 175.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 176
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 176.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 177
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 177.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 178
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 178.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 179
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 179.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 180
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 180.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 181
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 181.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 182
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 182.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 183
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 183.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 184
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 184.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 185
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 185.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 186
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 186.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 187
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 187.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 188
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 188.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 189
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 189.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 190
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 190.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 191
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 191.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 192
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 192.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 193
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 193.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 194
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 194.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 195
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 195.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 196
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 196.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 197
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 197.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 198
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 198.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 199
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 199.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 200
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 200.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 201
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 201.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 202
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 202.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 203
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 203.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 204
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 204.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 205
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 205.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 206
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 206.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 207
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 207.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 208
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 208.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 209
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 209.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 210
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 210.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 211
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 211.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 212
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 212.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 213
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 213.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 214
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 214.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 215
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 215.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 216
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 216.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 217
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 217.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 218
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 218.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 219
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 219.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 220
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 220.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 221
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 221.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 222
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 222.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 223
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 223.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 224
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 224.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 225
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 225.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 226
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 226.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 227
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 227.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 228
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 228.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 229
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 229.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 230
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 230.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 231
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 231.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 232
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 232.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 233
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 233.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 234
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 234.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 235
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 235.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 236
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 236.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 237
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 237.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 238
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 238.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 239
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 239.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 240
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 240.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 241
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 241.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 242
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 242.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 243
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 243.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 244
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 244.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 245
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 245.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 246
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 246.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 247
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 247.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 248
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 248.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 249
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 249.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 250
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 250.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 251
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 251.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 252
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 252.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 253
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 253.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 254
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 254.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 255
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 255.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 256
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 256.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 257
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 257.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 258
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 258.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 259
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 259.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 260
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 260.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 261
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 261.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 262
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 262.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 263
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 263.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 264
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 264.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 265
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 265.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 266
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 266.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 267
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 267.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 268
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 268.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 269
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 269.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 270
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 270.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 271
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 271.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 272
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 272.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 273
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 273.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 274
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 274.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 275
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 275.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 276
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 276.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 277
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 277.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 278
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 278.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 279
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 279.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 280
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 280.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 281
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 281.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 282
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 282.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 283
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 283.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 284
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 284.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 285
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 285.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 286
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 286.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 287
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 287.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 288
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 288.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 289
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 289.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 290
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 290.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 291
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 291.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 292
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 292.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 293
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 293.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 294
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 294.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 295
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 295.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 296
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 296.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 297
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 297.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 298
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 298.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 299
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 299.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 300
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 300.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 301
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 301.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 302
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 302.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 303
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 303.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 304
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 304.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 305
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 305.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 306
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 306.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 307
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 307.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 308
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 308.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 309
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 309.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 310
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 310.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 311
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 311.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 312
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 312.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 313
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 313.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 314
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 314.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 315
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 315.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 316
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 316.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 317
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 317.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 318
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 318.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 319
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 319.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 320
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 320.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 321
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 321.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 322
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 322.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 323
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 323.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 324
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 324.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 325
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 325.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 326
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 326.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 327
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 327.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 328
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 328.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 329
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 329.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 330
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 330.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 331
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 331.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 332
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 332.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 333
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 333.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 334
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 334.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 335
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 335.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 336
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 336.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 337
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 337.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 338
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 338.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 339
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 339.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 340
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 340.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 341
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 341.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 342
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 342.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 343
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 343.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 344
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 344.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 345
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 345.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 346
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 346.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 347
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 347.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 348
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 348.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 349
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 349.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 350
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 350.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 351
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 351.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 352
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 352.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 353
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 353.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 354
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 354.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 355
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 355.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 356
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 356.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 357
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 357.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 358
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 358.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 359
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 359.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 360
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 360.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 361
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 361.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 362
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 362.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 363
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 363.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 364
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 364.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 365
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 365.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 366
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 366.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 367
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 367.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 368
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 368.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 369
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 369.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 370
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 370.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 371
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 371.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 372
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 372.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 373
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 373.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 374
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 374.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 375
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 375.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 376
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 376.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 377
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 377.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 378
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 378.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 379
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 379.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 380
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 380.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 381
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 381.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 382
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 382.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 383
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 383.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 384
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 384.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 385
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 385.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 386
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 386.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 387
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 387.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 388
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 388.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 389
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 389.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 390
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 390.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 391
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 391.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 392
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 392.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 393
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 393.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 394
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 394.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 395
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 395.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 396
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 396.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 397
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 397.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 398
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 398.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 399
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 399.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 400
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 400.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 401
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 401.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 402
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 402.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 403
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 403.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 404
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 404.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 405
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 405.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 406
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 406.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 407
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 407.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 408
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 408.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 409
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 409.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 410
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 410.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 411
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 411.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 412
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 412.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 413
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 413.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 414
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 414.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 415
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 415.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 416
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 416.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 417
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 417.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 418
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 418.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 419
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 419.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 420
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 420.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 421
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 421.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 422
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 422.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 423
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 423.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 424
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 424.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 425
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 425.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 426
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 426.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 427
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 427.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 428
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 428.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 429
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 429.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 430
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 430.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 431
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 431.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 432
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 432.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 433
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 433.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 434
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 434.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 435
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 435.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 436
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 436.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 437
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 437.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 438
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 438.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 439
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 439.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 440
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 440.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 441
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 441.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 442
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 442.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 443
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 443.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 444
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 444.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 445
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 445.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 446
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 446.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 447
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 447.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 448
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 448.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 449
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 449.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 450
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 450.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 451
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 451.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 452
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 452.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 453
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 453.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 454
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 454.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 455
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 455.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 456
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 456.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 457
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 457.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 458
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 458.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 459
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 459.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 460
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 460.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 461
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 461.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 462
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 462.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 463
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 463.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 464
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 464.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 465
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 465.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 466
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 466.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 467
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 467.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 468
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 468.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 469
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 469.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 470
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 470.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 471
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 471.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 472
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 472.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 473
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 473.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 474
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 474.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 475
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 475.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 476
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 476.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 477
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 477.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 478
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 478.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 479
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 479.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 480
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 480.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 481
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 481.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 482
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 482.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 483
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 483.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 484
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 484.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 485
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 485.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 486
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 486.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 487
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 487.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 488
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 488.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 489
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 489.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 490
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 490.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 491
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 491.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 492
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 492.5
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 493
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 493.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 494
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 494.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 495
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 495.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 496
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 496.5
+    duration: 1
+    pathIndex: 1
+  - spawnTime: 497
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 497.5
+    duration: 1
+    pathIndex: 2
+  - spawnTime: 498
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 498.5
+    duration: 1
+    pathIndex: 3
+  - spawnTime: 499
+    duration: 1
+    pathIndex: 0
+  - spawnTime: 499.5
+    duration: 1
+    pathIndex: 0
+  firstNoteDelay: 6.2
+  editorNumBeats: 1000
+  editorBeatTime: 0.5
+  editorNumPaths: 4
+  editorNoteDuration: 1
