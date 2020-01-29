@@ -920,6 +920,12 @@ MonoBehaviour:
   horizontalNoteArrowC: {r: 0.3820755, g: 0.64505035, b: 1, a: 1}
   horizontalLaunchArrowC: {r: 0, g: 1, b: 0.023826122, a: 1}
   upArrowC: {r: 1, g: 0, b: 0, a: 1}
+  perfectMin: 0.8
+  goodMin: 0.65
+  badMin: 0.5
+  goodMax: 0.89
+  badMax: 0
+  missMax: 0
 --- !u!4 &1393232046
 Transform:
   m_ObjectHideFlags: 0
@@ -967,6 +973,7 @@ MonoBehaviour:
   noteCode: a
   allNotes: []
   noteEighthCount: 
+  trackPosIntervalsList: []
   notes: {fileID: 476736891}
   noteVisual: {fileID: 4428141960108257961, guid: 092feb7ed049b264e9d373ba68cdde59,
     type: 3}
@@ -977,16 +984,14 @@ MonoBehaviour:
   secPerBeat: 0
   trackPos: 0
   trackPosInBeats: 0
+  trackPosInBeatsGame: 0
   dspTrackTime: 0
   audioSource: {fileID: 1393232048}
-  beatsBeforeStart: 1
-  noteTimeTaken: 3
-  noteSpawnFrequency: 1
+  beatsBeforeStart: 2
+  noteTimeTaken: 6
   noteHitBoxDifficult: 5
-  timeToWait: 0
-  m_LastBeat: 0
   nextBeat: 0
-  currentBeat: 0
+  trackPosIntervals: 0
 --- !u!82 &1393232048
 AudioSource:
   m_ObjectHideFlags: 0

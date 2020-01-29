@@ -31,8 +31,6 @@ public class Note : MonoBehaviour
     public int laneNumber;
     [HideInInspector]
     public float percDistance;
-     
-    public GameObject leftWall, rightWall, forwardWall;
 
     bool hitEnd;
 
@@ -41,12 +39,7 @@ public class Note : MonoBehaviour
 
     public Vector3 playerPos;
 
-    private float t;
-
-
     private float startTime;
-    private float goalTime;
-    private float newGoalTime;
     private float curTime = 0;
 
     public bool canMove;
@@ -64,23 +57,6 @@ public class Note : MonoBehaviour
         player = FindObjectOfType<Player>();
         noteRend = meshRendererRef.GetComponent<Renderer>();
         noteWidth = noteRend.bounds.size.z;
-
-        leftWall.SetActive(false);
-        rightWall.SetActive(false);
-        forwardWall.SetActive(false);
-
-        // Declare wallLengths to be the z value of the leftWall gameobject
-        rend = leftWall.GetComponent<Renderer>();
-        wallLengths = rend.bounds.size.z;
-
-        // Set the size of the wall to be based off the noteTimeToArriveMult (the smaller the value, the larger the walls).
-        wallLengths /= tc.noteTimeTaken / tc.noteHitBoxDifficult;
-
-        Vector3 scale = leftWall.transform.localScale;
-        scale.z = wallLengths;
-        leftWall.transform.localScale = scale;
-        rightWall.transform.localScale = scale;
-
 
         //Determine the direction of the arrow on the note
         switch (arrowDir)
@@ -102,7 +78,6 @@ public class Note : MonoBehaviour
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalLaunchArrowC;
                 }
 
-                rightWall.SetActive(true);
                 break;
 
             case "right":
@@ -121,7 +96,7 @@ public class Note : MonoBehaviour
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalLaunchArrowC;
                 }
 
-                leftWall.SetActive(true);
+
                 break;
 
             case "up":
@@ -129,7 +104,7 @@ public class Note : MonoBehaviour
                     
                 transform.GetChild(1).GetComponentInChildren<Image>().sprite = upArrow;
                 transform.GetChild(1).GetComponentInChildren<Image>().color = gm.upArrowC;
-                forwardWall.SetActive(true);
+
                 break;
 
             default:

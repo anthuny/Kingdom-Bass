@@ -11,7 +11,6 @@ public class PathManager : MonoBehaviour
     public Vector3 initialPathSpawnLoc;
     [HideInInspector]
     public float pathLength;
-    bool justSpawnedPaths;
     private GameObject pathToDestroy;
     private Gamemode gm;
 
@@ -153,7 +152,6 @@ public class PathManager : MonoBehaviour
         if (oldNearestPath != nearestPath)
         {
             oldNearestPath = nearestPath;
-            justSpawnedPaths = false;
 
             //Remove all elements inside the pathNumbers list for the current segment
             laneNumbers.Clear();

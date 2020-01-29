@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Xml;
-using System.Linq;
+using UnityEngine;
 
 public class TrackCreator : MonoBehaviour
 {
@@ -21,6 +19,7 @@ public class TrackCreator : MonoBehaviour
 
     public List<float> allNotes = new List<float>();
     public List<int> noteEighthCount = new List<int>();
+    public List<float> trackPosIntervalsList = new List<float>();
 
     public GameObject notes;
     public GameObject noteVisual;
@@ -34,26 +33,21 @@ public class TrackCreator : MonoBehaviour
     public float secPerBeat;
     public float trackPos;
     public float trackPosInBeats;
+    public float trackPosInBeatsGame;
     public float dspTrackTime;
     public AudioSource audioSource;
 
     float lastBeat;
 
-    private float t = 0;
+    private int nextIndex = 0;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
     public int beatsBeforeStart;
     [Tooltip("The amount of beats that must happen for the note to get to the end")]
     public float noteTimeTaken;
-    [Tooltip("The amount of beats for a note to spawn")]
-    public float noteSpawnFrequency;
     [Tooltip("As this number is lowered, the window of opportunity for hitting notes is smaller")]
     public float noteHitBoxDifficult;
 
-    private bool canStart;
-
-    private float timer;
-    public float timeToWait;
     //bool doneOnce;
     GameObject player;
     //bool inIntro;
@@ -63,13 +57,11 @@ public class TrackCreator : MonoBehaviour
 
     XmlDocument levelDataXml;
 
-
-    private int nextIndex = 0;
-    int nextIndex2 = 0;
-
-    public float m_LastBeat;
+    [HideInInspector]
     public float nextBeat;
-    public float currentBeat;
+
+    private float a;
+    public float trackPosIntervals;
     private void Awake()
     {
         TextAsset xmlTextAsset = Resources.Load<TextAsset>("LevelData");
@@ -243,39 +235,43 @@ public class TrackCreator : MonoBehaviour
 
         trackPos = (float)(AudioSettings.dspTime - dspTrackTime);
 
-        // Determine how many beats since the song started
+        // Determine how many beats since the track started
         trackPosInBeats = (trackPos / secPerBeat) + 1;
-        
+
+        // Determine how many beats since the game started
+        trackPosInBeatsGame = trackPosInBeats - beatsBeforeStart;
+
         // TODO - beats before start is currently broken. It spawns 2 notes when the value is too high
         // And doesn't work correctly when the value is too low
-        if (audioSource.isPlaying && trackPosInBeats > beatsBeforeStart)
-        {
-            canStart = true;
-            //Debug.Log(trackPosInBeats);
-        }
-        if (audioSource.isPlaying && canStart)
-        {
 
+        if (audioSource.isPlaying)
+        {
             // Wait for secPerBeat * individual note intival to spawn a note
             // Ensure no notes spawn beyond the last
             // Ensures intro is over before starting
 
             // - WIP - this works perfectly I think. Just need to change how notes move to interpolation
-            if (trackPos > (lastBeat + secPerBeat) * noteSpawnFrequency)
+            if (trackPos > (lastBeat + ((beatsBeforeStart - 1 ) * secPerBeat)) + (secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat)))
             {
-                lastBeat += secPerBeat;
-
                 AssignNotes();
 
-                currentBeat = Mathf.FloorToInt(trackPosInBeats);
+                lastBeat += secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
 
-                //Debug.Log("Beat " + trackPos);
+                trackPosIntervals += (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
 
+                trackPosIntervalsList.Add(trackPosIntervals);
+
+                // Make sure this is after everything else that needs to use the current next index
+                nextIndex++;
+
+                nextBeat = a * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat) + (1 * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat));
+
+                //Debug.Log("nextbeat " + nextBeat);
+                //Debug.Log("trackPosInBeatsGame + " + trackPosInBeatsGame);
+
+                Debug.Log(trackPosIntervals);
             }
-
-            nextBeat = currentBeat + 1;
-            m_LastBeat = currentBeat;
-        }       
+        }
     }
 
     class GetNote

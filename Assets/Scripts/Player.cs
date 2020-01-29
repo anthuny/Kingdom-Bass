@@ -171,8 +171,25 @@ public class Player : MonoBehaviour
 
     private void CheckHitAccuracy()
     {
-        float pointFromLastBeat = tc.trackPosInBeats - tc.m_LastBeat;
-        float pointToNextBeat = tc.nextBeat - tc.trackPosInBeats;
+        float pointFromLastBeat = (tc.trackPosIntervalsList[0]) - (tc.trackPosInBeatsGame - tc.noteTimeTaken);
+        float pointToNextBeat = (tc.nextBeat - tc.trackPosInBeatsGame);
+
+
+        Debug.Log("pointFrom " + pointFromLastBeat);
+        Debug.Log("trackPosInBeatsGame + " + tc.trackPosInBeatsGame);
+        Debug.Log("answer to ^ + " + (tc.trackPosInBeatsGame - tc.noteTimeTaken));
+        Debug.Log("trackPosIntervals + " + tc.trackPosIntervalsList[0]);
+
+        tc.trackPosIntervalsList.RemoveAt(0);
+
+
+
+        // Debug for next beat
+
+        Debug.Log("PointTo " + pointToNextBeat);
+        //Debug.Log("next beat " + tc.nextBeat);
+        //Debug.Log("trackPosInBeatsGame + " + tc.trackPosInBeatsGame);
+
         if (pointFromLastBeat > pointToNextBeat)
         {
             if (pointFromLastBeat >= gm.perfectMin && pointFromLastBeat < 1)

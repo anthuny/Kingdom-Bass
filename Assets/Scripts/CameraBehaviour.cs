@@ -5,12 +5,7 @@ using UnityEngine;
 public class CameraBehaviour : MonoBehaviour
 {
     Gamemode gm;
-    bool doneOnce;
-    bool retracting;
-    string direction;
     Vector3 rot;
-    float t;
-    float t2;
 
     public iTween.EaseType easeType;
     public iTween.LoopType loopType;
@@ -29,8 +24,6 @@ public class CameraBehaviour : MonoBehaviour
 
     public IEnumerator RollCamera(string dir)
     {
-        doneOnce = true;
-        direction = dir;
         if (dir == "left")
         {
             iTween.RotateTo(this.gameObject, iTween.Hash("z", -gm.launchRotAmount, "time", gm.launchRotTime, "easytype", easeType, "looptype", loopType));
