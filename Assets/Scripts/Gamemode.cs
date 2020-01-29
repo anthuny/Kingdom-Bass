@@ -25,7 +25,12 @@ public class Gamemode : MonoBehaviour
 
     public float distPercArrowLock;
 
+    public int targetFps;
+
     public Text scoreText;
+
+    public float currentFps;
+    public Text fpsCounterText;
     public float launchRotAmount;
     public float launchRotTime;
 
@@ -33,14 +38,35 @@ public class Gamemode : MonoBehaviour
     public Color horizontalLaunchArrowC;
     public Color upArrowC;
 
+    [Range(0, 1)]
+    [Header("The MINIMUM point of how accurate the note must be hit for a PERFECT. 0 - 1")] 
+    public float perfectMin;
+    [Range(0, 1)]
+    [Header("The MINIMUM point of how accurate the note must be hit for a GOOD. 0 - 1")]
+    public float goodMin;
+
+    [Range(0, 1)]
+    [Header("The MINIMUM point of how accurate the note must be hit for a BAD. 0 - 1")]
+    public float badMin;
+
+    [HideInInspector]
+    public float goodMax, badMax, missMax;
+
     // Start is called before the first frame update
     void Start()
     {
+        QualitySettings.vSyncCount = 0;
+
         player = FindObjectOfType<Player>().gameObject;
         jet = FindObjectOfType<Jet>().gameObject;
 
         UpdateUI();
 
+        Application.targetFrameRate = targetFps;
+
+        goodMax = perfectMin - 0.01f;
+        badMax = goodMax - 0.01f;
+        missMax = badMax - 0.01f;
     }
 
     // Update is called once per frame
@@ -56,6 +82,9 @@ public class Gamemode : MonoBehaviour
             oldScore = score;
             UpdateUI();
         }
+
+        currentFps = 1.0f / Time.deltaTime;
+        fpsCounterText.text = "FPS | " + (int)currentFps;
     }
 
     void UpdateUI()

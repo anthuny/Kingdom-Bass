@@ -263,25 +263,18 @@ public class TrackCreator : MonoBehaviour
             // - WIP - this works perfectly I think. Just need to change how notes move to interpolation
             if (trackPos > (lastBeat + secPerBeat) * noteSpawnFrequency)
             {
-
-                //Debug.Log("beat");
-                //Debug.Log("trackPos is " + trackPos);
-                //Debug.Log("LastBeat is " + lastBeat);
-                //Debug.Log("SecperBeat is " + secPerBeat);
-                //Debug.Log("Beat happened " + trackPos);
-
-
                 lastBeat += secPerBeat;
 
                 AssignNotes();
 
                 currentBeat = Mathf.FloorToInt(trackPosInBeats);
+
+                //Debug.Log("Beat " + trackPos);
+
             }
 
             nextBeat = currentBeat + 1;
             m_LastBeat = currentBeat;
-            //Debug.Log("next beat " + nextBeat);
-            //Debug.Log("m_Last beat " + m_LastBeat);
         }       
     }
 

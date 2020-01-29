@@ -51,6 +51,10 @@ public class Note : MonoBehaviour
 
     public bool canMove;
 
+    public GameObject meshRendererRef;
+    private Renderer noteRend;
+    private float noteWidth;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,6 +62,8 @@ public class Note : MonoBehaviour
         tc = FindObjectOfType<TrackCreator>();
         gm = FindObjectOfType<Gamemode>();
         player = FindObjectOfType<Player>();
+        noteRend = meshRendererRef.GetComponent<Renderer>();
+        noteWidth = noteRend.bounds.size.z;
 
         leftWall.SetActive(false);
         rightWall.SetActive(false);
@@ -140,17 +146,10 @@ public class Note : MonoBehaviour
             return;
         }
 
-
-
         if (canMove && !doneOnce)
         {
             doneOnce = true;
-            //Debug.Log("Note spawned " + Time.frameCount);
-
             startTime = tc.trackPos;
-            //Debug.Log("startTime is " + startTime);
-            goalTime = startTime + (tc.secPerBeat * tc.noteTimeTaken);
-            //Debug.Log("goalTime is " + goalTime);
         }
         // Calculate the percantage of completion of the note on the lane
         percDistance = Mathf.Abs((transform.position.z - player.transform.position.z) / pm.pathLength) * 100;
@@ -159,23 +158,22 @@ public class Note : MonoBehaviour
         //gm.noteSpeed = pm.pathLength / (tc.timeToWait * tc.noteTimeToArriveMult);
         gm.noteSpeed = pm.pathLength / (tc.secPerBeat * tc.noteTimeTaken);
 
-        if (t <= 1)
+        if (curTime <= 1 && !doneOnce2)
         {
+            curTime = Mathf.Clamp01((tc.trackPos - startTime) / (tc.noteTimeTaken * tc.secPerBeat));
+
             Vector3 pos;
+            // Interpolate the note between the edge of the note, to the edge of the player (closest edges from eachother, based on curTime)
+
             pos = Vector3.Lerp(new Vector3(transform.position.x, transform.position.y, startingPos.z),
-                            new Vector3(transform.position.x, transform.position.y, player.transform.position.z), t);
+                            new Vector3(transform.position.x, transform.position.y, player.transform.position.z), curTime);
             transform.position = pos;
         }
 
-        newGoalTime = goalTime - startTime;
+        //newGoalTime = goalTime - startTime;
 
-        if (curTime <= newGoalTime)
-        {
-            curTime += Time.deltaTime;
-            t = curTime / newGoalTime;
-        }
 
-        if (t >= 1)
+        if (curTime >= 1)
         {
 
             doneOnce2 = true;
@@ -186,7 +184,7 @@ public class Note : MonoBehaviour
         if (doneOnce2 && !doneOnce3)
         {
             doneOnce3 = true;
-            //Debug.Log("Note Landing frame count " + Time.frameCount);
+            //Debug.Log("Note Landing " + tc.trackPos);
         }
 
         if (hitEnd)

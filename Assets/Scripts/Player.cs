@@ -21,6 +21,9 @@ public class Player : MonoBehaviour
 
     bool playerHitLaunch;
 
+    private Renderer rend;
+    public float playerWidth;
+
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +32,9 @@ public class Player : MonoBehaviour
         gm = FindObjectOfType<Gamemode>();
         pm = FindObjectOfType<PathManager>();
         tc = FindObjectOfType<TrackCreator>();
+
+        rend = GetComponentInChildren<Renderer>();
+        playerWidth = rend.bounds.size.z;   
 
         pathWidth = pm.initialPath.GetComponent<Path>().pathWidth;
     }
@@ -71,7 +77,11 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown("d") && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber)
         {
             movingRight = true;
-            //print(pm.maxPathNumber);
+            if (!passedBeat)
+            {
+                passedBeat = true;
+                CheckHitAccuracy();
+            }
         }
 
         // If:
@@ -81,6 +91,11 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown("a") && !movingRight && !movingLeft && nearestLaneNumber != 1)
         {
             movingLeft = true;
+            if (!passedBeat)
+            {
+                passedBeat = true;
+                CheckHitAccuracy();
+            }
         }
     }
 
@@ -140,58 +155,69 @@ public class Player : MonoBehaviour
 
         // Functionality of moving right
         if (movingRight)
-        {
-            float a = tc.trackPosInBeats - tc.m_LastBeat;
-            float b = tc.nextBeat - tc.trackPosInBeats;
-            if (a > b)
-            {
-                passedBeat = true;
-            }
-            else
-            {
-                passedBeat = false;
-            }
-
-            Debug.Log("trackPosInbeats is " + tc.trackPosInBeats);
-            Debug.Log("a is " + a);
-            Debug.Log("b is " + b);
-            if (passedBeat)
-            {
-                Debug.Log(tc.trackPosInBeats);
-            }
-            //Debug.Log(passedBeat);
+        {        
             movingLeft = false;
-            rb.AddForce(Vector3.right * gm.playerEvadeStr);
-            
+            rb.AddForce(Vector3.right * gm.playerEvadeStr);          
         }
 
 
         // Functionality of moving left
         if (movingLeft)
         {
-            /*
-            float a = tc.trackPosInBeats - tc.m_LastBeat;
-            float b = tc.nextBeat - tc.trackPosInBeats;
-            if (a > b)
-            {
-                passedBeat = true;
-            }
-            else
-            {
-                passedBeat = false;
-            }
-
-            if (passedBeat)
-            {
-                Debug.Log(tc.trackPosInBeats);
-            }
-            Debug.Log(passedBeat);
-            */
             movingRight = false;
             rb.AddForce(Vector3.left * gm.playerEvadeStr);
         }
     }
 
+    private void CheckHitAccuracy()
+    {
+        float pointFromLastBeat = tc.trackPosInBeats - tc.m_LastBeat;
+        float pointToNextBeat = tc.nextBeat - tc.trackPosInBeats;
+        if (pointFromLastBeat > pointToNextBeat)
+        {
+            if (pointFromLastBeat >= gm.perfectMin && pointFromLastBeat < 1)
+            {
+                Debug.Log("Perfect");
+            }
+            else if (pointFromLastBeat >= gm.goodMin && pointFromLastBeat <= gm.perfectMin)
+            {
+                Debug.Log("Good");
+            }
+            else if (pointFromLastBeat >= gm.badMin && pointFromLastBeat <= gm.goodMin)
+            {
+                Debug.Log("Bad");
+            }
+            else if (pointFromLastBeat <= gm.badMin)
+            {
+                Debug.Log("Miss");
+            }
+        }
+        else if (pointToNextBeat > pointFromLastBeat)
+        {
+            if (pointToNextBeat >= gm.perfectMin && pointToNextBeat < 1)
+            {
+                Debug.Log("Perfect");
+            }
+            else if (pointToNextBeat >= gm.goodMin && pointToNextBeat <= gm.perfectMin)
+            {
+                Debug.Log("Good");
+            }
+            else if (pointToNextBeat >= gm.badMin && pointToNextBeat <= gm.goodMin)
+            {
+                Debug.Log("Bad");
+            }
+            else if (pointToNextBeat <= gm.badMin)
+            {
+                Debug.Log("Miss");
+            }
+        }
+
+        passedBeat = false;
+
+        //Debug.Log("trackPosInbeats is " + tc.trackPosInBeats);
+        //Debug.Log("a is " + a);
+        //Debug.Log("b is " + b);
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.tag == "Note")
