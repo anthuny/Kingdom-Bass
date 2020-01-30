@@ -28,9 +28,14 @@ public class Gamemode : MonoBehaviour
     public int targetFps;
 
     public Text scoreText;
+    public Text fpsCounterText;
+    public Text perfectsText;
+    public Text goodsText;
+    public Text badsText;
+    public Text missesText;
 
     public float currentFps;
-    public Text fpsCounterText;
+
     public float launchRotAmount;
     public float launchRotTime;
 
@@ -52,6 +57,17 @@ public class Gamemode : MonoBehaviour
     [HideInInspector]
     public float goodMax, badMax, missMax;
 
+    [HideInInspector]
+    public int perfects, goods, bads, misses;
+
+    [Header("Accuracy Score Amounts")]
+    public int perfectScore;
+    public int goodScore;
+    public int badScore;
+    public int missScore;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -64,9 +80,13 @@ public class Gamemode : MonoBehaviour
 
         Application.targetFrameRate = targetFps;
 
-        goodMax = perfectMin - 0.01f;
-        badMax = goodMax - 0.01f;
-        missMax = badMax - 0.01f;
+        goodMax = perfectMin + 0.01f;
+        badMax = goodMax + 0.01f;
+        missMax = badMax + 0.01f;
+
+        perfectMin = 1 - perfectMin;
+        goodMin = 1 - goodMin;
+        badMin = 1 - badMin;
     }
 
     // Update is called once per frame
@@ -90,5 +110,10 @@ public class Gamemode : MonoBehaviour
     void UpdateUI()
     {
         scoreText.text = "Score | " + score.ToString();
+
+        perfectsText.text = "Perfect: " + perfects.ToString();
+        goodsText.text = "Good: " + goods.ToString();
+        badsText.text = "Bad: " + bads.ToString();
+        missesText.text = "Miss: " + misses.ToString();
     }
 }

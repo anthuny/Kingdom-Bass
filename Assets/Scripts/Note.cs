@@ -158,8 +158,16 @@ public class Note : MonoBehaviour
 
         if (doneOnce2 && !doneOnce3)
         {
+            //Debug.Log("note hit end");
             doneOnce3 = true;
-            //Debug.Log("Note Landing " + tc.trackPos);
+
+            // If this note is the 2nd note of all notes ever.
+            // Remove interaval index 0 when it gets to the end of it's path
+            if (tc.notes.transform.GetChild(1).gameObject == this.gameObject)
+            {
+                tc.deadNoteAssigned = true;
+            }
+
         }
 
         if (hitEnd)
@@ -171,7 +179,8 @@ public class Note : MonoBehaviour
     }
     void DestroyNote()
     {
-        Destroy(gameObject);
+        player.activeNotes.Remove(tc.notes.transform.GetChild(0));
+        Destroy(this.gameObject);
     }
 }
 

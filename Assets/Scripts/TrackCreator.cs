@@ -39,7 +39,8 @@ public class TrackCreator : MonoBehaviour
 
     float lastBeat;
 
-    private int nextIndex = 0;
+    [HideInInspector]
+    public int nextIndex = 0;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
     public int beatsBeforeStart;
@@ -48,20 +49,22 @@ public class TrackCreator : MonoBehaviour
     [Tooltip("As this number is lowered, the window of opportunity for hitting notes is smaller")]
     public float noteHitBoxDifficult;
 
-    //bool doneOnce;
     GameObject player;
-    //bool inIntro;
-    
-    //public float noteTimeToArriveMult;
-    //public bool tIsReady;
 
     XmlDocument levelDataXml;
 
     [HideInInspector]
     public float nextBeat;
-
-    private float a;
+    [HideInInspector]
     public float trackPosIntervals;
+    [HideInInspector]
+    public float pointFromLastBeat, pointToNextBeat;
+
+    [HideInInspector]
+    public float firstInterval;
+
+    [HideInInspector]
+    public bool deadNoteAssigned;
     private void Awake()
     {
         TextAsset xmlTextAsset = Resources.Load<TextAsset>("LevelData");
@@ -264,12 +267,31 @@ public class TrackCreator : MonoBehaviour
                 // Make sure this is after everything else that needs to use the current next index
                 nextIndex++;
 
-                nextBeat = a * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat) + (1 * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat));
-
                 //Debug.Log("nextbeat " + nextBeat);
                 //Debug.Log("trackPosInBeatsGame + " + trackPosInBeatsGame);
 
                 Debug.Log(trackPosIntervals);
+            }
+
+            if (trackPosInBeatsGame > noteTimeTaken + firstInterval)
+            {
+                nextBeat = (trackPosIntervalsList[1]);
+                //Debug.Log("index 1 of list is " + nextBeat);
+            }
+            else if (trackPosInBeatsGame < (noteTimeTaken + firstInterval) && trackPosIntervalsList.Count >= 1)
+            {
+                nextBeat = (trackPosIntervalsList[0]);
+                //Debug.Log("index 0 of list is " + nextBeat);
+            }
+            if (trackPosIntervalsList.Count >= 1)
+            {
+                pointFromLastBeat = (trackPosInBeatsGame - (trackPosIntervalsList[0] + noteTimeTaken));
+                pointToNextBeat = ((nextBeat + noteTimeTaken) - trackPosInBeatsGame);
+            }
+
+            if (trackPosIntervalsList.Count == 1)
+            {
+                firstInterval = trackPosIntervalsList[0];
             }
         }
     }
