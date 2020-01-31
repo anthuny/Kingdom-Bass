@@ -41,11 +41,15 @@ public class TrackCreator : MonoBehaviour
 
     [HideInInspector]
     public int nextIndex = 0;
+    [HideInInspector]
+    public float nextIndex2 = 0;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
     public int beatsBeforeStart;
     [Tooltip("The amount of beats that must happen for the note to get to the end")]
     public float noteTimeTaken;
+    [Tooltip("The MAX amount of beats that must happen for the note to get to the end")]
+    public float noteTimeTakenMax;
     [Tooltip("As this number is lowered, the window of opportunity for hitting notes is smaller")]
     public float noteHitBoxDifficult;
 
@@ -61,10 +65,17 @@ public class TrackCreator : MonoBehaviour
     public float pointFromLastBeat, pointToNextBeat;
 
     [HideInInspector]
+    public float pointFromLastBeatInstant, pointFromLastBeatWait;
+
+    [HideInInspector]
     public float firstInterval;
 
     [HideInInspector]
     public bool deadNoteAssigned;
+
+    public bool canGetNote = true;
+
+    //public bool canGetNote = true;
     private void Awake()
     {
         TextAsset xmlTextAsset = Resources.Load<TextAsset>("LevelData");
@@ -73,16 +84,18 @@ public class TrackCreator : MonoBehaviour
     }
 
     void Start()
-    {      
+    {
+        player = FindObjectOfType<Player>().gameObject;
+        gm = FindObjectOfType<Gamemode>();
+        pm = FindObjectOfType<PathManager>();
+
         // Load the audiosource atteched to this gameobject
         audioSource = GetComponent<AudioSource>();
 
         // Calculate the number of seconds in each beat
         secPerBeat = 60f / trackBpm;
 
-        player = FindObjectOfType<Player>().gameObject;
-        gm = FindObjectOfType<Gamemode>();
-        pm = FindObjectOfType<PathManager>();
+        gm.maxTimeBetweenInputs = ((secPerBeat / 5) / (noteTimeTaken / noteTimeTakenMax)) / 3;
 
         // Assign the laneCode array with the actual codes for each lane
         laneCodes[0] = lane1Code;
@@ -95,6 +108,8 @@ public class TrackCreator : MonoBehaviour
         laneCodes[7] = lane8Code;
 
         FindNotes();
+
+        //canGetNote = true;
     }
 
     public void FindNotes()
@@ -256,6 +271,7 @@ public class TrackCreator : MonoBehaviour
             // - WIP - this works perfectly I think. Just need to change how notes move to interpolation
             if (trackPos > (lastBeat + ((beatsBeforeStart - 1 ) * secPerBeat)) + (secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat)))
             {
+
                 AssignNotes();
 
                 lastBeat += secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
@@ -263,14 +279,20 @@ public class TrackCreator : MonoBehaviour
                 trackPosIntervals += (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
 
                 trackPosIntervalsList.Add(trackPosIntervals);
-
+                //nextIndex2 = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat); // this formula only reads the most newest note.
+                nextIndex2 = (noteEighthCount[0] / maxNoteIntervalsEachBeat);
+                //Debug.Log("nextIndex2 On beat " + nextIndex2);
                 // Make sure this is after everything else that needs to use the current next index
                 nextIndex++;
+                //nextIndex2 = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
+
 
                 //Debug.Log("nextbeat " + nextBeat);
                 //Debug.Log("trackPosInBeatsGame + " + trackPosInBeatsGame);
 
-                Debug.Log(trackPosIntervals);
+                //Debug.Log(trackPosIntervals);
+
+
             }
 
             if (trackPosInBeatsGame > noteTimeTaken + firstInterval)
@@ -285,8 +307,8 @@ public class TrackCreator : MonoBehaviour
             }
             if (trackPosIntervalsList.Count >= 1)
             {
+                // Calculate (from 0-1) how far the player currently is from the note BEHIND the player
                 pointFromLastBeat = (trackPosInBeatsGame - (trackPosIntervalsList[0] + noteTimeTaken));
-                pointToNextBeat = ((nextBeat + noteTimeTaken) - trackPosInBeatsGame);
             }
 
             if (trackPosIntervalsList.Count == 1)

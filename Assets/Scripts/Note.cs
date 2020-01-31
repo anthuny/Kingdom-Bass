@@ -155,6 +155,14 @@ public class Note : MonoBehaviour
             transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
             hitEnd = true;
         }
+        if (tc.deadNoteAssigned && doneOnce2 && !doneOnce3)
+        {
+            doneOnce3 = true;
+            tc.trackPosIntervalsList.RemoveAt(0);
+            tc.canGetNote = true;
+            //Debug.Log("removed index 0 of interval list.");
+
+        }
 
         if (doneOnce2 && !doneOnce3)
         {
@@ -166,6 +174,13 @@ public class Note : MonoBehaviour
             if (tc.notes.transform.GetChild(1).gameObject == this.gameObject)
             {
                 tc.deadNoteAssigned = true;
+                tc.trackPosIntervalsList.RemoveAt(0);
+                tc.canGetNote = true;
+            }
+
+            else if (tc.notes.transform.GetChild(0).gameObject == this.gameObject)
+            {
+                tc.canGetNote = true;
             }
 
         }
@@ -179,7 +194,6 @@ public class Note : MonoBehaviour
     }
     void DestroyNote()
     {
-        player.activeNotes.Remove(tc.notes.transform.GetChild(0));
         Destroy(this.gameObject);
     }
 }

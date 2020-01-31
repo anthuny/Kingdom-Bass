@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Player : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public int nearestLaneNumber;
 
-    private bool passedBeat;
+    public bool passedBeat;
 
     bool playerHitLaunch;
 
@@ -30,10 +31,21 @@ public class Player : MonoBehaviour
     public bool doneOnce2;
 
     float minDist;
-    Transform nearestNote;
-    public Transform nearestDeadNote;
-    public Transform oldNearestDeadNote;
-    public List<Transform> activeNotes = new List<Transform>();
+
+    private float pointFrom;
+    private float pointTo;
+
+    private bool stopTimer;
+    [HideInInspector]
+    public float timeFromLastMovement;
+
+    private int inputAmounts;
+
+    public bool canIncreaseScore;
+    public bool scoreAllowed;
+    public float elapsedTimeSinceMove;
+
+    private float startTime;
 
     // Start is called before the first frame update
     void Start()
@@ -75,50 +87,9 @@ public class Player : MonoBehaviour
     {
         Inputs();
         Movement();
-
-        for (int i = 0; i < tc.notes.transform.childCount - 1; i++)
-        {
-            if (tc.notes.transform.GetChild(i).gameObject.GetComponent<Note>().canMove && !activeNotes.Contains(tc.notes.transform.GetChild(i)))
-            {
-                activeNotes.Add(tc.notes.transform.GetChild(i));
-            }
-        }
-
-        minDist = Mathf.Infinity;
-
-        for (int i = 0; i < tc.notes.transform.childCount; i++)
-        {
-            float dist = Vector3.Distance(transform.position, new Vector3(transform.position.x, transform.position.y, tc.notes.transform.GetChild(i).transform.position.z));
-
-            if (minDist > dist)
-            {
-                nearestNote = tc.notes.transform.GetChild(i);
-                minDist = dist;
-            }
-        }
-
-
-        nearestDeadNote = nearestNote;
-
-        if (oldNearestDeadNote != nearestDeadNote)
-        {
-            oldNearestDeadNote = nearestDeadNote;
-            doneOnce2 = false;
-        }
-
-        if (nearestDeadNote && tc.deadNoteAssigned)
-        {
-            if (nearestDeadNote.transform.position.z <= transform.position.z && !doneOnce2)
-            {
-                doneOnce2 = true;
-                tc.trackPosIntervalsList.RemoveAt(0);
-                Debug.Log("removed index 1 of interval list. Point From " + tc.pointFromLastBeat + "Point to " + tc.pointToNextBeat);
-                //Debug.Break();
-            }
-        }
-
-
+        CheckHitAccuracy();
     }
+
     void Inputs()
     {
         // If:
@@ -127,12 +98,17 @@ public class Player : MonoBehaviour
         //      player is not in the most RIGHT lane
         if (Input.GetKeyDown("d") && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber)
         {
+            AssignFromAndToValues();
+            scoreAllowed = false;
+            timeFromLastMovement = tc.trackPos;
+            startTime = tc.trackPos;
+            canIncreaseScore = true;
             movingRight = true;
             if (!passedBeat)
             {
                 passedBeat = true;
+
                 doneOnce = false;
-                CheckHitAccuracy();
             }
         }
 
@@ -142,16 +118,29 @@ public class Player : MonoBehaviour
         //      player is not in the most LEFT lane
         if (Input.GetKeyDown("a") && !movingRight && !movingLeft && nearestLaneNumber != 1)
         {
+            AssignFromAndToValues();
+            scoreAllowed = false;
+            startTime = tc.trackPos;
+            canIncreaseScore = true;
             movingLeft = true;
             if (!passedBeat)
             {
                 passedBeat = true;
+
                 doneOnce = false;
-                CheckHitAccuracy();
             }
         }
     }
 
+    void AssignFromAndToValues()
+    {
+        //pointFrom = tc.pointFromLastBeat / tc.nextIndex2;
+        //pointTo = tc.pointToNextBeat / tc.nextIndex2;
+
+        tc.pointFromLastBeatInstant = tc.pointFromLastBeat;
+        //Debug.Log("trackPosInbeatsGameInstant" + tc.trackPosInBeatsGame);
+        //Debug.Break();
+    }
     void Movement()
     {
         // Ensures that there is a nearest path to begin with
@@ -224,83 +213,143 @@ public class Player : MonoBehaviour
 
     private void CheckHitAccuracy()
     {
-        Debug.Log("pointFrom " + tc.pointFromLastBeat / (tc.trackPosIntervals / tc.nextIndex));
-        Debug.Log("point from index val " + tc.trackPosIntervalsList[0]);
-        Debug.Log("PointTo " + tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex));
-        Debug.Log("trackPosInBeatsGame + " + tc.trackPosInBeatsGame);
-        Debug.Log("trackPosIntervals + " + tc.trackPosIntervalsList[0]);
-
-        // Debug for next beat
-
-
-        //Debug.Log("next beat " + tc.nextBeat);
-        //Debug.Log("trackPosInBeatsGame + " + tc.trackPosInBeatsGame);
-        
-        // TODO - Future Anthony. Everytime there is a perfect - glitch, all this code underneath doesn't work correctly
-        // Decent progress today. The game somewhat works with various levels of eighth waits.
-
-        Debug.Break();
-
-        CheckFirstHitAccuracy();
-        
-        // need to divide point to and polintfrom by 2 if it's double the eighth lengths. 
-        // need to do this in a formula that works for every eighth length.
-        if (tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) < 0 || tc.pointFromLastBeat / (tc.trackPosIntervals / tc.nextIndex) < 0 && (tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval)))
+        // If the player has already inputed a legal move for the note, do not allow it
+        if (!tc.canGetNote)
         {
-            Debug.Log("Perfect - glitch");
-            HitPerfect();
-            passedBeat = false;
+            ResetNotes();
             return;
         }
 
-        if (tc.pointFromLastBeat < tc.pointToNextBeat && tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval))
+        // If enough time from the last movement has passed, count the move, toward the score count
+        if (!scoreAllowed && passedBeat)
         {
-            if (tc.pointFromLastBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.perfectMin && tc.pointFromLastBeat / (tc.trackPosIntervals / tc.nextIndex) >= 0)
+            elapsedTimeSinceMove = (tc.trackPos - startTime);
+            //Debug.Log(elapsedTimeSinceMove);
+            canIncreaseScore = true;
+        }
+
+        if (elapsedTimeSinceMove >= gm.maxTimeBetweenInputs && !scoreAllowed)
+        {
+            scoreAllowed = true;
+            //Debug.Log("setting start time");
+            elapsedTimeSinceMove = 0;
+            //inputAmounts = 1;
+
+
+            //Debug.Log("Score given");
+            //stopTimer = false;
+            return;
+        }
+
+
+
+        // Check if the movement is allowed to increase the score. If not, do not allow it. Otherwise, allow it
+        if (!scoreAllowed || !canIncreaseScore)
+        {
+            return;
+        }
+
+        // This should be okay to leave here. The player must go through all of the above to make the note count
+        tc.canGetNote = false;
+        //Debug.Log("score allowed " + scoreAllowed);
+        //Debug.Log("canIncreaseScore " + canIncreaseScore);
+
+        //Debug.Break();
+        //Debug.Log("moving");
+
+
+        // Line reset
+        //Debug.Log("================================");
+
+        //Debug.Log("pointFrom raw " + tc.pointFromLastBeat);
+        //Debug.Log("pointTo Raw " + tc.pointToNextBeat);
+        //Debug.Log("nextIndex2 " + tc.nextIndex2);
+        //Debug.Log("point from index val " + tc.trackPosIntervalsList[0]);
+
+        //Debug.Log("trackPosInBeatsGame " + tc.trackPosInBeatsGame);
+        //Debug.Log("trackPosIntervals " + tc.trackPosIntervals);
+        //Debug.Log("next beat " + tc.nextBeat);
+        //Debug.Log("trackPosInBeatsGame + " + tc.trackPosInBeatsGame);
+        tc.pointFromLastBeatWait = tc.pointFromLastBeat;
+        pointFrom = tc.pointFromLastBeatInstant - Mathf.FloorToInt(tc.pointFromLastBeatInstant);
+        pointTo = 1 - pointFrom;
+        //Debug.Log("trackPosInBeatsGame instant 2 " + tc.pointFromLastBeatInstant);
+        //Debug.Log("trackPosInBeatsGame wait " + tc.pointFromLastBeatWait);
+        //Debug.Log("trackPosInBeatsGame after wait " + tc.trackPosInBeatsGame);
+        //Debug.Log("difference" + (tc.pointFromLastBeatWait - tc.pointFromLastBeatInstant));
+        Debug.Log("pointFrom " + pointFrom);
+        Debug.Log("PointTo " + pointTo);
+
+        // Future Anthony - Currently working on not allowing score increase if movements are too fast
+        // This works for the most part. Except sometimes the player doesn't get score for notes even
+        // when enough time has passed
+
+        // Also the player doesn't recieve any misses for not performing a movement input at all.
+
+
+        CheckFirstHitAccuracy();
+
+        // need to divide point to and pointfrom by 2 if it's double the eighth lengths. 
+        // need to do this in a formula that works for every eighth length.
+        if (pointTo < 0 || pointFrom > 1 && (tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval)))
+        {
+            //Debug.Log("Perfect - glitch");
+            HitPerfect();
+            ResetNotes();
+            return;
+        }
+
+        // If the player is closer to the previous note.
+        if (pointTo > pointFrom && tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval))
+        {
+            if (pointFrom <= gm.perfectMin && pointFrom >= 0)
             {
                 Debug.Log("Perfect 1");
                 HitPerfect();
             }
-            else if (tc.pointFromLastBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.goodMin && tc.pointFromLastBeat / (tc.trackPosIntervals / tc.nextIndex) >= gm.perfectMin)
+            else if (pointFrom <= gm.greatMin && pointFrom >= gm.perfectMin)
             {
-                Debug.Log("Good 1");
+                Debug.Log("Great 1");
                 HitGood();
             }
-            else if (tc.pointFromLastBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.badMin && tc.pointFromLastBeat / (tc.trackPosIntervals / tc.nextIndex) >= gm.goodMin)
+            else if (pointFrom <= gm.goodMin && pointFrom >= gm.greatMin)
             {
-                Debug.Log("Bad 1");
+                Debug.Log("Good 1");
                 HitBad();
             }
-            else if (tc.pointFromLastBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.badMin)
+            else if (pointFrom >= gm.goodMin && pointFrom <= .5f)
             {
                 Debug.Log("Miss 1");
                 Missed();
             }
         }
-        else if (tc.pointToNextBeat < tc.pointFromLastBeat)
+        // If the player is closer to the next note.
+        else if (pointTo < pointFrom && tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval))
         {
-            if (tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.perfectMin && tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) >= 0)
+            if (pointTo <= gm.perfectMin && pointTo >= 0)
             {
                 Debug.Log("Perfect 2");
                 HitPerfect();
             }
-            else if (tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.goodMin && tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) >= gm.perfectMin)
+            else if (pointTo <= gm.greatMin && pointTo >= gm.perfectMin)
             {
-                Debug.Log("Good 2");
+                Debug.Log("Great 2");
                 HitGood();
             }
-            else if (tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.badMin && tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) >= gm.goodMin)
+            else if (pointTo <= gm.goodMin && pointTo >= gm.greatMin)
             {
-                Debug.Log("Bad 2");
+                Debug.Log("Good 2");
                 HitBad();
             }
-            else if (tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.badMin)
+            else if (pointTo >= gm.goodMin && pointTo <= .5f)
             {
                 Debug.Log("Miss 2");
                 Missed();
             }
         }
-
-        passedBeat = false;
+        Debug.Break();
+        Debug.Log("==================================================");
+        ResetNotes();
     }
     private void CheckFirstHitAccuracy()
     {
@@ -309,27 +358,32 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.perfectMin && tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) >= 0)
+        if (pointTo <= gm.perfectMin && pointTo >= 0)
         {
-            Debug.Log("Perfect 3");
+            //Debug.Log("Perfect 3");
             HitPerfect();
         }
-        else if (tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.goodMin && tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) >= gm.perfectMin)
+        else if (pointTo <= gm.greatMin && pointTo >= gm.perfectMin)
         {
-            Debug.Log("Good 3");
+            //Debug.Log("Great 3");
             HitGood();
         }
-        else if (tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) <= gm.badMin && tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) >= gm.goodMin)
+        else if (pointTo <= gm.goodMin && pointTo >= gm.greatMin)
         {
-            Debug.Log("Bad 3");
+            //Debug.Log("Good 3");
             HitBad();
         }
-        else if (tc.pointToNextBeat / (tc.trackPosIntervals / tc.nextIndex) >= gm.badMin)
+        else if (pointTo >= gm.goodMin && pointTo <= .5f)
         {
-            Debug.Log("Miss 3");
+            //Debug.Log("Miss 3");
             Missed();
         }
 
+        ResetNotes();
+    }
+    private void ResetNotes()
+    {
+        canIncreaseScore = false;
         passedBeat = false;
     }
 
@@ -341,18 +395,20 @@ public class Player : MonoBehaviour
     private void HitGood()
     {
         gm.score += gm.goodScore;
-        gm.goods++;
+        gm.greats++;
     }
     private void HitBad()
     {
         gm.score += gm.badScore;
-        gm.bads++;
+        gm.goods++;
     }
     private void Missed()
     {
         Debug.Log("Missed");
         gm.score += gm.missScore;
         gm.misses++;
+        // Update score UI because getting a 'Miss' will not trigger score UI change
+        gm.UpdateUI();
     }
     private void OnTriggerEnter(Collider other)
     {

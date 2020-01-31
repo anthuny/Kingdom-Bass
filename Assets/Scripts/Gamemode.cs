@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Gamemode : MonoBehaviour
 {
+    private TrackCreator tc;
     private GameObject player;
     [HideInInspector]
     public GameObject jet;
@@ -30,9 +31,11 @@ public class Gamemode : MonoBehaviour
     public Text scoreText;
     public Text fpsCounterText;
     public Text perfectsText;
+    public Text greatsText;
     public Text goodsText;
-    public Text badsText;
     public Text missesText;
+
+    public Text timeFromLastMoveText;
 
     public float currentFps;
 
@@ -47,18 +50,17 @@ public class Gamemode : MonoBehaviour
     [Header("The MINIMUM point of how accurate the note must be hit for a PERFECT. 0 - 1")] 
     public float perfectMin;
     [Range(0, 1)]
+    [Header("The MINIMUM point of how accurate the note must be hit for a GREAT. 0 - 1")]
+    public float greatMin;
+    [Range(0, 1)]
     [Header("The MINIMUM point of how accurate the note must be hit for a GOOD. 0 - 1")]
     public float goodMin;
 
-    [Range(0, 1)]
-    [Header("The MINIMUM point of how accurate the note must be hit for a BAD. 0 - 1")]
-    public float badMin;
+    [HideInInspector]
+    public float greatMax, goodMax, missMax;
 
     [HideInInspector]
-    public float goodMax, badMax, missMax;
-
-    [HideInInspector]
-    public int perfects, goods, bads, misses;
+    public int perfects, greats, goods, misses;
 
     [Header("Accuracy Score Amounts")]
     public int perfectScore;
@@ -66,6 +68,8 @@ public class Gamemode : MonoBehaviour
     public int badScore;
     public int missScore;
 
+    [Tooltip("Max amount of time in seconds for how long it takes for movements to NOT give score")]
+    public float maxTimeBetweenInputs;
 
 
     // Start is called before the first frame update
@@ -75,18 +79,19 @@ public class Gamemode : MonoBehaviour
 
         player = FindObjectOfType<Player>().gameObject;
         jet = FindObjectOfType<Jet>().gameObject;
+        tc = FindObjectOfType<TrackCreator>();
 
         UpdateUI();
 
         Application.targetFrameRate = targetFps;
 
-        goodMax = perfectMin + 0.01f;
-        badMax = goodMax + 0.01f;
-        missMax = badMax + 0.01f;
+        greatMax = perfectMin + 0.01f;
+        goodMax = greatMax + 0.01f;
+        missMax = goodMax + 0.01f;
 
         perfectMin = 1 - perfectMin;
+        greatMin = 1 - greatMin;
         goodMin = 1 - goodMin;
-        badMin = 1 - badMin;
     }
 
     // Update is called once per frame
@@ -105,15 +110,17 @@ public class Gamemode : MonoBehaviour
 
         currentFps = 1.0f / Time.deltaTime;
         fpsCounterText.text = "FPS | " + (int)currentFps;
+
+        timeFromLastMoveText.text = "Time From Last Movement " + player.GetComponent<Player>().timeFromLastMovement.ToString();
     }
 
-    void UpdateUI()
+    public void UpdateUI()
     {
         scoreText.text = "Score | " + score.ToString();
 
         perfectsText.text = "Perfect: " + perfects.ToString();
+        greatsText.text = "Great: " + greats.ToString();
         goodsText.text = "Good: " + goods.ToString();
-        badsText.text = "Bad: " + bads.ToString();
         missesText.text = "Miss: " + misses.ToString();
     }
 }
