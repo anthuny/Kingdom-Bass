@@ -108,8 +108,6 @@ public class TrackCreator : MonoBehaviour
         // Calculate the number of seconds in each beat
         secPerBeat = 60f / trackBpm;
 
-        //gm.maxTimeBetweenInputs = ((secPerBeat / 5) / (noteTimeTaken / noteTimeTakenMax)) / 5;
-
         // Assign the laneCode array with the actual codes for each lane
         laneCodes[0] = lane1Code;
         laneCodes[1] = lane2Code;
@@ -132,9 +130,6 @@ public class TrackCreator : MonoBehaviour
             GetNote newGetNote = new GetNote(note);
         }
     }
-
-
-
     public void SpawnNotes(string noteType, string laneNumber, string arrowD, string EighthWait)
     {
         // Checks for notes in each lane, If it belongs in a lane, make it belong there 
@@ -254,6 +249,15 @@ public class TrackCreator : MonoBehaviour
 
     private void Update()
     {
+        // Index out of bounds check
+        if (trackPosIntervalsList.Count >= 1)
+        {
+            // Set the max amount of time the player has to input another movement before their last 
+            // input is what is score they will get for the current note
+            gm.maxTimeBetweenInputs = ((secPerBeat * trackPosIntervalsList[0]) / 2);
+        }
+
+        // Start the song 
         if (Input.GetKeyDown(KeyCode.Space) && !audioSource.isPlaying)
         {
 
@@ -262,6 +266,7 @@ public class TrackCreator : MonoBehaviour
             audioSource.Play();
         }
 
+        // Keep track of the track's position in seconds from when it started
         trackPos = (float)(AudioSettings.dspTime - dspTrackTime);
 
         // Determine how many beats since the track started
@@ -270,19 +275,12 @@ public class TrackCreator : MonoBehaviour
         // Determine how many beats since the game started
         trackPosInBeatsGame = trackPosInBeats - beatsBeforeStart;
 
-        // TODO - beats before start is currently broken. It spawns 2 notes when the value is too high
-        // And doesn't work correctly when the value is too low
-
         if (audioSource.isPlaying)
         {
-            // Wait for secPerBeat * individual note intival to spawn a note
-            // Ensure no notes spawn beyond the last
+            // Spawn a note
             // Ensures intro is over before starting
-
-            // - WIP - this works perfectly I think. Just need to change how notes move to interpolation
             if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat)))
             {
-
                 AssignNotes();
 
                 lastBeat += secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
@@ -292,32 +290,12 @@ public class TrackCreator : MonoBehaviour
 
                 trackPosIntervalsList.Add(trackPosIntervals);
                 trackPosIntervalsList2.Add(trackPosIntervals2);
-                //nextIndex2 = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat); // this formula only reads the most newest note.
+
                 nextIndex2 = (noteEighthCount[0] / maxNoteIntervalsEachBeat);
-                nextIndex3 = (noteEighthCount[1] / maxNoteIntervalsEachBeat);
-                //Debug.Log("nextIndex2 On beat " + nextIndex2);
-                // Make sure this is after everything else that needs to use the current next index
                 nextIndex++;
-                //nextIndex2 = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
-
-
-                //Debug.Log("nextbeat " + nextBeat);
-                //Debug.Log("trackPosInBeatsGame + " + trackPosInBeatsGame);
-
-                //Debug.Log(trackPosIntervals);
-
-
             }
 
-            if (trackPosIntervalsList.Count >= 2)
-            {
-                // Calculate (from 0-1) how far the player currently is from the note BEHIND the player
-                //pointFromLastBeat = (trackPosInBeatsGame - (trackPosNumber * secPerBeat) + noteTimeTaken);
-
-            }
-
-
-
+            // Index out of bounds check
             if (trackPosIntervalsList2.Count == 1)
             {
                 firstInterval = trackPosIntervalsList2[0];
@@ -325,6 +303,7 @@ public class TrackCreator : MonoBehaviour
         }
     }
 
+    // XML referencing for each note.
     class GetNote
     {
         public string noteType { get; private set; }

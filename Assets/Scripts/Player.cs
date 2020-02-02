@@ -196,39 +196,21 @@ public class Player : MonoBehaviour
         }
     }
     void AssignFromAndToValues()
-    {
-        
-        //pointFrom = tc.pointFromLastBeat / tc.nextIndex2;
-        //pointTo = tc.pointToNextBeat / tc.nextIndex2;
+    {      
+        currentPointInBeats = tc.trackPosInBeatsGame;
 
-        currentPointInBeats = tc.trackPosInBeatsGame;// - Mathf.FloorToInt(tc.trackPosInBeatsGame);
-
-        float difference = tc.pointToNextBeat - tc.previousNoteBeatTime;
-        Debug.Log("Difference between the two " + difference);
         pointFrom = 1 - (Mathf.InverseLerp(tc.pointToNextBeat, tc.previousNoteBeatTime, currentPointInBeats));
        
         pointTo = 1 - pointFrom;
-        Debug.Log("previousBeatTime " + tc.previousNoteBeatTime);
-        Debug.Log("pointToNextBeat " + tc.pointToNextBeat);
-        Debug.Log("currentPointInBeats " + currentPointInBeats);
-        Debug.Log("pointFrom 1 | " + pointFrom);
-        Debug.Log("pointTo 1 | " + pointTo);
-
-
-        //Debug.Break();
-
     }
     private void CheckHitAccuracy()
     {
-        //Debug.Log("1 | " + tc.canGetNote + scoreAllowed + noteCalculationOver);
-        
         // If the player has already inputed a legal move for the note, do not allow it
         if (!tc.canGetNote)
         {
             //ResetNotes();
             return;
         }
-        //Debug.Log("2 | " + tc.canGetNote + scoreAllowed + noteCalculationOver);
         // This function can only get up to here without passedBeat true (this bool turns true
         // when the player inputs a movement
 
@@ -239,7 +221,7 @@ public class Player : MonoBehaviour
             //Debug.Log(elapsedTimeSinceMove);
             canIncreaseScore = false;
         }
-        //Debug.Log("3 | " + tc.canGetNote + scoreAllowed + noteCalculationOver);
+
         if (elapsedTimeSinceMove >= gm.maxTimeBetweenInputs)
         {
             // This bool is so this if statement only happens once
@@ -251,7 +233,6 @@ public class Player : MonoBehaviour
 
             return;
         }
-        //Debug.Log("4 | " + tc.canGetNote + scoreAllowed + noteCalculationOver);
         // Check if the movement is allowed to increase the score. If not, do not allow it. Otherwise, allow it
         if (!scoreAllowed || !canIncreaseScore)
         {
@@ -264,50 +245,6 @@ public class Player : MonoBehaviour
         {
             tc.canGetNote = false;
         }
-        //Debug.Log("5 | " + tc.canGetNote + scoreAllowed + noteCalculationOver);
-
-        //Debug.Log("score allowed " + scoreAllowed);
-        //Debug.Log("canIncreaseScore " + canIncreaseScore);
-
-        //Debug.Break();
-        //Debug.Log("moving");
-
-
-        // Line reset
-        //Debug.Log("================================");
-
-        //Debug.Log("pointFrom raw " + tc.pointFromLastBeat);
-        //Debug.Log("pointTo Raw " + tc.pointToNextBeat);
-        //Debug.Log("nextIndex2 " + tc.nextIndex2);
-        //Debug.Log("point from index val " + tc.trackPosIntervalsList[0]);
-
-        //Debug.Log("trackPosInBeatsGame " + tc.trackPosInBeatsGame);
-        //Debug.Log("trackPosIntervals " + tc.trackPosIntervals);
-        //Debug.Log("next beat " + tc.nextBeat);
-        //Debug.Log("trackPosInBeatsGame + " + tc.trackPosInBeatsGame);
-
-        // not useful i think
-        //tc.pointFromLastBeatWait = tc.pointFromLastBeat;
-
-
-
-
-        //Debug.Log(pointFrom);
-
-        //pointFrom = tc.pointFromLastBeatInstant;
-
-        Debug.Log("pointFrom 2 | " + pointFrom);
-        Debug.Log("pointTo 2 | " + pointTo);
-        //Debug.Log("trackPosInBeatsGame instant 2 " + tc.pointFromLastBeatInstant);
-        //Debug.Log("trackPosInBeatsGame wait " + tc.pointFromLastBeatWait);
-        //Debug.Log("trackPosInBeatsGame after wait " + tc.trackPosInBeatsGame);
-        //Debug.Log("difference" + (tc.pointFromLastBeatWait - tc.pointFromLastBeatInstant));
-
-        //Debug.Log("PointTo " + pointTo);
-
-        // Future Anthony - Currently working on not allowing score increase if movements are too fast
-        // This works for the most part. Except sometimes the player doesn't get score for notes even
-        // when enough time has passed
 
         // Also the player doesn't recieve any misses for not performing a movement input at all.
 
