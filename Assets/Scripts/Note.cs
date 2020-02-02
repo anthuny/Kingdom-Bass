@@ -23,10 +23,10 @@ public class Note : MonoBehaviour
     //[HideInInspector]
     public int eighthWait;
 
-    private bool doneOnce;
-    private bool doneOnce2;
-    private bool doneOnce3;
-
+    public bool doneOnce;
+    public bool doneOnce2;
+    public bool doneOnce3;
+    public bool doneOnce4;
 
     public int laneNumber;
     [HideInInspector]
@@ -116,6 +116,7 @@ public class Note : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (!canMove)
         {
             return;
@@ -126,6 +127,11 @@ public class Note : MonoBehaviour
             doneOnce = true;
             startTime = tc.trackPos;
         }
+
+  
+
+
+
         // Calculate the percantage of completion of the note on the lane
         percDistance = Mathf.Abs((transform.position.z - player.transform.position.z) / pm.pathLength) * 100;
 
@@ -145,51 +151,80 @@ public class Note : MonoBehaviour
             transform.position = pos;
         }
 
-        //newGoalTime = goalTime - startTime;
-
-
         if (curTime >= 1)
         {
-
             doneOnce2 = true;
             transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
-            hitEnd = true;
+
         }
+
+
+        if (doneOnce2 && !doneOnce3)
+        {
+
+            doneOnce3 = true;
+
+            // Ensure that the player can gain score for the note, even if they inputed a movement just before passing a note
+            // This is reliant on this note staying alive long enough for to switch canGetNote to true from false
+            if (!tc.canGetNote && !doneOnce4)
+            {
+                //Debug.Log("allowing");
+                doneOnce4 = true;
+                tc.canGetNote = true;
+            }
+
+            // Rounds the value to the nearest .25f
+            tc.previousNoteBeatTime = ((Mathf.Round((tc.trackPosInBeatsGame - .25f) * 4)) / 4) + .25f;
+
+
+            //Debug.Log("Setting pointFromLastBeat " + tc.previousNoteBeatTime);
+            tc.trackPosNumber = tc.trackPosIntervalsList2[1];
+
+            // Assign the beats at the next beat
+            tc.pointToNextBeat = tc.previousNoteBeatTime + tc.trackPosNumber;
+
+            //tc.trackPosIntervalsList2.RemoveAt(0);
+            tc.trackPosIntervalsList2.RemoveAt(0);
+
+            // If this note is the 2nd note of all notes ever.
+            // Remove interval index 0 when it gets to the end of it's path
+            if (tc.notes.transform.GetChild(1).gameObject == this.gameObject)
+            {
+                //Debug.Log("should removing thing");
+                tc.deadNoteAssigned = true;
+                tc.trackPosIntervalsList.RemoveAt(0);
+                tc.canGetNote = true;
+                hitEnd = true;
+            }
+
+            else if (tc.notes.transform.GetChild(0).gameObject == this.gameObject)
+            {
+                tc.trackPosIntervalsList.RemoveAt(0);
+                tc.canGetNote = true;
+                hitEnd = true;
+            }
+
+            else
+            {
+                Debug.Log("error holy shit");
+            }
+        }
+
         if (tc.deadNoteAssigned && doneOnce2 && !doneOnce3)
         {
             doneOnce3 = true;
             tc.trackPosIntervalsList.RemoveAt(0);
             tc.canGetNote = true;
             //Debug.Log("removed index 0 of interval list.");
-
         }
-
-        if (doneOnce2 && !doneOnce3)
-        {
-            //Debug.Log("note hit end");
-            doneOnce3 = true;
-
-            // If this note is the 2nd note of all notes ever.
-            // Remove interaval index 0 when it gets to the end of it's path
-            if (tc.notes.transform.GetChild(1).gameObject == this.gameObject)
-            {
-                tc.deadNoteAssigned = true;
-                tc.trackPosIntervalsList.RemoveAt(0);
-                tc.canGetNote = true;
-            }
-
-            else if (tc.notes.transform.GetChild(0).gameObject == this.gameObject)
-            {
-                tc.canGetNote = true;
-            }
-
-        }
-
         if (hitEnd)
         {
             hitEnd = false;
 
-            Invoke("DestroyNote", (tc.secPerBeat * tc.noteTimeTaken) / 3);
+            // The float (0.5f) may cause problems when spawning notes at different speeds,
+            // or if the bpm of the song changes
+            Invoke("DestroyNote", (tc.secPerBeat * tc.trackPosIntervalsList[0]) + .05f);
+            //Debug.Log("nextIndex 3 " + tc.trackPosIntervals);
         }
     }
     void DestroyNote()

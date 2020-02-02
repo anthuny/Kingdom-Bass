@@ -37,6 +37,10 @@ public class Gamemode : MonoBehaviour
 
     public Text timeFromLastMoveText;
 
+    public Text canGetNoteText;
+    public Text scoreAllowedText;
+    public Text noteCalculationOverText;
+
     public float currentFps;
 
     public float launchRotAmount;
@@ -111,7 +115,10 @@ public class Gamemode : MonoBehaviour
         currentFps = 1.0f / Time.deltaTime;
         fpsCounterText.text = "FPS | " + (int)currentFps;
 
-        timeFromLastMoveText.text = "Time From Last Movement " + player.GetComponent<Player>().timeFromLastMovement.ToString();
+        noteCalculationOverText.text = "noteCalculationOver = " + player.GetComponent<Player>().noteCalculationOver.ToString();
+        scoreAllowedText.text = "scoreAllowed = " + player.GetComponent<Player>().scoreAllowed.ToString();
+        canGetNoteText.text = "canGetNote = " + tc.canGetNote.ToString();
+        timeFromLastMoveText.text = "Time From Last Movement " + player.GetComponent<Player>().elapsedTimeSinceMove.ToString();
     }
 
     public void UpdateUI()

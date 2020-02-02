@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
+using System.Collections;
 
 public class TrackCreator : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class TrackCreator : MonoBehaviour
     public List<float> allNotes = new List<float>();
     public List<int> noteEighthCount = new List<int>();
     public List<float> trackPosIntervalsList = new List<float>();
+    public List<float> trackPosIntervalsList2 = new List<float>();
+
+    public float trackPosNumber;
 
     public GameObject notes;
     public GameObject noteVisual;
@@ -36,6 +40,7 @@ public class TrackCreator : MonoBehaviour
     public float trackPosInBeatsGame;
     public float dspTrackTime;
     public AudioSource audioSource;
+    public float previousNoteBeatTime;
 
     float lastBeat;
 
@@ -43,8 +48,11 @@ public class TrackCreator : MonoBehaviour
     public int nextIndex = 0;
     [HideInInspector]
     public float nextIndex2 = 0;
+    [HideInInspector]
+    public float nextIndex3;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
+    [Range(1, 25)]
     public int beatsBeforeStart;
     [Tooltip("The amount of beats that must happen for the note to get to the end")]
     public float noteTimeTaken;
@@ -62,6 +70,8 @@ public class TrackCreator : MonoBehaviour
     [HideInInspector]
     public float trackPosIntervals;
     [HideInInspector]
+    public float trackPosIntervals2;
+    [HideInInspector]
     public float pointFromLastBeat, pointToNextBeat;
 
     [HideInInspector]
@@ -73,9 +83,12 @@ public class TrackCreator : MonoBehaviour
     [HideInInspector]
     public bool deadNoteAssigned;
 
+    [Tooltip("The player is only able to obtain 1 amont of score per note." +
+        " If this variable is true, the player has not done a valid movement")]
     public bool canGetNote = true;
 
-    //public bool canGetNote = true;
+    private bool doneOnce;
+    private Transform noteInfront;
     private void Awake()
     {
         TextAsset xmlTextAsset = Resources.Load<TextAsset>("LevelData");
@@ -95,7 +108,7 @@ public class TrackCreator : MonoBehaviour
         // Calculate the number of seconds in each beat
         secPerBeat = 60f / trackBpm;
 
-        gm.maxTimeBetweenInputs = ((secPerBeat / 5) / (noteTimeTaken / noteTimeTakenMax)) / 3;
+        //gm.maxTimeBetweenInputs = ((secPerBeat / 5) / (noteTimeTaken / noteTimeTakenMax)) / 5;
 
         // Assign the laneCode array with the actual codes for each lane
         laneCodes[0] = lane1Code;
@@ -108,8 +121,6 @@ public class TrackCreator : MonoBehaviour
         laneCodes[7] = lane8Code;
 
         FindNotes();
-
-        //canGetNote = true;
     }
 
     public void FindNotes()
@@ -269,18 +280,21 @@ public class TrackCreator : MonoBehaviour
             // Ensures intro is over before starting
 
             // - WIP - this works perfectly I think. Just need to change how notes move to interpolation
-            if (trackPos > (lastBeat + ((beatsBeforeStart - 1 ) * secPerBeat)) + (secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat)))
+            if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat)))
             {
 
                 AssignNotes();
 
                 lastBeat += secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
 
-                trackPosIntervals += (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
+                trackPosIntervals = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
+                trackPosIntervals2 = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
 
                 trackPosIntervalsList.Add(trackPosIntervals);
+                trackPosIntervalsList2.Add(trackPosIntervals2);
                 //nextIndex2 = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat); // this formula only reads the most newest note.
                 nextIndex2 = (noteEighthCount[0] / maxNoteIntervalsEachBeat);
+                nextIndex3 = (noteEighthCount[1] / maxNoteIntervalsEachBeat);
                 //Debug.Log("nextIndex2 On beat " + nextIndex2);
                 // Make sure this is after everything else that needs to use the current next index
                 nextIndex++;
@@ -295,25 +309,18 @@ public class TrackCreator : MonoBehaviour
 
             }
 
-            if (trackPosInBeatsGame > noteTimeTaken + firstInterval)
-            {
-                nextBeat = (trackPosIntervalsList[1]);
-                //Debug.Log("index 1 of list is " + nextBeat);
-            }
-            else if (trackPosInBeatsGame < (noteTimeTaken + firstInterval) && trackPosIntervalsList.Count >= 1)
-            {
-                nextBeat = (trackPosIntervalsList[0]);
-                //Debug.Log("index 0 of list is " + nextBeat);
-            }
-            if (trackPosIntervalsList.Count >= 1)
+            if (trackPosIntervalsList.Count >= 2)
             {
                 // Calculate (from 0-1) how far the player currently is from the note BEHIND the player
-                pointFromLastBeat = (trackPosInBeatsGame - (trackPosIntervalsList[0] + noteTimeTaken));
+                //pointFromLastBeat = (trackPosInBeatsGame - (trackPosNumber * secPerBeat) + noteTimeTaken);
+
             }
 
-            if (trackPosIntervalsList.Count == 1)
+
+
+            if (trackPosIntervalsList2.Count == 1)
             {
-                firstInterval = trackPosIntervalsList[0];
+                firstInterval = trackPosIntervalsList2[0];
             }
         }
     }
