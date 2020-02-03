@@ -320,7 +320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 476736891}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.01, z: 70}
+  m_LocalPosition: {x: 0, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1160,8 +1160,8 @@ MonoBehaviour:
   scoreAllowedText: {fileID: 2142299897}
   noteCalculationOverText: {fileID: 1934597719}
   currentFps: 0
-  launchRotAmount: 8
-  launchRotTime: 0
+  launchRotAmount: 3
+  launchRotTime: 0.05
   horizontalNoteArrowC: {r: 0.3820755, g: 0.64505035, b: 1, a: 1}
   horizontalLaunchArrowC: {r: 0, g: 1, b: 0.023826122, a: 1}
   upArrowC: {r: 1, g: 0, b: 0, a: 1}
@@ -1237,7 +1237,7 @@ MonoBehaviour:
   noteVisual: {fileID: 4428141960108257961, guid: 092feb7ed049b264e9d373ba68cdde59,
     type: 3}
   maxNoteIntervalsEachBeat: 8
-  trackBpm: 100
+  trackBpm: 130
   noteType1Code: note
   noteType2Code: launch
   secPerBeat: 0

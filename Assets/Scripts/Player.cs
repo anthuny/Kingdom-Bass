@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     private Gamemode gm;
     private PathManager pm;
     private TrackCreator tc;
+    private CameraBehaviour cm;
 
     private float pathWidth;
 
@@ -25,7 +26,7 @@ public class Player : MonoBehaviour
     private Renderer rend;
     public float playerWidth;
 
-    bool hitNote;
+    public bool hitNote;
     bool doneOnce;
     bool doneOnce3;
     public bool doneOnce2;
@@ -38,8 +39,12 @@ public class Player : MonoBehaviour
     public float elapsedTimeSinceMove;
 
     private float startTime;
+    public bool isBlocking;
 
     private float currentPointInBeats;
+
+    public List<Transform> activeNotes = new List<Transform>();
+    public Transform nearestNote;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +53,7 @@ public class Player : MonoBehaviour
         gm = FindObjectOfType<Gamemode>();
         pm = FindObjectOfType<PathManager>();
         tc = FindObjectOfType<TrackCreator>();
+        cm = Camera.main.GetComponent<CameraBehaviour>();
 
         rend = GetComponentInChildren<Renderer>();
         playerWidth = rend.bounds.size.z;   
@@ -81,9 +87,26 @@ public class Player : MonoBehaviour
     {
         Inputs();
         Movement();
-        CheckHitAccuracy();
+        FindNearestNote();
     }
 
+    void FindNearestNote()
+    {
+        float minDist = Mathf.Infinity;
+
+        // Detect the nearest enemy's position
+        foreach (Transform t in activeNotes)
+        {
+            float dist = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
+                            new Vector3(transform.position.x, transform.position.y, transform.position.z));
+
+            if (minDist > dist)
+            {
+                nearestNote = t;
+                minDist = dist;
+            }
+        }
+    }
     void Inputs()
     {
         // If:
@@ -96,17 +119,10 @@ public class Player : MonoBehaviour
             // Ensure that the player cannot get score until 1 beat before the first note
             if (tc.trackPosInBeatsGame > tc.firstNote - 1)
             {
+                Debug.Log("hit d");
                 AssignFromAndToValues();
                 scoreAllowed = false;
-                startTime = tc.trackPos;
                 canIncreaseScore = true;
-
-                if (!noteCalculationOver)
-                {
-                    noteCalculationOver = true;
-
-                    doneOnce = false;
-                }
             }
 
         }
@@ -121,18 +137,21 @@ public class Player : MonoBehaviour
             // Ensure that the player cannot get score until 1 beat before the first note
             if (tc.trackPosInBeatsGame > tc.firstNote - 1)
             {
+                Debug.Log("hit a");
                 AssignFromAndToValues();
                 scoreAllowed = false;
-                startTime = tc.trackPos;
                 canIncreaseScore = true;
-
-                if (!noteCalculationOver)
-                {
-                    noteCalculationOver = true;
-
-                    doneOnce = false;
-                }
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isBlocking = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            isBlocking = false;
         }
     }
 
@@ -207,20 +226,86 @@ public class Player : MonoBehaviour
         }
     }
     void AssignFromAndToValues()
-    {   
+    {
+        if (!isBlocking)
+        {
+            return;
+        }
+
+        Debug.Log("2");
         currentPointInBeats = tc.trackPosInBeatsGame;
 
         pointFrom = 1 - (Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats));
-       
+
         pointTo = 1 - pointFrom;
-        
+
         gm.scoreIncreased = true;
 
-        Debug.Log("pointFrom " + pointFrom);
-        Debug.Log("pointTo " + pointTo);
-        Debug.Log("``````````````````````");
+        //Debug.Log("pointFrom " + pointFrom);
+        //Debug.Log("pointTo " + pointTo);
+        //Debug.Log("``````````````````````");
         //Debug.Break();
+
+        CheckHitAccuracy();
     }
+
+    private void DoNoteEffect()
+    {
+        Note nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
+
+        Debug.Log("5");
+
+        // In the case of a note with a left arrow
+        if (nearestNoteScript.noteDir == "left" && nearestLaneNumber > nearestNoteScript.laneNumber)
+        {
+            Debug.Log("Note, left arrow " + nearestLaneNumber);
+
+            if (nearestNoteScript.noteType == "launch")
+            {
+                Debug.Log("left launch");
+                //StartCoroutine(cm.RollCamera("left"));
+                playerHitLaunch = true;
+                Debug.Log("-------------------");
+                Debug.Break();
+            }
+        }
+
+        // In the case of a note with a right arrow
+        else if (nearestNoteScript.noteDir == "right" && nearestLaneNumber < nearestNoteScript.laneNumber)
+        {
+            Debug.Log("Note, right arrow " + nearestLaneNumber);
+
+            if (nearestNoteScript.noteType == "launch")
+            {
+                Debug.Log("right launch");
+                //StartCoroutine(cm.RollCamera("right"));
+                playerHitLaunch = true;
+                Debug.Break();
+            }
+        }
+    }
+
+    public void DoNoteEffectUp()
+    {
+        if (!nearestNote)
+        {
+            return;
+        }
+        Note nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
+
+        if (nearestNoteScript.noteDir == "up" && isBlocking)
+        {
+            if (nearestNoteScript.gameObject.transform.position.z < transform.position.z 
+                && nearestLaneNumber == nearestNoteScript.laneNumber && !nearestNoteScript.doneUpArrow)
+            {
+                nearestNoteScript.doneUpArrow = true;
+                AssignFromAndToValues();
+                //Debug.Break();
+            }
+        }
+
+    }
+
     private void CheckHitAccuracy()
     {
         // If the player has already inputed a legal move for the note, do not allow it
@@ -230,41 +315,8 @@ public class Player : MonoBehaviour
             return;
         }
 
-        // This function can only get up to here without passedBeat true (this bool turns true
-        // when the player inputs a movement
-
-        // Begin counting in seconds from when the input from moving was issued
-        if (!scoreAllowed && noteCalculationOver)
-        {
-            elapsedTimeSinceMove = (tc.trackPos - startTime);
-            Debug.Log(elapsedTimeSinceMove);
-            canIncreaseScore = false;
-        }
-
-        if (elapsedTimeSinceMove >= gm.maxTimeBetweenInputs)
-        {
-            // This bool is so this if statement only happens once
-            scoreAllowed = true;
-            elapsedTimeSinceMove = 0;
-            noteCalculationOver = false;
-
-            canIncreaseScore = true;
-
-            return;
-        }
-        // Check if the movement is allowed to increase the score. If not, do not allow it. Otherwise, allow it
-        if (!scoreAllowed || !canIncreaseScore)
-        {
-            return;
-        }
-        // Ensure that the player is only able to issue only 1 gain in score for each note.
-        // At this point, the note is allowed, so it will give score, so no further score can 
-        // be gained until the next note pased the player
-        else
-        {
-            tc.canGetNote = false;
-        }
-
+        tc.canGetNote = false;
+        Debug.Log("3");
         // Also the player doesn't recieve any misses for not performing a movement input at all.
 
         //Debug.Break();
@@ -290,12 +342,12 @@ public class Player : MonoBehaviour
             else if (pointFrom <= gm.greatMin && pointFrom >= gm.perfectMin)
             {
                 //Debug.Log("Great 1");
-                HitGood();
+                HitGreat();
             }
             else if (pointFrom <= gm.goodMin && pointFrom >= gm.greatMin)
             {
                 //Debug.Log("Good 1");
-                HitBad();
+                HitGood();
             }
             else if (pointFrom >= gm.goodMin && pointFrom <= .5f)
             {
@@ -314,12 +366,12 @@ public class Player : MonoBehaviour
             else if (pointTo <= gm.greatMin && pointTo >= gm.perfectMin)
             {
                 //Debug.Log("Great 2");
-                HitGood();
+                HitGreat();
             }
             else if (pointTo <= gm.goodMin && pointTo >= gm.greatMin)
             {
                 //Debug.Log("Good 2");
-                HitBad();
+                HitGood();
             }
             else if (pointTo >= gm.goodMin && pointTo <= .5f)
             {
@@ -329,6 +381,8 @@ public class Player : MonoBehaviour
         }
         //Debug.Log("==================================================");
         ResetNotes();
+        //Debug.Break();
+        Debug.Log("4");
     }
     private void CheckFirstHitAccuracy()
     {
@@ -345,12 +399,12 @@ public class Player : MonoBehaviour
         else if (pointTo <= gm.greatMin && pointTo >= gm.perfectMin)
         {
             //Debug.Log("Great 3");
-            HitGood();
+            HitGreat();
         }
         else if (pointTo <= gm.goodMin && pointTo >= gm.greatMin)
         {
             //Debug.Log("Good 3");
-            HitBad();
+            HitGood();
         }
         else if (pointTo >= gm.goodMin && pointTo <= .5f)
         {
@@ -371,20 +425,23 @@ public class Player : MonoBehaviour
     {
         gm.score += gm.perfectScore;
         gm.perfects++;
+        DoNoteEffect();
     }
-    private void HitGood()
+    private void HitGreat()
     {
         gm.score += gm.goodScore;
         gm.greats++;
+        DoNoteEffect();
     }
-    private void HitBad()
+    private void HitGood()
     {
         gm.score += gm.badScore;
         gm.goods++;
+        DoNoteEffect();
     }
     public void Missed()
     {
-        Debug.Log("Missed");
+        //Debug.Log("Missed");
         gm.score += gm.missScore;
         gm.misses++;
         // Doing this because this variable needs to be activaed whenever any score is gained
@@ -392,77 +449,5 @@ public class Player : MonoBehaviour
         gm.scoreIncreased = true;
         // Update score UI because getting a 'Miss' will not trigger score UI change
         gm.UpdateUI();
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.transform.tag == "Note")
-        {
-            //Debug.Log("hitnote on");
-            hitNote = true;
-        }
-
-        if (other.transform.tag == "NoteWall")
-        {
-            // Ensure that the player enters the note from the correct direction
-            // If the player does. Recieve points.
-            // If not, nothing happens atm.
-            switch (other.transform.parent.GetComponent<Note>().arrowDir)
-            {
-                case "left":
-                    if (other.transform.parent.GetComponent<Note>().laneNumber < nearestLaneNumber)
-                    {
-                        other.gameObject.SetActive(false);
-                        if (other.transform.parent.GetComponent<Note>().isLaunch)
-                        {
-                            playerHitLaunch = true;
-                            StartCoroutine(Camera.main.GetComponent<CameraBehaviour>().RollCamera("left"));
-                        }
-                        gm.score++;
-                    }
-                    break;
-
-                case "right":
-                    if (other.transform.parent.GetComponent<Note>().laneNumber > nearestLaneNumber)
-                    {
-                        other.gameObject.SetActive(false);
-                        if (other.transform.parent.GetComponent<Note>().isLaunch)
-                        {
-                            playerHitLaunch = true;
-                            StartCoroutine(Camera.main.GetComponent<CameraBehaviour>().RollCamera("right"));
-                        }
-                        gm.score++;
-                    }
-                    break;
-
-                case "up":
-                    if (other.transform.parent.GetComponent<Note>().laneNumber == nearestLaneNumber)
-                    {
-                        other.gameObject.SetActive(false);
-                        gm.score++;
-                    }
-                    break;
-            }
-        }
-    }
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.transform.tag == "Note")
-        {
-            //Player hitting the hit
-            if (Input.GetKey(KeyCode.Space))
-            {
-                // Spawn hit particle effect
-                Instantiate(gm.jet.GetComponent<Jet>().hitParticle, other.transform.position, transform.rotation);
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.transform.tag == "Note")
-        {
-            //Debug.Log("hitnote off");
-            hitNote = false;
-        }
     }
 }

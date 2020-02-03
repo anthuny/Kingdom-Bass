@@ -97,7 +97,7 @@ public class TrackCreator : MonoBehaviour
     [HideInInspector]
     public bool deadNoteAssigned;
 
-    [Tooltip("The player is only able to obtain 1 amont of score per note." +
+    [Tooltip("The player is only able to obtain 1 amount of score per note." +
         " If this variable is true, the player has not done a valid movement")]
     public bool canGetNote = true;
 
@@ -155,6 +155,7 @@ public class TrackCreator : MonoBehaviour
             {              
                 // Spawn noteVisual, at notes position
                 GameObject go = Instantiate(noteVisual, notes.transform.position, Quaternion.identity);
+                Note noteScript = go.GetComponent<Note>();
 
                 // Set the name of the note to the lane it is in
                 // TODO : Add the type of note aswell when I add the note in the game
@@ -162,27 +163,16 @@ public class TrackCreator : MonoBehaviour
 
                 // Parent this note to the notes object 
                 go.transform.SetParent(notes.transform);
-                
-                // Set the note to be of type note
-                if (noteType == noteType1Code)
-                {
-                    go.GetComponent<Note>().isNote = true;
-                }
 
-                // Set the note to be of type launch
-                else if (noteType == noteType2Code)
-                {
-                    go.GetComponent<Note>().isLaunch = true;
-                }
-
-                // Set the arrow direction of the note
-                go.GetComponent<Note>().arrowDir = arrowD;
+                // Set the note type and arrow direction
+                noteScript.noteType = noteType;
+                noteScript.noteDir = arrowD;
 
                 // Set the amount of eighthwaits the note is to perfom
-                go.GetComponent<Note>().eighthWait = int.Parse(EighthWait);
+                noteScript.eighthWait = int.Parse(EighthWait);
 
                 // Set the lane number of the note 
-                go.GetComponent<Note>().laneNumber = i;
+                noteScript.laneNumber = i;
 
                 // Disable the note
                 go.SetActive(false);
@@ -277,7 +267,7 @@ public class TrackCreator : MonoBehaviour
 
             if (!gm.scoreIncreased)
             {
-                Debug.Break();
+                //Debug.Break();
                 player.Missed();
             }
 
@@ -310,6 +300,11 @@ public class TrackCreator : MonoBehaviour
             //Debug.Log("currentNoteDiff " + curNoteDiff);
             //Debug.Log("nextNoteDiff " + nextNoteDiff);
             //Debug.Log("-----------------------------");
+
+        // Future Anthony - Need to rework all this code + the similar code in each note.
+        // tc.canGetNote needs to be set to true only when a 'good' score cannot be achieved
+        // anymore, instead of exactly halfway between each beat.
+
         }
     }
     private void Update()

@@ -39,4 +39,9 @@ public class CameraBehaviour : MonoBehaviour
         }
 
     }
+
+    public void Test()
+    {
+        Debug.Log("wtf");
+    }
 }

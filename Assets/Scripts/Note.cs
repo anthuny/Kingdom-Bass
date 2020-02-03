@@ -10,16 +10,11 @@ public class Note : MonoBehaviour
     private Gamemode gm;
 
     [HideInInspector]
-    public bool isNote, isLaunch;
-
-    [HideInInspector]
     public Vector3 startingPos;
     [HideInInspector]
     public float pathWidth;
     [HideInInspector]
     private Player player;
-    [HideInInspector]
-    public string arrowDir;
     //[HideInInspector]
     public int eighthWait;
 
@@ -49,6 +44,11 @@ public class Note : MonoBehaviour
     private float noteWidth;
     private bool hitEndLoop;
 
+    public string noteType;
+    public string noteDir;
+
+    public bool doneUpArrow;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,10 +60,10 @@ public class Note : MonoBehaviour
         noteWidth = noteRend.bounds.size.z;
 
         //Determine the direction of the arrow on the note
-        switch (arrowDir)
+        switch (noteDir)
         {
             case "left":
-                if (isNote)
+                if (noteType == "note")
                 {
                     Sprite leftArrow = Resources.Load<Sprite>("Sprites/T_LeftArrow") as Sprite;
 
@@ -71,7 +71,7 @@ public class Note : MonoBehaviour
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalNoteArrowC;
                    
                 }
-                else if (isLaunch)
+                else if (noteType == "launch")
                 {
                     Sprite leftArrowLaunch = Resources.Load<Sprite>("Sprites/T_LeftArrowLaunch") as Sprite;
 
@@ -82,21 +82,20 @@ public class Note : MonoBehaviour
                 break;
 
             case "right":
-                if (isNote)
+                if (noteType == "note")
                 {
                     Sprite rightArrow = Resources.Load<Sprite>("Sprites/T_RightArrow") as Sprite;
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = rightArrow;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalNoteArrowC;
                 }
-                else if (isLaunch)
+                else if (noteType == "launch")
                 {
                     Sprite rightArrowLaunch = Resources.Load<Sprite>("Sprites/T_RightArrowLaunch") as Sprite;
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = rightArrowLaunch;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalLaunchArrowC;
                 }
-
 
                 break;
 
@@ -109,23 +108,38 @@ public class Note : MonoBehaviour
                 break;
 
             default:
-                Debug.Log(this.gameObject.name + " does not have an arrow direction");
+                Debug.Log(this.gameObject.name + " does not have proper arrow direction");
                 break;
         }
     }
 
+    void UpArrowSecurity()
+    {
+        if (this. noteDir == "up")
+        {
+            player.DoNoteEffectUp();
+        }
+
+    }
     // Update is called once per frame
     void Update()
     {
+
         if (!canMove)
         {
             return;
         }
 
+        UpArrowSecurity();
+
+        // Happens once when canMove is triggered true
         if (canMove && !doneOnce)
         {
             doneOnce = true;
             startTime = tc.trackPos;
+
+            // Add this note to the active notes array
+            player.activeNotes.Add(this.gameObject.transform);
         }
 
         // Calculate the percantage of completion of the note on the lane
@@ -240,7 +254,6 @@ public class Note : MonoBehaviour
             doneOnce3 = true;
             tc.trackPosIntervalsList.RemoveAt(0);
             tc.canGetNote = true;
-            //Debug.Log("removed index 0 of interval list.");
         }
         if (hitEnd)
         {
@@ -248,9 +261,7 @@ public class Note : MonoBehaviour
             hitEndLoop = true;
             // The float (0.5f) may cause problems when spawning notes at different speeds,
             // or if the bpm of the song changes
-            Invoke("DestroyNote", (tc.secPerBeat * tc.trackPosIntervalsList[0]) + .02f);
-            //Debug.Log((tc.secPerBeat * tc.trackPosIntervalsList[0]));
-            //Debug.Log("nextIndex 3 " + tc.trackPosIntervals);
+            Invoke("DestroyNote", (tc.secPerBeat * tc.trackPosIntervalsList[0]) + .03f);
         }
 
         
@@ -267,7 +278,7 @@ public class Note : MonoBehaviour
             //Debug.Log("halfWay2 " + halfWay2);
             //Debug.Log(b);
 
-            // future anthony - im up to here, trying to do what's on the white board. Need to figure out further ahead pointto and prevnote
+        
             /*
             // Calculate the difference between the next beat and the last in timeinbeats
             float difference = tc.pointToNextBeat - tc.previousNoteBeatTime;
@@ -294,6 +305,8 @@ public class Note : MonoBehaviour
     }
     void DestroyNote()
     {
+        // remove this note to the active notes array
+        player.activeNotes.Remove(this.gameObject.transform);
         Destroy(this.gameObject);
     }
 }
