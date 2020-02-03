@@ -220,7 +220,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -18, y: 4}
+  m_AnchoredPosition: {x: -18, y: 4.000061}
   m_SizeDelta: {x: 1838.1001, y: 456.40002}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &372599679
@@ -615,14 +615,14 @@ RectTransform:
   m_GameObject: {fileID: 920784964}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1349756, y: 0.1349756, z: 0.1349756}
+  m_LocalScale: {x: 0.22424845, y: 0.22424845, z: 0.22424845}
   m_Children: []
   m_Father: {fileID: 1876809848}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -2, y: -171}
+  m_AnchoredPosition: {x: 40, y: -215.69006}
   m_SizeDelta: {x: 1838.1001, y: 456.40002}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &920784966
@@ -638,7 +638,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -649,7 +649,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 300
     m_FontStyle: 1
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 300
     m_Alignment: 5
@@ -1056,14 +1056,14 @@ RectTransform:
   m_GameObject: {fileID: 1337209283}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1349756, y: 0.1349756, z: 0.1349756}
+  m_LocalScale: {x: 0.22424845, y: 0.22424845, z: 0.22424845}
   m_Children: []
   m_Father: {fileID: 1876809848}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -2, y: -207.29993}
+  m_AnchoredPosition: {x: 40, y: -276}
   m_SizeDelta: {x: 1838.1001, y: 456.40002}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1337209285
@@ -1079,7 +1079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1090,7 +1090,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 300
     m_FontStyle: 1
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 300
     m_Alignment: 5
@@ -1179,7 +1179,8 @@ MonoBehaviour:
   goodScore: 100
   badScore: 25
   missScore: 0
-  maxTimeBetweenInputs: 2
+  scoreIncreased: 0
+  maxTimeBetweenInputs: 0.1
 --- !u!4 &1393232046
 Transform:
   m_ObjectHideFlags: 0
@@ -1228,11 +1229,15 @@ MonoBehaviour:
   allNotes: []
   noteEighthCount: 
   trackPosIntervalsList: []
+  trackPosIntervalsList2: []
+  trackPosIntervalsList3: []
+  trackPosNumber: 0
+  trackPosNumber2: 0
   notes: {fileID: 476736891}
   noteVisual: {fileID: 4428141960108257961, guid: 092feb7ed049b264e9d373ba68cdde59,
     type: 3}
   maxNoteIntervalsEachBeat: 8
-  trackBpm: 80
+  trackBpm: 100
   noteType1Code: note
   noteType2Code: launch
   secPerBeat: 0
@@ -1241,21 +1246,34 @@ MonoBehaviour:
   trackPosInBeatsGame: 0
   dspTrackTime: 0
   audioSource: {fileID: 1393232048}
+  previousNoteBeatTime: 0
+  previousNoteBeatTime2: 0
+  previousNoteBeatTime3: 0
+  nextNoteInBeats3: 0
+  curNoteDiff: 0
+  nextNoteDiff: 0
   nextIndex: 0
   nextIndex2: 0
-  beatsBeforeStart: 1
+  nextIndex3: 1
+  beatsBeforeStart: 2
   noteTimeTaken: 3
   noteTimeTakenMax: 6
   noteHitBoxDifficult: 5
   nextBeat: 0
   trackPosIntervals: 0
-  pointFromLastBeat: 0
+  trackPosIntervals2: 0
+  trackPosIntervals3: 0
   pointToNextBeat: 0
+  pointToNextBeat2: 0
+  firstNote: 0
+  nextNoteInBeats: 0
+  nextNoteInBeats2: 0
   pointFromLastBeatInstant: 0
   pointFromLastBeatWait: 0
   firstInterval: 0
   deadNoteAssigned: 0
   canGetNote: 1
+  doneOnce: 0
 --- !u!82 &1393232048
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1472,14 +1490,14 @@ RectTransform:
   m_GameObject: {fileID: 1778991084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1349756, y: 0.1349756, z: 0.1349756}
+  m_LocalScale: {x: 0.22424845, y: 0.22424845, z: 0.22424845}
   m_Children: []
   m_Father: {fileID: 1876809848}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -2, y: -94.55994}
+  m_AnchoredPosition: {x: 40, y: -88.69006}
   m_SizeDelta: {x: 1838.1001, y: 456.40002}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1778991086
@@ -1495,7 +1513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1506,7 +1524,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 300
     m_FontStyle: 1
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 300
     m_Alignment: 5
@@ -1752,14 +1770,14 @@ RectTransform:
   m_GameObject: {fileID: 1886193737}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1349756, y: 0.1349756, z: 0.1349756}
+  m_LocalScale: {x: 0.22424845, y: 0.22424845, z: 0.22424845}
   m_Children: []
   m_Father: {fileID: 1876809848}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -2, y: -132.99994}
+  m_AnchoredPosition: {x: 40, y: -152.56006}
   m_SizeDelta: {x: 1838.1001, y: 456.40002}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1886193739
@@ -1775,7 +1793,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1786,7 +1804,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 300
     m_FontStyle: 1
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 300
     m_Alignment: 5

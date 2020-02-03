@@ -92,17 +92,23 @@ public class Player : MonoBehaviour
         //      player is not in the most RIGHT lane
         if (Input.GetKeyDown("d") && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber)
         {
-            AssignFromAndToValues();
-            scoreAllowed = false;
-            startTime = tc.trackPos;
-            canIncreaseScore = true;
             movingRight = true;
-            if (!noteCalculationOver)
+            // Ensure that the player cannot get score until 1 beat before the first note
+            if (tc.trackPosInBeatsGame > tc.firstNote - 1)
             {
-                noteCalculationOver = true;
+                AssignFromAndToValues();
+                scoreAllowed = false;
+                startTime = tc.trackPos;
+                canIncreaseScore = true;
 
-                doneOnce = false;
+                if (!noteCalculationOver)
+                {
+                    noteCalculationOver = true;
+
+                    doneOnce = false;
+                }
             }
+
         }
 
         // If:
@@ -111,16 +117,21 @@ public class Player : MonoBehaviour
         //      player is not in the most LEFT lane
         if (Input.GetKeyDown("a") && !movingRight && !movingLeft && nearestLaneNumber != 1)
         {
-            AssignFromAndToValues();
-            scoreAllowed = false;
-            startTime = tc.trackPos;
-            canIncreaseScore = true;
             movingLeft = true;
-            if (!noteCalculationOver)
+            // Ensure that the player cannot get score until 1 beat before the first note
+            if (tc.trackPosInBeatsGame > tc.firstNote - 1)
             {
-                noteCalculationOver = true;
+                AssignFromAndToValues();
+                scoreAllowed = false;
+                startTime = tc.trackPos;
+                canIncreaseScore = true;
 
-                doneOnce = false;
+                if (!noteCalculationOver)
+                {
+                    noteCalculationOver = true;
+
+                    doneOnce = false;
+                }
             }
         }
     }
@@ -196,12 +207,19 @@ public class Player : MonoBehaviour
         }
     }
     void AssignFromAndToValues()
-    {      
+    {   
         currentPointInBeats = tc.trackPosInBeatsGame;
 
-        pointFrom = 1 - (Mathf.InverseLerp(tc.pointToNextBeat, tc.previousNoteBeatTime, currentPointInBeats));
+        pointFrom = 1 - (Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats));
        
         pointTo = 1 - pointFrom;
+        
+        gm.scoreIncreased = true;
+
+        Debug.Log("pointFrom " + pointFrom);
+        Debug.Log("pointTo " + pointTo);
+        Debug.Log("``````````````````````");
+        //Debug.Break();
     }
     private void CheckHitAccuracy()
     {
@@ -211,6 +229,7 @@ public class Player : MonoBehaviour
             //ResetNotes();
             return;
         }
+
         // This function can only get up to here without passedBeat true (this bool turns true
         // when the player inputs a movement
 
@@ -218,7 +237,7 @@ public class Player : MonoBehaviour
         if (!scoreAllowed && noteCalculationOver)
         {
             elapsedTimeSinceMove = (tc.trackPos - startTime);
-            //Debug.Log(elapsedTimeSinceMove);
+            Debug.Log(elapsedTimeSinceMove);
             canIncreaseScore = false;
         }
 
@@ -248,11 +267,10 @@ public class Player : MonoBehaviour
 
         // Also the player doesn't recieve any misses for not performing a movement input at all.
 
+        //Debug.Break();
 
         CheckFirstHitAccuracy();
 
-        // need to divide point to and pointfrom by 2 if it's double the eighth lengths. 
-        // need to do this in a formula that works for every eighth length.
         if (pointTo < 0 || pointFrom > 1 && (tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval)))
         {
             //Debug.Log("Perfect - glitch");
@@ -266,22 +284,22 @@ public class Player : MonoBehaviour
         {
             if (pointFrom <= gm.perfectMin && pointFrom >= 0)
             {
-                Debug.Log("Perfect 1");
+                //Debug.Log("Perfect 1");
                 HitPerfect();
             }
             else if (pointFrom <= gm.greatMin && pointFrom >= gm.perfectMin)
             {
-                Debug.Log("Great 1");
+                //Debug.Log("Great 1");
                 HitGood();
             }
             else if (pointFrom <= gm.goodMin && pointFrom >= gm.greatMin)
             {
-                Debug.Log("Good 1");
+                //Debug.Log("Good 1");
                 HitBad();
             }
             else if (pointFrom >= gm.goodMin && pointFrom <= .5f)
             {
-                Debug.Log("Miss 1");
+                //Debug.Log("Miss 1");
                 Missed();
             }
         }
@@ -290,27 +308,26 @@ public class Player : MonoBehaviour
         {
             if (pointTo <= gm.perfectMin && pointTo >= 0)
             {
-                Debug.Log("Perfect 2");
+                //Debug.Log("Perfect 2");
                 HitPerfect();
             }
             else if (pointTo <= gm.greatMin && pointTo >= gm.perfectMin)
             {
-                Debug.Log("Great 2");
+                //Debug.Log("Great 2");
                 HitGood();
             }
             else if (pointTo <= gm.goodMin && pointTo >= gm.greatMin)
             {
-                Debug.Log("Good 2");
+                //Debug.Log("Good 2");
                 HitBad();
             }
             else if (pointTo >= gm.goodMin && pointTo <= .5f)
             {
-                Debug.Log("Miss 2");
+                //Debug.Log("Miss 2");
                 Missed();
             }
         }
-        //Debug.Break();
-        Debug.Log("==================================================");
+        //Debug.Log("==================================================");
         ResetNotes();
     }
     private void CheckFirstHitAccuracy()
@@ -365,11 +382,14 @@ public class Player : MonoBehaviour
         gm.score += gm.badScore;
         gm.goods++;
     }
-    private void Missed()
+    public void Missed()
     {
         Debug.Log("Missed");
         gm.score += gm.missScore;
         gm.misses++;
+        // Doing this because this variable needs to be activaed whenever any score is gained
+        // even a miss. 
+        gm.scoreIncreased = true;
         // Update score UI because getting a 'Miss' will not trigger score UI change
         gm.UpdateUI();
     }
@@ -424,7 +444,6 @@ public class Player : MonoBehaviour
             }
         }
     }
-
     private void OnTriggerStay(Collider other)
     {
         if (other.transform.tag == "Note")

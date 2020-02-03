@@ -22,8 +22,10 @@ public class TrackCreator : MonoBehaviour
     public List<int> noteEighthCount = new List<int>();
     public List<float> trackPosIntervalsList = new List<float>();
     public List<float> trackPosIntervalsList2 = new List<float>();
+    public List<float> trackPosIntervalsList3 = new List<float>();
 
     public float trackPosNumber;
+    public float trackPosNumber2;
 
     public GameObject notes;
     public GameObject noteVisual;
@@ -41,15 +43,20 @@ public class TrackCreator : MonoBehaviour
     public float dspTrackTime;
     public AudioSource audioSource;
     public float previousNoteBeatTime;
+    public float previousNoteBeatTime2;
+    public float previousNoteBeatTime3;
+    public float nextNoteInBeats3;
 
+    public float curNoteDiff, nextNoteDiff;
+    private float oldNextNoteDiff;
     float lastBeat;
 
     [HideInInspector]
     public int nextIndex = 0;
     [HideInInspector]
     public float nextIndex2 = 0;
-    [HideInInspector]
-    public float nextIndex3;
+
+    public int nextIndex3;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
     [Range(1, 25)]
@@ -61,7 +68,7 @@ public class TrackCreator : MonoBehaviour
     [Tooltip("As this number is lowered, the window of opportunity for hitting notes is smaller")]
     public float noteHitBoxDifficult;
 
-    GameObject player;
+    Player player;
 
     XmlDocument levelDataXml;
 
@@ -72,7 +79,14 @@ public class TrackCreator : MonoBehaviour
     [HideInInspector]
     public float trackPosIntervals2;
     [HideInInspector]
-    public float pointFromLastBeat, pointToNextBeat;
+    public float trackPosIntervals3;
+    [HideInInspector]
+    public float pointToNextBeat, pointToNextBeat2;
+    [HideInInspector]
+    public float firstNote;
+
+    [HideInInspector]
+    public float nextNoteInBeats, nextNoteInBeats2;
 
     [HideInInspector]
     public float pointFromLastBeatInstant, pointFromLastBeatWait;
@@ -87,7 +101,9 @@ public class TrackCreator : MonoBehaviour
         " If this variable is true, the player has not done a valid movement")]
     public bool canGetNote = true;
 
-    private bool doneOnce;
+    [HideInInspector]
+    public bool doneOnce = false;
+    private bool doneOnce2;
     private Transform noteInfront;
     private void Awake()
     {
@@ -98,7 +114,7 @@ public class TrackCreator : MonoBehaviour
 
     void Start()
     {
-        player = FindObjectOfType<Player>().gameObject;
+        player = FindObjectOfType<Player>();
         gm = FindObjectOfType<Gamemode>();
         pm = FindObjectOfType<PathManager>();
 
@@ -118,7 +134,7 @@ public class TrackCreator : MonoBehaviour
         laneCodes[6] = lane7Code;
         laneCodes[7] = lane8Code;
 
-        FindNotes();
+        FindNotes(); 
     }
 
     public void FindNotes()
@@ -133,9 +149,6 @@ public class TrackCreator : MonoBehaviour
     public void SpawnNotes(string noteType, string laneNumber, string arrowD, string EighthWait)
     {
         // Checks for notes in each lane, If it belongs in a lane, make it belong there 
-        // This is currently only going to work for lanes 
-        // TODO : Make it work for type of note aswell, when I create that type of note.
-
         for (int i = 1; i <= pm.maxLanes; i++)
         {
             if (int.Parse(laneNumber) == i)
@@ -247,8 +260,62 @@ public class TrackCreator : MonoBehaviour
         }
     }
 
+    void UpdateMissCondition()
+    {
+        // Ensure that the following if statement only happens when there is a new 'nextNoteDiff'
+        if (oldNextNoteDiff != nextNoteDiff)
+        {
+            oldNextNoteDiff = nextNoteDiff;
+            doneOnce2 = false;
+        }
+
+        // Ensure through a bool, if the player recieves a miss or not for not inputing anything
+        if (doneOnce && trackPosInBeatsGame >= nextNoteDiff && !doneOnce2)
+        {
+            doneOnce2 = true;
+            
+
+            if (!gm.scoreIncreased)
+            {
+                Debug.Break();
+                player.Missed();
+            }
+
+            gm.scoreIncreased = false;
+
+            //Currently inbetween beats
+            nextIndex3++;
+
+            trackPosNumber = trackPosIntervalsList3[nextIndex3 - 1];
+            trackPosNumber2 = trackPosIntervalsList3[nextIndex3];
+
+            previousNoteBeatTime2 = previousNoteBeatTime + (noteEighthCount[nextIndex3 - 1] / maxNoteIntervalsEachBeat);
+
+
+            nextNoteInBeats = previousNoteBeatTime2;
+            nextNoteInBeats2 = nextNoteInBeats + (noteEighthCount[nextIndex3] / maxNoteIntervalsEachBeat);
+
+            float a = (nextNoteInBeats + previousNoteBeatTime) / 2;
+            float b = (previousNoteBeatTime2 + nextNoteInBeats2) / 2;
+            curNoteDiff = a;
+            nextNoteDiff = b;
+
+            //Debug.Log("nextIndex3 " + nextIndex3);
+            //Debug.Log("previousNotebeatTime " + previousNoteBeatTime);
+            //Debug.Log("previousNoteBeatTime2 " + previousNoteBeatTime2);
+
+            //Debug.Log("nextNoteInBeats " + nextNoteInBeats);
+            //Debug.Log("nextNoteInBeats2 " + nextNoteInBeats2);
+
+            //Debug.Log("currentNoteDiff " + curNoteDiff);
+            //Debug.Log("nextNoteDiff " + nextNoteDiff);
+            //Debug.Log("-----------------------------");
+        }
+    }
     private void Update()
     {
+        UpdateMissCondition();
+
         // Index out of bounds check
         if (trackPosIntervalsList.Count >= 1)
         {
@@ -270,10 +337,10 @@ public class TrackCreator : MonoBehaviour
         trackPos = (float)(AudioSettings.dspTime - dspTrackTime);
 
         // Determine how many beats since the track started
-        trackPosInBeats = (trackPos / secPerBeat) + 1;
+        trackPosInBeats = (trackPos / secPerBeat);
 
         // Determine how many beats since the game started
-        trackPosInBeatsGame = trackPosInBeats - beatsBeforeStart;
+        trackPosInBeatsGame = trackPosInBeats - beatsBeforeStart + 1;
 
         if (audioSource.isPlaying)
         {
@@ -287,9 +354,11 @@ public class TrackCreator : MonoBehaviour
 
                 trackPosIntervals = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
                 trackPosIntervals2 = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
+                trackPosIntervals3 += (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
 
                 trackPosIntervalsList.Add(trackPosIntervals);
                 trackPosIntervalsList2.Add(trackPosIntervals2);
+                trackPosIntervalsList3.Add(trackPosIntervals3);
 
                 nextIndex2 = (noteEighthCount[0] / maxNoteIntervalsEachBeat);
                 nextIndex++;
@@ -299,7 +368,17 @@ public class TrackCreator : MonoBehaviour
             if (trackPosIntervalsList2.Count == 1)
             {
                 firstInterval = trackPosIntervalsList2[0];
+
+                // Determine what the first next note will be for score measuring
+                pointToNextBeat = trackPosIntervalsList2[0] * (noteTimeTaken + 1);
+                firstNote = pointToNextBeat;
             }
+
+            if (trackPosIntervalsList2.Count == 2)
+            {
+                pointToNextBeat2 = trackPosIntervalsList2[1] * (noteTimeTaken + 1);
+            }
+
         }
     }
 

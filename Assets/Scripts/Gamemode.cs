@@ -72,6 +72,8 @@ public class Gamemode : MonoBehaviour
     public int badScore;
     public int missScore;
 
+    public bool scoreIncreased;
+
     [Tooltip("Max amount of time in seconds for how long it takes for movements to NOT give score")]
     public float maxTimeBetweenInputs;
 
@@ -109,6 +111,7 @@ public class Gamemode : MonoBehaviour
         if (score != oldScore)
         {
             oldScore = score;
+            scoreIncreased = true;
             UpdateUI();
         }
 
