@@ -119,7 +119,6 @@ public class Player : MonoBehaviour
             // Ensure that the player cannot get score until 1 beat before the first note
             if (tc.trackPosInBeatsGame > tc.firstNote - 1)
             {
-                Debug.Log("hit d");
                 AssignFromAndToValues();
                 scoreAllowed = false;
                 canIncreaseScore = true;
@@ -137,7 +136,6 @@ public class Player : MonoBehaviour
             // Ensure that the player cannot get score until 1 beat before the first note
             if (tc.trackPosInBeatsGame > tc.firstNote - 1)
             {
-                Debug.Log("hit a");
                 AssignFromAndToValues();
                 scoreAllowed = false;
                 canIncreaseScore = true;
@@ -232,7 +230,6 @@ public class Player : MonoBehaviour
             return;
         }
 
-        Debug.Log("2");
         currentPointInBeats = tc.trackPosInBeatsGame;
 
         pointFrom = 1 - (Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats));
@@ -253,34 +250,25 @@ public class Player : MonoBehaviour
     {
         Note nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
 
-        Debug.Log("5");
-
         // In the case of a note with a left arrow
         if (nearestNoteScript.noteDir == "left" && nearestLaneNumber > nearestNoteScript.laneNumber)
         {
-            Debug.Log("Note, left arrow " + nearestLaneNumber);
 
             if (nearestNoteScript.noteType == "launch")
             {
-                Debug.Log("left launch");
                 //StartCoroutine(cm.RollCamera("left"));
                 playerHitLaunch = true;
-                Debug.Log("-------------------");
-                Debug.Break();
             }
         }
 
         // In the case of a note with a right arrow
         else if (nearestNoteScript.noteDir == "right" && nearestLaneNumber < nearestNoteScript.laneNumber)
         {
-            Debug.Log("Note, right arrow " + nearestLaneNumber);
 
             if (nearestNoteScript.noteType == "launch")
             {
-                Debug.Log("right launch");
                 //StartCoroutine(cm.RollCamera("right"));
                 playerHitLaunch = true;
-                Debug.Break();
             }
         }
     }
@@ -316,7 +304,7 @@ public class Player : MonoBehaviour
         }
 
         tc.canGetNote = false;
-        Debug.Log("3");
+
         // Also the player doesn't recieve any misses for not performing a movement input at all.
 
         //Debug.Break();
@@ -382,7 +370,6 @@ public class Player : MonoBehaviour
         //Debug.Log("==================================================");
         ResetNotes();
         //Debug.Break();
-        Debug.Log("4");
     }
     private void CheckFirstHitAccuracy()
     {
