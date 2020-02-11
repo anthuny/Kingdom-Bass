@@ -59,6 +59,8 @@ public class Gamemode : MonoBehaviour
     [Range(0, 1)]
     [Header("The MINIMUM point of how accurate the note must be hit for a GOOD. 0 - 1")]
     public float goodMin;
+    //recomend change from checking distance between notes to a set of colliders on the player and check that way as to free up processing from constantly checking distance of notes
+    //probably not that big of a drain for most PCs to notice but need to optimise where we can for slower ones
 
     [HideInInspector]
     public float greatMax, goodMax, missMax;
@@ -77,6 +79,7 @@ public class Gamemode : MonoBehaviour
     [Tooltip("Max amount of time in seconds for how long it takes for movements to NOT give score")]
     public float maxTimeBetweenInputs;
 
+    // do al these need to be global?
 
     // Start is called before the first frame update
     void Start()
@@ -98,6 +101,7 @@ public class Gamemode : MonoBehaviour
         perfectMin = 1 - perfectMin;
         greatMin = 1 - greatMin;
         goodMin = 1 - goodMin;
+        // ill need this explained to me
     }
 
     // Update is called once per frame
@@ -110,8 +114,9 @@ public class Gamemode : MonoBehaviour
         // If there is a change in score, Update the UI
         if (score != oldScore)
         {
-            oldScore = score;
-            scoreIncreased = true;
+            oldScore = score; // is this needed?
+            scoreIncreased = true; // where is this used?
+            //if both above are used can they be moved to the UpdateUI method?? 
             UpdateUI();
         }
 
@@ -122,6 +127,7 @@ public class Gamemode : MonoBehaviour
         scoreAllowedText.text = "scoreAllowed = " + player.GetComponent<Player>().scoreAllowed.ToString();
         canGetNoteText.text = "canGetNote = " + tc.canGetNote.ToString();
         timeFromLastMoveText.text = "Time From Last Movement " + player.GetComponent<Player>().elapsedTimeSinceMove.ToString();
+        //is all this just for debug?
     }
 
     public void UpdateUI()
@@ -132,5 +138,6 @@ public class Gamemode : MonoBehaviour
         greatsText.text = "Great: " + greats.ToString();
         goodsText.text = "Good: " + goods.ToString();
         missesText.text = "Miss: " + misses.ToString();
+        //could these be fit into a single multi line text box to save updating 4 texts?
     }
 }

@@ -9,6 +9,7 @@ public class CameraBehaviour : MonoBehaviour
 
     public iTween.EaseType easeType;
     public iTween.LoopType loopType;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,12 +18,12 @@ public class CameraBehaviour : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void Update() // Needed?
     {
 
     }
 
-    public IEnumerator RollCamera(string dir)
+    public IEnumerator RollCamera(string dir) //what is using this enum?
     {
         if (dir == "left")
         {
@@ -40,7 +41,7 @@ public class CameraBehaviour : MonoBehaviour
 
     }
 
-    public void Test()
+    public void Test() //UHHHHHHH??????? ok??
     {
         Debug.Log("wtf");
     }
