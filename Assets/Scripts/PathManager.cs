@@ -38,6 +38,10 @@ public class PathManager : MonoBehaviour
     [Range(1, 100)]
     public int spawnPathDist;
 
+    private float t;
+    private float n;
+    private bool spawningPaths;
+
     // Start is called before the first frame update
 
     private void Awake()
@@ -61,10 +65,48 @@ public class PathManager : MonoBehaviour
         oldNearestPath = paths[0];
     }
 
+    void BeginPathSpawn()
+    {
+        // If all lanes have been spawned
+        if (spawningPaths)
+        {
+            // Itterate through each one
+            for (int i = 0; i < paths.Count; i++)
+            {
+                // Increase the opacity and the player's sight distance on it over time
+                paths[i].transform.GetChild(0).GetComponent<Renderer>().material.SetFloat("Vector1_114CB03C", t);
+                paths[i].transform.GetChild(0).GetComponent<Renderer>().material.SetFloat("Vector1_E92490E6", n);
+            }
+        }
+
+    }
+
+    void ElapsePathSpawn()
+    {
+        if (!spawningPaths)
+        {
+            return;
+        }
+
+        // If the lane's opacity has not reached it's maximum value, continue until it does.
+        if (t <= gm.maxPathOpacity)
+        {
+            t += Time.deltaTime * gm.pathOpacityIncSpeed;
+        }
+
+        // If the player's lane view distance has not reached it's maximum value, continue until it does.
+        if (n <= gm.maxPathViewDist)
+        {
+            n += Time.deltaTime * gm.pathViewDistIncSpeed;
+        }
+    }
+
     private void Update()
     {
         FindNearestPath();
         DestroyPathsBehind();
+        ElapsePathSpawn();
+        BeginPathSpawn();
     }
 
     // Spawn the first path
@@ -111,6 +153,12 @@ public class PathManager : MonoBehaviour
                 player.GetComponent<Player>().RepositionPlayer(go);
 
             }
+
+            // After all lanes have spawned (all at 0 opacity) allow them to begin to increase in opacity
+            GameObject allPaths = FindObjectOfType<Path>().gameObject;
+            allPaths.transform.GetChild(1).GetComponent<Renderer>().material.SetFloat("Vector1_114CB03C", 0);
+
+            spawningPaths = true;
         }
     }
 
@@ -179,7 +227,7 @@ public class PathManager : MonoBehaviour
         // Find the segment number of that path
         // If the difference between that path's segment, and the player's nearest path
         // segment is larger then x. Destroy all paths in that behind segment
-        //Find the path the player is on
+        // Find the path the player is on
 
         pathLength = paths[totalPaths].GetComponent<Path>().pathLength;
 

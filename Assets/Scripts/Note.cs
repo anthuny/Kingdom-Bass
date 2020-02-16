@@ -49,6 +49,12 @@ public class Note : MonoBehaviour
 
     public bool doneUpArrow;
 
+    public Renderer spotLightRef;
+
+    private float H;
+    private float S;
+    private float V;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,7 +75,14 @@ public class Note : MonoBehaviour
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = leftArrow;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalNoteArrowC;
-                   
+
+                    //Set the colour of the spotlight
+                    Color.RGBToHSV(gm.horizontalNoteArrowC, out H, out S, out V);
+                    V += gm.noteSpotLightDiff;
+                    spotLightRef.material.SetColor("Color_9834739F", Color.HSVToRGB(H, S, V));
+
+                    // Increase the strength of the spotlight because it is a note note.
+                    spotLightRef.material.SetFloat("Vector1_114CB03C", gm.noteSpotLightIntensity);
                 }
                 else if (noteType == "launch")
                 {
@@ -77,6 +90,18 @@ public class Note : MonoBehaviour
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = leftArrowLaunch;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalLaunchArrowC;
+
+                    //Set the colour of the spotlight
+                    Color.RGBToHSV(gm.horizontalLaunchArrowC, out H, out S, out V);
+                    V += gm.noteSpotLightDiff;
+                    spotLightRef.material.SetColor("Color_9834739F", Color.HSVToRGB(H, S, V));
+
+                    //Increase the scale of the spotlight because it is a launch note.
+                    Vector3 scale = spotLightRef.gameObject.transform.localScale;
+                    spotLightRef.gameObject.transform.localScale = new Vector3(scale.x = 1 + gm.launchSpotLightInc, scale.y + gm.launchSpotLightInc / 2, scale.z = gm.launchSpotLightInc);
+
+                    // Increase the strength of the spotlight because it is a launch note.
+                    spotLightRef.material.SetFloat("Vector1_114CB03C", gm.launchSpotLightIntensity);
                 }
 
                 break;
@@ -88,6 +113,14 @@ public class Note : MonoBehaviour
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = rightArrow;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalNoteArrowC;
+
+                    //Set the colour of the spotlight
+                    Color.RGBToHSV(gm.horizontalNoteArrowC, out H, out S, out V);
+                    V += gm.noteSpotLightDiff;
+                    spotLightRef.material.SetColor("Color_9834739F", Color.HSVToRGB(H, S, V));
+
+                    // Increase the strength of the spotlight because it is a note note.
+                    spotLightRef.material.SetFloat("Vector1_114CB03C", gm.noteSpotLightIntensity);
                 }
                 else if (noteType == "launch")
                 {
@@ -95,6 +128,18 @@ public class Note : MonoBehaviour
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = rightArrowLaunch;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalLaunchArrowC;
+
+                    //Set the colour of the spotlight
+                    Color.RGBToHSV(gm.horizontalLaunchArrowC, out H, out S, out V);
+                    V += gm.noteSpotLightDiff;
+                    spotLightRef.material.SetColor("Color_9834739F", Color.HSVToRGB(H, S, V));
+
+                    //Increase the scale of the spotlight because it is a launch note.
+                    Vector3 scale = spotLightRef.gameObject.transform.localScale;
+                    spotLightRef.gameObject.transform.localScale = new Vector3(scale.x = 1 + gm.launchSpotLightInc, scale.y + gm.launchSpotLightInc / 2, scale.z = gm.launchSpotLightInc);
+
+                    // Increase the strength of the spotlight because it is a launch note.
+                    spotLightRef.material.SetFloat("Vector1_114CB03C", gm.launchSpotLightIntensity);
                 }
 
                 break;
@@ -104,6 +149,14 @@ public class Note : MonoBehaviour
                     
                 transform.GetChild(1).GetComponentInChildren<Image>().sprite = upArrow;
                 transform.GetChild(1).GetComponentInChildren<Image>().color = gm.upArrowC;
+
+                //Set the colour of the spotlight
+                Color.RGBToHSV(gm.upArrowC, out H, out S, out V);
+                V += gm.noteSpotLightDiff;
+                spotLightRef.material.SetColor("Color_9834739F", Color.HSVToRGB(H, S, V));
+
+                // Increase the strength of the spotlight because it is a note note.
+                spotLightRef.material.SetFloat("Vector1_114CB03C", gm.noteSpotLightIntensity);
 
                 break;
 

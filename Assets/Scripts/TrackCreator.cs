@@ -289,22 +289,6 @@ public class TrackCreator : MonoBehaviour
             float b = (previousNoteBeatTime2 + nextNoteInBeats2) / 2;
             curNoteDiff = a;
             nextNoteDiff = b;
-
-            //Debug.Log("nextIndex3 " + nextIndex3);
-            //Debug.Log("previousNotebeatTime " + previousNoteBeatTime);
-            //Debug.Log("previousNoteBeatTime2 " + previousNoteBeatTime2);
-
-            //Debug.Log("nextNoteInBeats " + nextNoteInBeats);
-            //Debug.Log("nextNoteInBeats2 " + nextNoteInBeats2);
-
-            //Debug.Log("currentNoteDiff " + curNoteDiff);
-            //Debug.Log("nextNoteDiff " + nextNoteDiff);
-            //Debug.Log("-----------------------------");
-
-        // Future Anthony - Need to rework all this code + the similar code in each note.
-        // tc.canGetNote needs to be set to true only when a 'good' score cannot be achieved
-        // anymore, instead of exactly halfway between each beat.
-
         }
     }
     private void Update()
@@ -322,7 +306,6 @@ public class TrackCreator : MonoBehaviour
         // Start the song 
         if (Input.GetKeyDown(KeyCode.Space) && !audioSource.isPlaying)
         {
-
             dspTrackTime = (float)AudioSettings.dspTime;
 
             audioSource.Play();

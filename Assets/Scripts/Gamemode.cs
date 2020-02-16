@@ -49,6 +49,24 @@ public class Gamemode : MonoBehaviour
     public Color horizontalNoteArrowC;
     public Color horizontalLaunchArrowC;
     public Color upArrowC;
+    [Tooltip("The higher this value is, the lighter the spotlight will be, compared to the colour of the note")]
+    public float noteSpotLightDiff;
+    [Tooltip("The higher this value is, the larger the spotlight will be (in scale) for a launch note")]
+    public float launchSpotLightInc;
+
+    [Tooltip("The higher this value is, the more intense the spotlight will be for a note note")]
+    public float noteSpotLightIntensity;
+    [Tooltip("The higher this value is, the more intense the spotlight will be for a launch note")]
+    public float launchSpotLightIntensity;
+
+    [Tooltip("This is the maximum opacity the material can reach")]
+    public float maxPathOpacity = 15;
+    [Tooltip("This is the maximum distance that the path will be visible. The higher this number, the further the player can see of the path")]
+    public float maxPathViewDist = 1.1f;
+    [Tooltip("The higher this value, the faster the increase of opacity will elapse at the start of the game")]
+    public float pathOpacityIncSpeed = 3;
+    [Tooltip("The higher this value, the faster the increase in player sight for the path will be at the start of the game")]
+    public float pathViewDistIncSpeed = .2f;
 
     [Range(0, 1)]
     [Header("The MINIMUM point of how accurate the note must be hit for a PERFECT. 0 - 1")] 
