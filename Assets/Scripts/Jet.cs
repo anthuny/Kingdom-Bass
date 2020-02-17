@@ -25,7 +25,6 @@ public class Jet : MonoBehaviour
     public bool shooting;
     public ParticleSystem hitParticle;
 
-    // Start is called before the first frame update
     void Start()
     {
         player = FindObjectOfType<Player>().gameObject;
@@ -86,4 +85,3 @@ public class Jet : MonoBehaviour
         //Aim();
     }
 }
-//why is the majority of this commented out?

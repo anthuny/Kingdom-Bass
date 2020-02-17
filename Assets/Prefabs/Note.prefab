@@ -644,6 +644,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1539924428822953021}
     m_Modifications:
+    - target: {fileID: 5699407736266330119, guid: 47c81ec73816bd945a1b9263889c7c17,
+        type: 3}
+      propertyPath: m_Name
+      value: M_VolumetricLightINNER
+      objectReference: {fileID: 0}
     - target: {fileID: 8737833179216503316, guid: 47c81ec73816bd945a1b9263889c7c17,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -704,21 +709,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 0.57384
       objectReference: {fileID: 0}
-    - target: {fileID: 5699407736266330119, guid: 47c81ec73816bd945a1b9263889c7c17,
-        type: 3}
-      propertyPath: m_Name
-      value: M_VolumetricLightINNER
-      objectReference: {fileID: 0}
-    - target: {fileID: 362991767863723843, guid: 47c81ec73816bd945a1b9263889c7c17,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1770691166241863563, guid: 47c81ec73816bd945a1b9263889c7c17,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8404905275182532015, guid: 47c81ec73816bd945a1b9263889c7c17,
         type: 3}
       propertyPath: m_Name
@@ -744,6 +734,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 362991767863723843, guid: 47c81ec73816bd945a1b9263889c7c17,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1770691166241863563, guid: 47c81ec73816bd945a1b9263889c7c17,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47c81ec73816bd945a1b9263889c7c17, type: 3}
 --- !u!4 &985498757058393225 stripped
@@ -765,6 +765,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1539924428822953021}
     m_Modifications:
+    - target: {fileID: 5016877904187779681, guid: b83864a020910484baf83ba7b2e07caa,
+        type: 3}
+      propertyPath: m_Name
+      value: VolumetricNoteLight
+      objectReference: {fileID: 0}
+    - target: {fileID: 5016877904187779681, guid: b83864a020910484baf83ba7b2e07caa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4384075151383266294, guid: b83864a020910484baf83ba7b2e07caa,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -818,16 +828,6 @@ PrefabInstance:
     - target: {fileID: 4384075151383266294, guid: b83864a020910484baf83ba7b2e07caa,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5016877904187779681, guid: b83864a020910484baf83ba7b2e07caa,
-        type: 3}
-      propertyPath: m_Name
-      value: VolumetricNoteLight
-      objectReference: {fileID: 0}
-    - target: {fileID: 5016877904187779681, guid: b83864a020910484baf83ba7b2e07caa,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7766975481205187958, guid: b83864a020910484baf83ba7b2e07caa,

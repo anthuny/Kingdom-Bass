@@ -166,24 +166,28 @@ public class Note : MonoBehaviour
         }
     }
 
+    /*
     void UpArrowSecurity()
     {
         if (this. noteDir == "up")
         {
             player.DoNoteEffectUp();
         }
-
     }
-    // Update is called once per frame
+    */
+
     void Update()
     {
-
         if (!canMove)
         {
             return;
         }
 
-        UpArrowSecurity();
+        //UpArrowSecurity();
+        if (this. noteDir == "up")
+        {
+            player.DoNoteEffectUp();
+        }
 
         // Happens once when canMove is triggered true
         if (canMove && !doneOnce)
@@ -354,9 +358,9 @@ public class Note : MonoBehaviour
             }
             */
         }
-        
     }
-    void DestroyNote()
+
+    public void DestroyNote()
     {
         // remove this note to the active notes array
         player.activeNotes.Remove(this.gameObject.transform);

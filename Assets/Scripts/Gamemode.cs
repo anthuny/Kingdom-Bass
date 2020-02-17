@@ -97,9 +97,6 @@ public class Gamemode : MonoBehaviour
     [Tooltip("Max amount of time in seconds for how long it takes for movements to NOT give score")]
     public float maxTimeBetweenInputs;
 
-    // do al these need to be global?
-
-    // Start is called before the first frame update
     void Start()
     {
         QualitySettings.vSyncCount = 0;
@@ -119,22 +116,16 @@ public class Gamemode : MonoBehaviour
         perfectMin = 1 - perfectMin;
         greatMin = 1 - greatMin;
         goodMin = 1 - goodMin;
-        // ill need this explained to me
     }
 
-    // Update is called once per frame
     void Update()
     {
         jetZ = jetDistance + player.transform.position.z;
-
         jet.transform.position = new Vector3(0, jetY, jetZ);
 
         // If there is a change in score, Update the UI
         if (score != oldScore)
         {
-            oldScore = score; // is this needed?
-            scoreIncreased = true; // where is this used?
-            //if both above are used can they be moved to the UpdateUI method?? 
             UpdateUI();
         }
 
@@ -150,12 +141,17 @@ public class Gamemode : MonoBehaviour
 
     public void UpdateUI()
     {
-        scoreText.text = "Score | " + score.ToString();
+        oldScore = score;
+        scoreIncreased = true;
 
-        perfectsText.text = "Perfect: " + perfects.ToString();
-        greatsText.text = "Great: " + greats.ToString();
-        goodsText.text = "Good: " + goods.ToString();
-        missesText.text = "Miss: " + misses.ToString();
-        //could these be fit into a single multi line text box to save updating 4 texts?
+        scoreText.text = "Score | " + score.ToString();
+        perfectsText.text = "Perfect: " + perfects.ToString()+
+            "\nGreat: " + greats.ToString() +
+            "\nGood: " + goods.ToString()+
+            "\nMiss: " + misses.ToString();
+        //  greatsText.text = "Great: " + greats.ToString();
+        //  goodsText.text = "Good: " + goods.ToString();
+        // missesText.text = "Miss: " + misses.ToString();
+        //need to fit these into a single text box
     }
 }

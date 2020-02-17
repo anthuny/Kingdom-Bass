@@ -16,7 +16,6 @@ public class Laser : MonoBehaviour
 
     public Jet jet;
 
-    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -97,7 +96,7 @@ public class Laser : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // If laser hits the player, destroy the laser
-        if (other.transform.tag == "Player")
+        if (other.transform.CompareTag("Player"))
         {
             Destroy(gameObject);
         }

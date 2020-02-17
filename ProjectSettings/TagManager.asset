@@ -8,6 +8,7 @@ TagManager:
   - Note
   - NoteWall
   - DeadNote
+  - KILL
   layers:
   - Default
   - TransparentFX
