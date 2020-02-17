@@ -71,7 +71,7 @@ public class Note : MonoBehaviour
             case "left":
                 if (noteType == "note")
                 {
-                    Sprite leftArrow = Resources.Load<Sprite>("Sprites/T_LeftArrow") as Sprite;
+                    Sprite leftArrow = Resources.Load<Sprite>("Sprites/T_LeftArrowV2") as Sprite;
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = leftArrow;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalNoteArrowC;
@@ -86,7 +86,7 @@ public class Note : MonoBehaviour
                 }
                 else if (noteType == "launch")
                 {
-                    Sprite leftArrowLaunch = Resources.Load<Sprite>("Sprites/T_LeftArrowLaunch") as Sprite;
+                    Sprite leftArrowLaunch = Resources.Load<Sprite>("Sprites/T_LeftArrowLaunchV2") as Sprite;
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = leftArrowLaunch;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalLaunchArrowC;
@@ -98,7 +98,7 @@ public class Note : MonoBehaviour
 
                     //Increase the scale of the spotlight because it is a launch note.
                     Vector3 scale = spotLightRef.gameObject.transform.localScale;
-                    spotLightRef.gameObject.transform.localScale = new Vector3(scale.x = 1 + gm.launchSpotLightInc, scale.y + gm.launchSpotLightInc / 2, scale.z = gm.launchSpotLightInc);
+                    spotLightRef.gameObject.transform.localScale = new Vector3(scale.x = 1 + gm.launchSpotLightInc, scale.y + gm.launchSpotLightInc / 2, scale.z = 1 + gm.launchSpotLightInc);
 
                     // Increase the strength of the spotlight because it is a launch note.
                     spotLightRef.material.SetFloat("Vector1_114CB03C", gm.launchSpotLightIntensity);
@@ -109,7 +109,7 @@ public class Note : MonoBehaviour
             case "right":
                 if (noteType == "note")
                 {
-                    Sprite rightArrow = Resources.Load<Sprite>("Sprites/T_RightArrow") as Sprite;
+                    Sprite rightArrow = Resources.Load<Sprite>("Sprites/T_RightArrowV2") as Sprite;
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = rightArrow;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalNoteArrowC;
@@ -124,7 +124,7 @@ public class Note : MonoBehaviour
                 }
                 else if (noteType == "launch")
                 {
-                    Sprite rightArrowLaunch = Resources.Load<Sprite>("Sprites/T_RightArrowLaunch") as Sprite;
+                    Sprite rightArrowLaunch = Resources.Load<Sprite>("Sprites/T_RightArrowLaunchV2") as Sprite;
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = rightArrowLaunch;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalLaunchArrowC;
@@ -136,7 +136,7 @@ public class Note : MonoBehaviour
 
                     //Increase the scale of the spotlight because it is a launch note.
                     Vector3 scale = spotLightRef.gameObject.transform.localScale;
-                    spotLightRef.gameObject.transform.localScale = new Vector3(scale.x = 1 + gm.launchSpotLightInc, scale.y + gm.launchSpotLightInc / 2, scale.z = gm.launchSpotLightInc);
+                    spotLightRef.gameObject.transform.localScale = new Vector3(scale.x = 1 + gm.launchSpotLightInc, scale.y + gm.launchSpotLightInc / 2, scale.z = 1 + gm.launchSpotLightInc);
 
                     // Increase the strength of the spotlight because it is a launch note.
                     spotLightRef.material.SetFloat("Vector1_114CB03C", gm.launchSpotLightIntensity);
@@ -145,7 +145,7 @@ public class Note : MonoBehaviour
                 break;
 
             case "up":
-                Sprite upArrow = Resources.Load<Sprite>("Sprites/T_UpArrow") as Sprite;
+                Sprite upArrow = Resources.Load<Sprite>("Sprites/T_UpArrowV2") as Sprite;
                     
                 transform.GetChild(1).GetComponentInChildren<Image>().sprite = upArrow;
                 transform.GetChild(1).GetComponentInChildren<Image>().color = gm.upArrowC;
