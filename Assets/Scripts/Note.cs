@@ -363,8 +363,8 @@ public class Note : MonoBehaviour
     public void DestroyNote()
     {
         // remove this note to the active notes array
-        player.activeNotes.Remove(this.gameObject.transform);
-        Destroy(this.gameObject);
+        //player.activeNotes.Remove(this.gameObject.transform);
+        //Destroy(this.gameObject);
     }
 }
 
