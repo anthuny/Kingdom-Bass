@@ -9,19 +9,9 @@ public class KillBox : MonoBehaviour
     {
         Debug.Log("killbox works");
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(collision + " kill box col");
-    }
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other + "kill box trg");
+        other.gameObject.GetComponent<Note>().DestroyNote();
     }
 }

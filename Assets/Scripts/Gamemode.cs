@@ -69,16 +69,18 @@ public class Gamemode : MonoBehaviour
     public float pathViewDistIncSpeed = .2f;
 
     [Range(0, 1)]
-    [Header("The MINIMUM point of how accurate the note must be hit for a PERFECT. 0 - 1")] 
-    public float perfectMin;
+    [Header("What percentage of accuracy is required for a PERFECT hit?")] 
+    public float prPercent;
+    public GameObject perfectCOL;
     [Range(0, 1)]
-    [Header("The MINIMUM point of how accurate the note must be hit for a GREAT. 0 - 1")]
-    public float greatMin;
+    [Header("What percentage of accuracy is required for a GREAT hit?")]
+    public float grPercent;
+    public GameObject greatCOL;
     [Range(0, 1)]
-    [Header("The MINIMUM point of how accurate the note must be hit for a GOOD. 0 - 1")]
-    public float goodMin;
-    //recomend change from checking distance between notes to a set of colliders on the player and check that way as to free up processing from constantly checking distance of notes
-    //probably not that big of a drain for most PCs to notice but need to optimise where we can for slower ones
+    [Header("What percentage of accuracy is required for a GOOD hit?")]
+    public float goPercent;
+    public GameObject goodCOL;
+    //anything outside of these percentages will be treated as a miss
 
     [HideInInspector]
     public float greatMax, goodMax, missMax;
@@ -109,13 +111,13 @@ public class Gamemode : MonoBehaviour
 
         Application.targetFrameRate = targetFps;
 
-        greatMax = perfectMin + 0.01f;
-        goodMax = greatMax + 0.01f;
-        missMax = goodMax + 0.01f;
-
-        perfectMin = 1 - perfectMin;
-        greatMin = 1 - greatMin;
-        goodMin = 1 - goodMin;
+        Vector3 playerT = player.transform.localScale;
+        playerT.x = prPercent;
+        perfectCOL.transform.localScale = playerT;
+        playerT.x = grPercent;
+        greatCOL.transform.localScale = playerT;
+        playerT.x = goPercent;
+        goodCOL.transform.localScale = playerT;
     }
 
     void Update()
@@ -136,7 +138,6 @@ public class Gamemode : MonoBehaviour
         scoreAllowedText.text = "scoreAllowed = " + player.GetComponent<Player>().scoreAllowed.ToString();
         canGetNoteText.text = "canGetNote = " + tc.canGetNote.ToString();
         timeFromLastMoveText.text = "Time From Last Movement " + player.GetComponent<Player>().elapsedTimeSinceMove.ToString();
-        //is all this just for debug?
     }
 
     public void UpdateUI()
@@ -149,9 +150,5 @@ public class Gamemode : MonoBehaviour
             "\nGreat: " + greats.ToString() +
             "\nGood: " + goods.ToString()+
             "\nMiss: " + misses.ToString();
-        //  greatsText.text = "Great: " + greats.ToString();
-        //  goodsText.text = "Good: " + goods.ToString();
-        // missesText.text = "Miss: " + misses.ToString();
-        //need to fit these into a single text box
     }
 }

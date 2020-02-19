@@ -87,9 +87,9 @@ public class Player : MonoBehaviour
     {
         Inputs();
         Movement();
-        FindNearestNote();
+        //FindNearestNote();
     }
-
+    /*
     void FindNearestNote()
     {
         float minDist = Mathf.Infinity;
@@ -107,6 +107,7 @@ public class Player : MonoBehaviour
             }
         }
     }
+    */
     void Inputs()
     {
         // If:
@@ -116,6 +117,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown("d") && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber)
         {
             movingRight = true;
+            /*
             // Ensure that the player cannot get score until 1 beat before the first note
             if (tc.trackPosInBeatsGame > tc.firstNote - 1)
             {
@@ -123,6 +125,7 @@ public class Player : MonoBehaviour
                 scoreAllowed = false;
                 canIncreaseScore = true;
             }
+            */
 
         }
 
@@ -133,6 +136,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown("a") && !movingRight && !movingLeft && nearestLaneNumber != 1)
         {
             movingLeft = true;
+            /*
             // Ensure that the player cannot get score until 1 beat before the first note
             if (tc.trackPosInBeatsGame > tc.firstNote - 1)
             {
@@ -140,6 +144,7 @@ public class Player : MonoBehaviour
                 scoreAllowed = false;
                 canIncreaseScore = true;
             }
+            */
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -243,7 +248,7 @@ public class Player : MonoBehaviour
         //Debug.Log("``````````````````````");
         //Debug.Break();
 
-        CheckHitAccuracy();
+        //CheckHitAccuracy();
     }
 
     private void DoNoteEffect()
@@ -294,6 +299,7 @@ public class Player : MonoBehaviour
 
     }
 
+    /*
     private void CheckHitAccuracy()
     {
         // If the player has already inputed a legal move for the note, do not allow it
@@ -371,6 +377,7 @@ public class Player : MonoBehaviour
         ResetNotes();
         //Debug.Break();
     }
+    
     private void CheckFirstHitAccuracy()
     {
         if (tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval))
@@ -401,6 +408,7 @@ public class Player : MonoBehaviour
 
         ResetNotes();
     }
+    */
     private void ResetNotes()
     {
         canIncreaseScore = false;

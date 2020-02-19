@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class Note : MonoBehaviour
 {
     private TrackCreator tc;
@@ -166,22 +165,9 @@ public class Note : MonoBehaviour
         }
     }
 
-    /*
-    void UpArrowSecurity()
-    {
-        if (this. noteDir == "up")
-        {
-            player.DoNoteEffectUp();
-        }
-    }
-    */
-
     void Update()
     {
-        if (!canMove)
-        {
-            return;
-        }
+        if (!canMove) { return; }
 
         //UpArrowSecurity();
         if (this. noteDir == "up")
@@ -360,6 +346,28 @@ public class Note : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject)
+        {
+            if (collision.gameObject.CompareTag("PERFECT"))
+            {
+
+            }
+            else if (collision.gameObject.CompareTag("GREAT"))
+            {
+
+            }
+            else if (collision.gameObject.CompareTag("GOOD"))
+            {
+
+            }
+            else
+            {
+                Debug.LogError("colided with player but no valid collider was found");
+            }
+        }
+    }
     public void DestroyNote()
     {
         // remove this note to the active notes array
