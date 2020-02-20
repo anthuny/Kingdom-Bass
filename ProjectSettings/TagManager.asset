@@ -9,6 +9,10 @@ TagManager:
   - NoteWall
   - DeadNote
   - KILL
+  - PERFECT
+  - GREAT
+  - GOOD
+  - PlayerPos
   layers:
   - Default
   - TransparentFX

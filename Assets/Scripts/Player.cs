@@ -46,6 +46,9 @@ public class Player : MonoBehaviour
     public List<Transform> activeNotes = new List<Transform>();
     public Transform nearestNote;
 
+    public GameObject[] lanePos = new GameObject[5];
+    private int playerCurrentLane;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,10 +59,13 @@ public class Player : MonoBehaviour
         cm = Camera.main.GetComponent<CameraBehaviour>();
 
         rend = GetComponentInChildren<Renderer>();
-        playerWidth = rend.bounds.size.z;   
+        playerWidth = rend.bounds.size.z;
 
         pathWidth = pm.initialPath.GetComponent<Path>().pathWidth;
 
+        lanePos = GameObject.FindGameObjectsWithTag("PlayerPos");
+        playerCurrentLane = 3;
+        gameObject.GetComponent<Transform>().position = lanePos[playerCurrentLane].GetComponent<Transform>().position;
     }
 
     public void RepositionPlayer(GameObject go)
@@ -86,7 +92,9 @@ public class Player : MonoBehaviour
     void Update()
     {
         Inputs();
-        Movement();
+        gameObject.GetComponent<Transform>().position = lanePos[playerCurrentLane].gameObject.GetComponent<Transform>().position;
+        gameObject.GetComponent<Transform>().rotation = Quaternion.Euler(0, 0, 0);
+        // Movement();
         //FindNearestNote();
     }
     /*
@@ -110,6 +118,7 @@ public class Player : MonoBehaviour
     */
     void Inputs()
     {
+        /*
         // If:
         //      player is pressing D
         //      playing is NOT moving left or right already
@@ -125,7 +134,6 @@ public class Player : MonoBehaviour
                 scoreAllowed = false;
                 canIncreaseScore = true;
             }
-            */
 
         }
 
@@ -144,7 +152,15 @@ public class Player : MonoBehaviour
                 scoreAllowed = false;
                 canIncreaseScore = true;
             }
+            }
             */
+        if (Input.GetKeyDown("d"))
+        {
+            MoveRight(false);
+        }
+        else if (Input.GetKeyDown("a"))
+        {
+            MoveLeft(false);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -157,8 +173,33 @@ public class Player : MonoBehaviour
             isBlocking = false;
         }
     }
+  
+    void MoveLeft(bool launch)
+    {
+        if (launch)
+        {
+            playerCurrentLane = 0;
+        }
+        else if (playerCurrentLane!=0)
+        {
+            playerCurrentLane -= 1;
+        }
+        gameObject.GetComponent<Transform>().position = lanePos[playerCurrentLane].gameObject.GetComponent<Transform>().position;
+    }
+    void MoveRight(bool launch)
+    {
+        if (launch)
+        {
+            playerCurrentLane = 4;
+        }
+       else if (playerCurrentLane != 4)
+        {
+            playerCurrentLane += 1;
+        }
+        gameObject.GetComponent<Transform>().position = lanePos[playerCurrentLane].gameObject.GetComponent<Transform>().position;
+    }
 
-
+    /*
     void Movement()
     {
         // Ensures that there is a nearest path to begin with
@@ -215,9 +256,9 @@ public class Player : MonoBehaviour
 
         // Functionality of moving right
         if (movingRight)
-        {        
+        {
             movingLeft = false;
-            rb.AddForce(Vector3.right * gm.playerEvadeStr);          
+            rb.AddForce(Vector3.right * gm.playerEvadeStr);
         }
 
 
@@ -228,6 +269,7 @@ public class Player : MonoBehaviour
             rb.AddForce(Vector3.left * gm.playerEvadeStr);
         }
     }
+    */
     void AssignFromAndToValues()
     {
         if (!isBlocking)
@@ -288,7 +330,7 @@ public class Player : MonoBehaviour
 
         if (nearestNoteScript.noteDir == "up" && isBlocking)
         {
-            if (nearestNoteScript.gameObject.transform.position.z < transform.position.z 
+            if (nearestNoteScript.gameObject.transform.position.z < transform.position.z
                 && nearestLaneNumber == nearestNoteScript.laneNumber && !nearestNoteScript.doneUpArrow)
             {
                 nearestNoteScript.doneUpArrow = true;
@@ -409,6 +451,14 @@ public class Player : MonoBehaviour
         ResetNotes();
     }
     */
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("coll enter" + collision.gameObject.name);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("trg enter" + other.gameObject.name);
+    }
     private void ResetNotes()
     {
         canIncreaseScore = false;

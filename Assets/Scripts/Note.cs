@@ -346,28 +346,6 @@ public class Note : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject)
-        {
-            if (collision.gameObject.CompareTag("PERFECT"))
-            {
-
-            }
-            else if (collision.gameObject.CompareTag("GREAT"))
-            {
-
-            }
-            else if (collision.gameObject.CompareTag("GOOD"))
-            {
-
-            }
-            else
-            {
-                Debug.LogError("colided with player but no valid collider was found");
-            }
-        }
-    }
     public void DestroyNote()
     {
         // remove this note to the active notes array

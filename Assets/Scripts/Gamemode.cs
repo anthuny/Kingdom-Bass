@@ -111,12 +111,19 @@ public class Gamemode : MonoBehaviour
 
         Application.targetFrameRate = targetFps;
 
+        //find all the colliders and set them to gameObject Vars
+        perfectCOL = GameObject.FindGameObjectWithTag("PERFECT");
+        greatCOL = GameObject.FindGameObjectWithTag("GREAT");
+        goodCOL = GameObject.FindGameObjectWithTag("GOOD");
         Vector3 playerT = player.transform.localScale;
-        playerT.x = prPercent;
+        playerT.y = 2;
+
+        //set the Z scale of each to the value of the percentage set in inspector this will only affect the width of the collider relative to the centre of the object
+        playerT.z = prPercent;
         perfectCOL.transform.localScale = playerT;
-        playerT.x = grPercent;
+        playerT.z = grPercent;
         greatCOL.transform.localScale = playerT;
-        playerT.x = goPercent;
+        playerT.z = goPercent;
         goodCOL.transform.localScale = playerT;
     }
 

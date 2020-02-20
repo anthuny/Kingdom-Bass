@@ -11,7 +11,7 @@ public class KillBox : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other + "kill box trg");
+      //  Debug.Log(other + "kill box trg");
         other.gameObject.GetComponent<Note>().DestroyNote();
     }
 }
