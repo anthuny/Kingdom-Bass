@@ -39,12 +39,16 @@ public class Player : MonoBehaviour
     public float elapsedTimeSinceMove;
 
     private float startTime;
-    public bool isBlocking;
+    public bool isShielding;
 
     private float currentPointInBeats;
 
     public List<Transform> activeNotes = new List<Transform>();
     public Transform nearestNote;
+
+    public Material shieldMat;
+    private Color shieldColor;
+    public GameObject shield;
 
     // Start is called before the first frame update
     void Start()
@@ -56,10 +60,11 @@ public class Player : MonoBehaviour
         cm = Camera.main.GetComponent<CameraBehaviour>();
 
         rend = GetComponentInChildren<Renderer>();
-        playerWidth = rend.bounds.size.z;   
+        playerWidth = rend.bounds.size.z;
 
         pathWidth = pm.initialPath.GetComponent<Path>().pathWidth;
 
+        ShieldReset();
     }
 
     public void RepositionPlayer(GameObject go)
@@ -88,8 +93,22 @@ public class Player : MonoBehaviour
         Inputs();
         Movement();
         FindNearestNote();
+        UpdateShield();
     }
 
+    void UpdateShield()
+    {
+        shieldMat.SetFloat("Vector1_A7E2E21E", gm.shieldOpacity);
+        shieldColor = gm.shieldColor;
+        shieldMat.SetColor("Color_58F8661B", shieldColor * gm.shieldEmissionInc);
+    }
+
+    void ShieldReset()
+    {
+        // Ensure that the shield is off when the game starts
+        shieldMat.SetFloat("Vector1_A7E2E21E", 0);
+        shieldMat.SetColor("Color_58F8661B", shieldColor * 0);
+    }
     void FindNearestNote()
     {
         float minDist = Mathf.Infinity;
@@ -144,12 +163,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            isBlocking = true;
+            isShielding = true;
         }
 
-        if (Input.GetKeyUp(KeyCode.Space))
+        else if (Input.GetKeyUp(KeyCode.Space))
         {
-            isBlocking = false;
+            isShielding = false;
         }
     }
 
@@ -225,7 +244,7 @@ public class Player : MonoBehaviour
     }
     void AssignFromAndToValues()
     {
-        if (!isBlocking)
+        if (!isShielding)
         {
             return;
         }
@@ -281,7 +300,7 @@ public class Player : MonoBehaviour
         }
         Note nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
 
-        if (nearestNoteScript.noteDir == "up" && isBlocking)
+        if (nearestNoteScript.noteDir == "up" && isShielding)
         {
             if (nearestNoteScript.gameObject.transform.position.z < transform.position.z 
                 && nearestLaneNumber == nearestNoteScript.laneNumber && !nearestNoteScript.doneUpArrow)

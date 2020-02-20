@@ -7,6 +7,7 @@ public class Gamemode : MonoBehaviour
 {
     private TrackCreator tc;
     private GameObject player;
+    private Player playerScript;
     [HideInInspector]
     public GameObject jet;
     public float jetZ;
@@ -97,11 +98,31 @@ public class Gamemode : MonoBehaviour
     [Tooltip("Max amount of time in seconds for how long it takes for movements to NOT give score")]
     public float maxTimeBetweenInputs;
 
+    [Header("Shield")]
+    public float shieldOpacityIncSpeed = 1;
+    public float shieldEmissionIncSpeed = 3;
+    //[HideInInspector]
+    public float shieldOpacity;
+    //[HideInInspector]
+    public float shieldEmissionInc;
+    [ColorUsageAttribute(true,true)]
+    public Color shieldColor;
+
+    private bool allowIncOpacity;
+    private bool allowIncEmission;
+    private bool completed1 = true;
+    private bool completed2 = true;
+    public float shieldMaxEmission;
+    public float shieldPulseSpeed = 5;
+    public float shieldMinScale;
+    public float shieldMaxScale;
+    public float shieldScaleSpeed;
     void Start()
-    {
+    { 
         QualitySettings.vSyncCount = 0;
 
         player = FindObjectOfType<Player>().gameObject;
+        playerScript = player.GetComponent<Player>();
         jet = FindObjectOfType<Jet>().gameObject;
         tc = FindObjectOfType<TrackCreator>();
 
@@ -120,6 +141,8 @@ public class Gamemode : MonoBehaviour
 
     void Update()
     {
+        UpdateShield();
+
         jetZ = jetDistance + player.transform.position.z;
         jet.transform.position = new Vector3(0, jetY, jetZ);
 
@@ -132,13 +155,102 @@ public class Gamemode : MonoBehaviour
         currentFps = 1.0f / Time.deltaTime;
         fpsCounterText.text = "FPS | " + (int)currentFps;
 
-        noteCalculationOverText.text = "noteCalculationOver = " + player.GetComponent<Player>().noteCalculationOver.ToString();
-        scoreAllowedText.text = "scoreAllowed = " + player.GetComponent<Player>().scoreAllowed.ToString();
+        noteCalculationOverText.text = "noteCalculationOver = " + playerScript.noteCalculationOver.ToString();
+        scoreAllowedText.text = "scoreAllowed = " + playerScript.scoreAllowed.ToString();
         canGetNoteText.text = "canGetNote = " + tc.canGetNote.ToString();
-        timeFromLastMoveText.text = "Time From Last Movement " + player.GetComponent<Player>().elapsedTimeSinceMove.ToString();
-        //is all this just for debug?
+        timeFromLastMoveText.text = "Time From Last Movement " + playerScript.elapsedTimeSinceMove.ToString();
+        //is all this just for debug? yes
     }
 
+    void UpdateShield()
+    {
+        // Turning the visuals ON for the shield
+        if (playerScript.isShielding)
+        {
+            //completed1 = false;
+            allowIncOpacity = true;
+            allowIncEmission = true;
+        }
+
+        if (allowIncOpacity)
+        {
+            // Increase the opacity of the shield
+            shieldOpacity += Time.deltaTime * shieldOpacityIncSpeed;
+
+            // If shield is active, set pulse speed to it's actual value
+            playerScript.shieldMat.SetFloat("Vector1_60F525E0", shieldPulseSpeed);
+
+            // Increase the scale of the shield
+            //playerScript.shield.transform.localScale = Vector3.Lerp(new Vector3(shieldMinScale, shieldMinScale, shieldMinScale),
+            //    new Vector3(shieldMaxScale, shieldMaxScale, shieldMaxScale), shieldScaleSpeed);
+
+            playerScript.shield.transform.localScale += Vector3.one * Time.deltaTime * shieldScaleSpeed;
+
+            // if the shield opacity reaches 1, stop it from continuing
+            if (shieldOpacity >= 1 || playerScript.shield.transform.localScale.x >= shieldMaxScale)
+            {
+                shieldOpacity = 1;
+
+                // Set the scale of the shield to the max scale
+                playerScript.shield.transform.localScale = new Vector3(shieldMaxScale, shieldMaxScale, shieldMaxScale);
+            }
+        }
+
+        if (allowIncEmission)
+        {
+            // Increase the emission over time
+            shieldEmissionInc += Time.deltaTime * shieldEmissionIncSpeed;
+
+            // If the shield emmision reaches or passes the max, stop it from continuing
+            if (shieldEmissionInc >= shieldMaxEmission)
+            {
+                shieldEmissionInc = shieldMaxEmission;
+            }
+        }
+
+        // Turning the visuals OFF for the shield
+        if (!playerScript.isShielding)
+        {
+            allowIncOpacity = false;
+            allowIncEmission = false;
+        }
+
+        if (!allowIncOpacity)
+        {
+            // Increase the opacity of the shield
+            shieldOpacity -= Time.deltaTime * shieldOpacityIncSpeed;
+
+            // If shield is active, set pulse speed to 0
+            playerScript.shieldMat.SetFloat("Vector1_60F525E0", 0);
+
+            // Decrease the scale of the shield
+            //playerScript.shield.transform.localScale = Vector3.Lerp(new Vector3(shieldMaxScale, shieldMaxScale, shieldMaxScale),
+             //   new Vector3(shieldMinScale, shieldMinScale, shieldMinScale), shieldScaleSpeed);
+
+            playerScript.shield.transform.localScale -= Vector3.one * Time.deltaTime * shieldScaleSpeed;
+
+            // if the shield opacity reaches 0, stop it from continuing
+            if (shieldOpacity <= 0 || playerScript.shield.transform.localScale.x <= shieldMinScale)
+            {
+                shieldOpacity = 0;
+                shieldEmissionInc = 0;
+                // Set the scale of the shield to the min scale
+                playerScript.shield.transform.localScale = new Vector3(shieldMinScale, shieldMinScale, shieldMinScale);
+            }
+        }
+
+        if (!allowIncEmission)
+        {
+            // Increase the emission over time
+            shieldEmissionInc -= Time.deltaTime * shieldEmissionIncSpeed;
+
+            // If the shield emmision reaches or passes the max, stop it from continuing
+            if (shieldEmissionInc <= 0)
+            {
+                shieldEmissionInc = 0;
+            }
+        }
+    }
     public void UpdateUI()
     {
         oldScore = score;
