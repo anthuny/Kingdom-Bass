@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
         //      player is pressing D
         //      playing is NOT moving left or right already
         //      player is not in the most RIGHT lane
-        if (Input.GetKeyDown("d") && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber)
+        if (Input.GetKeyDown(KeyCode.RightShift) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber)
         {
             movingRight = true;
             // Ensure that the player cannot get score until 1 beat before the first note
@@ -149,7 +149,7 @@ public class Player : MonoBehaviour
         //      player is pressing A
         //      playing is NOT moving left or right already
         //      player is not in the most LEFT lane
-        if (Input.GetKeyDown("a") && !movingRight && !movingLeft && nearestLaneNumber != 1)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !movingRight && !movingLeft && nearestLaneNumber != 1)
         {
             movingLeft = true;
             // Ensure that the player cannot get score until 1 beat before the first note

@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddcec8a8eb2d684d833ac8f5d26aebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   maxShadowDistance:
     m_OverrideState: 1
@@ -187,13 +187,13 @@ MonoBehaviour:
     max: 5
   skyTint:
     m_OverrideState: 1
-    m_Value: {r: 0.9811321, g: 0.9811321, b: 0.9811321, a: 1}
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   groundColor:
     m_OverrideState: 1
-    m_Value: {r: 0, g: 0, b: 0, a: 1}
+    m_Value: {r: 0.24528301, g: 0.24181202, b: 0.24181202, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f077503be6ae942a1e1245dbd53ea9, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   intensity:
     m_OverrideState: 1
@@ -296,20 +296,20 @@ MonoBehaviour:
     min: 0
   albedo:
     m_OverrideState: 1
-    m_Value: {r: 0.5382699, g: 0.5816098, b: 0.6037736, a: 1}
+    m_Value: {r: 0.051174805, g: 0.30646938, b: 0.4716981, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 25.9
+    m_Value: 16.6
     min: 1
   baseHeight:
     m_OverrideState: 1
-    m_Value: -35.2
+    m_Value: -21.7
   meanHeight:
     m_OverrideState: 1
-    m_Value: -26.1
+    m_Value: -13.1
   anisotropy:
     m_OverrideState: 1
     m_Value: -0.061

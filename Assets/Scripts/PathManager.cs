@@ -74,8 +74,8 @@ public class PathManager : MonoBehaviour
             for (int i = 0; i < paths.Count; i++)
             {
                 // Increase the opacity and the player's sight distance on it over time
-                paths[i].transform.GetChild(0).GetComponent<Renderer>().material.SetFloat("Vector1_114CB03C", t);
-                paths[i].transform.GetChild(0).GetComponent<Renderer>().material.SetFloat("Vector1_E92490E6", n);
+                paths[i].transform.GetChild(0).GetComponent<Renderer>().material.SetFloat("Vector1_7E903828", t);
+                paths[i].transform.GetChild(0).GetComponent<Renderer>().material.SetFloat("Vector1_58090123", n);
             }
         }
 
@@ -156,9 +156,49 @@ public class PathManager : MonoBehaviour
 
             // After all lanes have spawned (all at 0 opacity) allow them to begin to increase in opacity
             GameObject allPaths = FindObjectOfType<Path>().gameObject;
-            allPaths.transform.GetChild(1).GetComponent<Renderer>().material.SetFloat("Vector1_114CB03C", 0);
+            allPaths.transform.GetChild(0).GetComponent<Renderer>().material.SetFloat("Vector1_7E903828", 0);
 
             spawningPaths = true;
+
+            // If this path is NOT the last path
+            if (i != maxLanes)
+            {
+                // Disable the right divider of the path
+                go.GetComponent<Path>().rightDivider.SetActive(false);
+            }
+
+            // If this path is the LAST path
+            else
+            {
+                // enable the right divider of the path
+                go.GetComponent<Path>().rightDivider.SetActive(true);
+
+                go.GetComponent<Path>().rightBeam.transform.localPosition = new Vector3(0.75f, 2.082f, 5.135f);
+                go.GetComponent<Path>().rightBeam.transform.localScale = new Vector3(0.13f, 5f, 0.13f);
+
+                // Iterate through all right divider visuals and make them all larger in scale + position them differently
+                for (int x = 0; x < go.GetComponent<Path>().rightDividers.Length; x++)
+                {
+                    go.GetComponent<Path>().rightDividers[x].transform.localScale = new Vector3(2.2f, 1, 1);
+                    go.GetComponent<Path>().rightDividers[x].GetComponent<RectTransform>().localPosition = new Vector3(-12, -1.73f, 0);
+                    go.GetComponent<Path>().rightDividers[x].GetComponent<RectTransform>().localScale = new Vector3(2.2f, 1.2f, 1);
+                }
+            }
+
+            // If this path is the FIRST path
+            if (i == 1)
+            {
+                go.GetComponent<Path>().leftBeam.transform.localPosition = new Vector3(2.326f, 2.082f, 5.135f);
+                go.GetComponent<Path>().leftBeam.transform.localScale = new Vector3(0.13f, 5f, 0.13f);
+
+                // Iterate through all left divider visuals and make them all larger in scale + position them differently + scale them differently
+                for (int x = 0; x < go.GetComponent<Path>().leftDividers.Length; x++)
+                {
+                    go.GetComponent<Path>().leftDividers[x].transform.localScale = new Vector3(2.2f, 1, 1);
+                    go.GetComponent<Path>().leftDividers[x].GetComponent<RectTransform>().localPosition = new Vector3(-12, -1.73f, 0);
+                    go.GetComponent<Path>().leftDividers[x].GetComponent<RectTransform>().localScale = new Vector3(2.2f, 1.2f, 1);
+                }
+            }
         }
     }
 

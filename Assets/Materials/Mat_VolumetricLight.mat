@@ -27,4 +27,4 @@ Material:
     - Vector1_2380839B: 2500
     - Vector1_E92490E6: 0.75
     m_Colors:
-    - Color_9834739F: {r: 0, g: 0.38099718, b: 1, a: 0}
+    - Color_9834739F: {r: 1, g: 1, b: 1, a: 0}

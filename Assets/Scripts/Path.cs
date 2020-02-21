@@ -14,6 +14,13 @@ public class Path : MonoBehaviour
     public int segment;
     public int laneNumber;
 
+    public GameObject leftDivider;
+    public GameObject rightDivider;
+    public GameObject[] leftDividers;
+    public GameObject[] rightDividers;
+    public GameObject leftBeam;
+    public GameObject rightBeam;
+
     // Start is called before the first frame update
     void Awake()
     {

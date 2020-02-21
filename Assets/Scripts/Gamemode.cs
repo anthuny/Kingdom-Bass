@@ -117,6 +117,9 @@ public class Gamemode : MonoBehaviour
     public float shieldMinScale;
     public float shieldMaxScale;
     public float shieldScaleSpeed;
+
+    [Header("Path")]
+    public float pathColourValue;
     void Start()
     { 
         QualitySettings.vSyncCount = 0;
