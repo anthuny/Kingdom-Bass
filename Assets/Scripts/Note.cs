@@ -158,7 +158,26 @@ public class Note : MonoBehaviour
                 // Increase the strength of the spotlight because it is a note note.
                 spotLightRef.material.SetFloat("Vector1_114CB03C", gm.noteSpotLightIntensity);
 
+
                 break;
+            /*
+        case "blast":
+           Sprite blastNote = //put blast sprite in here
+
+            transform.GetChild(1).GetComponentInChildren<Image>().sprite = blastNote
+            transform.GetChild(1).GetComponentInChildren<Image>().color = gm.blastNoteC;
+
+               //Set the colour of the spotlight
+                Color.RGBToHSV(gm.blastNoteC, out H, out S, out V);
+                V += gm.noteSpotLightDiff;
+                spotLightRef.material.SetColor(//add colour for spotlight here);
+
+                // Increase the strength of the spotlight because it is a blast note.
+                spotLightRef.material.SetFloat(//add intensity vector here);
+
+            gameObject.GetComponent<Transform>().localScale.Set(3, 1, 1);
+            break;
+            */
 
             default:
                 Debug.Log(this.gameObject.name + " does not have proper arrow direction");
@@ -368,4 +387,4 @@ public class Note : MonoBehaviour
     }
 }
 
-
+    

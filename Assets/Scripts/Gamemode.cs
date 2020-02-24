@@ -36,6 +36,8 @@ public class Gamemode : MonoBehaviour
     public Text goodsText;
     public Text missesText;
     public Text beatsText;
+    public Text comboText;
+    public Text healthText
 
     public Text timeFromLastMoveText;
 
@@ -51,6 +53,7 @@ public class Gamemode : MonoBehaviour
     public Color horizontalNoteArrowC;
     public Color horizontalLaunchArrowC;
     public Color upArrowC;
+    public Color blastNoteC;
     [Tooltip("The higher this value is, the lighter the spotlight will be, compared to the colour of the note")]
     public float noteSpotLightDiff;
     [Tooltip("The higher this value is, the larger the spotlight will be (in scale) for a launch note")]
@@ -94,6 +97,9 @@ public class Gamemode : MonoBehaviour
     public int badScore;
     public int missScore;
 
+    public int comboMulti = 1;
+
+
     public bool scoreIncreased;
 
     [Tooltip("Max amount of time in seconds for how long it takes for movements to NOT give score")]
@@ -124,6 +130,17 @@ public class Gamemode : MonoBehaviour
     public Color lane2Color;
     public Color lane3Color;
 
+
+    [Header("Health Bar")]
+    private float health;
+
+    public float healthMax;
+    public float regenPerfect;
+    public float regenGreat;
+    public float regenGood;
+    public float lossMiss;
+    public float healthRegenPerSec;
+
     void Start()
     { 
         QualitySettings.vSyncCount = 0;
@@ -144,6 +161,8 @@ public class Gamemode : MonoBehaviour
         perfectMin = 1 - perfectMin;
         greatMin = 1 - greatMin;
         goodMin = 1 - goodMin;
+
+        health = healthMax;
     }
 
     void Update()
@@ -156,6 +175,7 @@ public class Gamemode : MonoBehaviour
         // If there is a change in score, Update the UI
         if (score != oldScore)
         {
+            comboMulti += 1;
             UpdateUI();
         }
 
@@ -261,6 +281,10 @@ public class Gamemode : MonoBehaviour
     }
     public void UpdateUI()
     {
+        if (score != oldScore)
+        {
+            comboMulti += 1;
+        }
         oldScore = score;
         scoreIncreased = true;
 
@@ -269,9 +293,21 @@ public class Gamemode : MonoBehaviour
             "\nGreat: " + greats.ToString() +
             "\nGood: " + goods.ToString()+
             "\nMiss: " + misses.ToString();
-        //  greatsText.text = "Great: " + greats.ToString();
-        //  goodsText.text = "Good: " + goods.ToString();
-        // missesText.text = "Miss: " + misses.ToString();
-        //need to fit these into a single text box
+        comboText.text = ("Combo Multiplier x" + comboMulti.ToString());
+        healthText.text = (health.ToString());
+    }
+
+    public void UpdateHealth(float amount)
+    {
+        health += amount;
+
+        if (health<=0)
+        {
+            health = 0f;
+        }
+        else if (health>=healthMax)
+        {
+            health = healthMax;
+        }
     }
 }

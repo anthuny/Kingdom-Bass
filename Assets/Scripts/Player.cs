@@ -429,25 +429,30 @@ public class Player : MonoBehaviour
 
     private void HitPerfect()
     {
-        gm.score += gm.perfectScore;
+        gm.UpdateHealth(gm.regenPerfect);
+        gm.score += (gm.perfectScore*gm.comboMulti);
         gm.perfects++;
         DoNoteEffect();
     }
     private void HitGreat()
     {
-        gm.score += gm.goodScore;
+        gm.UpdateHealth(gm.regenGreat);
+        gm.score += (gm.goodScore * gm.comboMulti);
         gm.greats++;
         DoNoteEffect();
     }
     private void HitGood()
     {
-        gm.score += gm.badScore;
+        gm.UpdateHealth(gm.regenGood);
+        gm.score += (gm.badScore * gm.comboMulti);
         gm.goods++;
         DoNoteEffect();
     }
     public void Missed()
     {
+        gm.UpdateHealth(gm.lossMiss);
         //Debug.Log("Missed");
+        gm.comboMulti = 1;
         gm.score += gm.missScore;
         gm.misses++;
         // Doing this because this variable needs to be activaed whenever any score is gained
