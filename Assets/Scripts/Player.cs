@@ -163,12 +163,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            isShielding = true;
+            isShielding = false;
         }
 
         else if (Input.GetKeyUp(KeyCode.Space))
         {
-            isShielding = false;
+            isShielding = true;
         }
     }
 

@@ -154,6 +154,34 @@ public class PathManager : MonoBehaviour
 
             }
 
+            //Set the colour of the spotlight
+            //Color.RGBToHSV(gm.lane1Color, out H, out S, out V);
+
+            if (i == 1)
+            {
+                go.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("Color_D4874C26", gm.lane1Color);
+            }
+
+            if (i == 2)
+            {
+                go.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("Color_D4874C26", gm.lane2Color);
+            }
+
+            if (i == 3)
+            {
+                go.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("Color_D4874C26", gm.lane3Color);
+            }
+
+            if (i == 4)
+            {
+                go.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("Color_D4874C26", gm.lane2Color);
+            }
+
+            if (i == 5)
+            {
+                go.transform.GetChild(0).GetComponent<Renderer>().material.SetColor("Color_D4874C26", gm.lane1Color);
+            }
+
             // After all lanes have spawned (all at 0 opacity) allow them to begin to increase in opacity
             GameObject allPaths = FindObjectOfType<Path>().gameObject;
             allPaths.transform.GetChild(0).GetComponent<Renderer>().material.SetFloat("Vector1_7E903828", 0);

@@ -119,7 +119,10 @@ public class Gamemode : MonoBehaviour
     public float shieldScaleSpeed;
 
     [Header("Path")]
-    public float pathColourValue;
+    public Color lane1Color;
+    public Color lane2Color;
+    public Color lane3Color;
+
     void Start()
     { 
         QualitySettings.vSyncCount = 0;
