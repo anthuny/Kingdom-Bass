@@ -187,7 +187,8 @@ public class Gamemode : MonoBehaviour
         canGetNoteText.text = "canGetNote = " + tc.canGetNote.ToString();
         timeFromLastMoveText.text = "Time From Last Movement " + playerScript.elapsedTimeSinceMove.ToString();
         beatsText.text = tc.trackPosInBeats.ToString();
-        //is all this just for debug? yes
+
+        UpdateHealth(healthRegenPerSec);
     }
 
     void UpdateShield()
