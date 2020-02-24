@@ -35,6 +35,7 @@ public class Gamemode : MonoBehaviour
     public Text greatsText;
     public Text goodsText;
     public Text missesText;
+    public Text beatsText;
 
     public Text timeFromLastMoveText;
 
@@ -165,6 +166,7 @@ public class Gamemode : MonoBehaviour
         scoreAllowedText.text = "scoreAllowed = " + playerScript.scoreAllowed.ToString();
         canGetNoteText.text = "canGetNote = " + tc.canGetNote.ToString();
         timeFromLastMoveText.text = "Time From Last Movement " + playerScript.elapsedTimeSinceMove.ToString();
+        beatsText.text = tc.trackPosInBeats.ToString();
         //is all this just for debug? yes
     }
 

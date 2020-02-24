@@ -229,7 +229,7 @@ public class Note : MonoBehaviour
         if (doneOnce2 && !doneOnce3)
         {
             doneOnce3 = true;
-
+            //Debug.Break();
             // Rounds the value to the nearest .25f
             tc.previousNoteBeatTime = ((Mathf.Round((tc.trackPosInBeatsGame - .25f) * 4)) / 4) + .25f;
 

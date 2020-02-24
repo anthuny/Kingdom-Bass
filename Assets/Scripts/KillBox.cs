@@ -16,12 +16,9 @@ public class KillBox : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(collision + " kill box col");
-    }
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other + "kill box trg");
+        other.GetComponent<Note>().DestroyNote();
     }
 }

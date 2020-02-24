@@ -20,7 +20,7 @@
         <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>4</Note_EighthWait>
+        <Note_EighthWait>8</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
@@ -32,13 +32,25 @@
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
@@ -50,67 +62,85 @@
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>1</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>launch</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>launch</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
         <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>1</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
@@ -122,151 +152,259 @@
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>4</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>launch</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>launch</Note_Type>
         <Note_Lane>4</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>4</Note_EighthWait>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>4</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
         <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>1</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>launch</Note_Type>
         <Note_Lane>2</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>launch</Note_Type>
         <Note_Lane>4</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>4</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
@@ -278,19 +416,199 @@
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>5</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_EighthWait>8</Note_EighthWait>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>5</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>4</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_EighthWait>2</Note_EighthWait>
       </Note>
     </Notes>
   </Level>

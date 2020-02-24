@@ -113,7 +113,7 @@ public class Player : MonoBehaviour
     {
         float minDist = Mathf.Infinity;
 
-        // Detect the nearest enemy's position
+        // Detect the nearest note's position
         foreach (Transform t in activeNotes)
         {
             float dist = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
