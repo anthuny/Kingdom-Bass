@@ -453,11 +453,7 @@ public class Player : MonoBehaviour
     */
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("coll enter" + collision.gameObject.name);
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("trg enter" + other.gameObject.name);
+        // Debug.Log("coll enter" + collision.gameObject.name);
     }
     private void ResetNotes()
     {
