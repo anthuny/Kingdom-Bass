@@ -279,11 +279,11 @@ public class TrackCreator : MonoBehaviour
             trackPosNumber = trackPosIntervalsList3[nextIndex3 - 1];
             trackPosNumber2 = trackPosIntervalsList3[nextIndex3];
 
-            previousNoteBeatTime2 = previousNoteBeatTime + (noteEighthCount[nextIndex3 - 1] / maxNoteIntervalsEachBeat);
+            previousNoteBeatTime2 = previousNoteBeatTime + (noteEighthCount[nextIndex3 - 1]);
 
 
             nextNoteInBeats = previousNoteBeatTime2;
-            nextNoteInBeats2 = nextNoteInBeats + (noteEighthCount[nextIndex3] / maxNoteIntervalsEachBeat);
+            nextNoteInBeats2 = nextNoteInBeats + (noteEighthCount[nextIndex3]);
 
             float a = (nextNoteInBeats + previousNoteBeatTime) / 2;
             float b = (previousNoteBeatTime2 + nextNoteInBeats2) / 2;
@@ -324,21 +324,21 @@ public class TrackCreator : MonoBehaviour
         {
             // Spawn a note
             // Ensures intro is over before starting
-            if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat)))
+            if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * noteEighthCount[nextIndex]))
             {
                 AssignNotes();
 
-                lastBeat += secPerBeat * (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
+                lastBeat += secPerBeat * noteEighthCount[nextIndex];
 
-                trackPosIntervals = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
-                trackPosIntervals2 = (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
-                trackPosIntervals3 += (noteEighthCount[nextIndex] / maxNoteIntervalsEachBeat);
+                trackPosIntervals = noteEighthCount[nextIndex];
+                trackPosIntervals2 = noteEighthCount[nextIndex];
+                trackPosIntervals3 += noteEighthCount[nextIndex];
 
                 trackPosIntervalsList.Add(trackPosIntervals);
                 trackPosIntervalsList2.Add(trackPosIntervals2);
                 trackPosIntervalsList3.Add(trackPosIntervals3);
 
-                nextIndex2 = (noteEighthCount[0] / maxNoteIntervalsEachBeat);
+                nextIndex2 = noteEighthCount[0];
                 nextIndex++;
             }
 

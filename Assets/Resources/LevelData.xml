@@ -8,7 +8,7 @@
         <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
-        <Note_EighthWait>0</Note_EighthWait>
+        <Note_EighthWait>5</Note_EighthWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
