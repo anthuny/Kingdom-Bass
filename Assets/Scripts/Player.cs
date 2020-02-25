@@ -44,11 +44,22 @@ public class Player : MonoBehaviour
     private float currentPointInBeats;
 
     public List<Transform> activeNotes = new List<Transform>();
+    public List<Transform> notesBehind = new List<Transform>();
+    public List<float> distances = new List<float>();
     public Transform nearestNote;
+    public Transform furthestBehindNote;
 
     public Material shieldMat;
     private Color shieldColor;
     public GameObject shield;
+
+    float newPerfect;
+    float newGreat;
+    float newGood;
+
+    GameObject FurthestObject = null;
+
+    private Note nearestNoteScript;
 
     // Start is called before the first frame update
     void Start()
@@ -94,6 +105,13 @@ public class Player : MonoBehaviour
         Movement();
         FindNearestNote();
         UpdateShield();
+
+        if (!nearestNote)
+        {
+            return;
+        }
+
+        nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
     }
 
     void UpdateShield()
@@ -126,8 +144,44 @@ public class Player : MonoBehaviour
             }
         }
     }
-    void Inputs()
+
+    public void DestroyFurthestNote()
     {
+        float FurthestDistance = 0;
+        foreach (Transform Object in activeNotes)
+        {
+            float ObjectDistance = Vector3.Distance(transform.position, Object.transform.position);
+            if (ObjectDistance > FurthestDistance)
+            {
+                FurthestObject = Object.gameObject;
+                FurthestDistance = ObjectDistance;
+            }
+        }
+
+        // If there are 2 or more notes behind the enemy, destroy the most furthest one
+        for (int i = 0; i < activeNotes.Count; i++)
+        {
+            if (notesBehind.Count >= 2)
+            {
+                StartCoroutine(FurthestObject.GetComponent<Note>().DestroyNote());
+                Debug.Break();
+            }
+
+            if (activeNotes[i].gameObject.transform.position.z < transform.position.z)
+            {
+                notesBehind.Add(activeNotes[i].gameObject.transform);
+            }
+        }
+
+        // Anthony: I'm up to here. Currently trying to get the furthest note behind the player to destroy 
+        // when there are two notes behind the player. I want a small delay for 2 notes to be behind the player (that's being done
+        // in the destroy function in note script
+    }
+
+
+
+    void Inputs()
+    {    
         // If:
         //      player is pressing D
         //      playing is NOT moving left or right already
@@ -146,6 +200,7 @@ public class Player : MonoBehaviour
                 canIncreaseScore = true;
             }
             */
+            //Debug.Log("1");
             AssignFromAndToValues();
             scoreAllowed = false;
             canIncreaseScore = true;
@@ -182,8 +237,6 @@ public class Player : MonoBehaviour
             isShielding = true;
         }
     }
-
-
     void Movement()
     {
         // Ensures that there is a nearest path to begin with
@@ -255,34 +308,31 @@ public class Player : MonoBehaviour
     }
     void AssignFromAndToValues()
     {
+        //Debug.Log("2");
         if (!isShielding)
         {
             return;
         }
-
         currentPointInBeats = tc.trackPosInBeatsGame;
 
-        pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats)));//* tc.nextNoteInBeats3 - tc.previousNoteBeatTime3);
-        pointFrom *= tc.nextNoteInBeats3 - tc.previousNoteBeatTime3;
+        pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats)));
+        //pointFrom *= tc.nextNoteInBeats3 - tc.previousNoteBeatTime3;
         pointTo = 1 - pointFrom;
-
         gm.scoreIncreased = true;
-
+        //Debug.Log("3");
         Debug.Log("nextNoteInBeats3 = " + tc.nextNoteInBeats3);
         Debug.Log("previousNoteBeatTime3 = " + tc.previousNoteBeatTime3);
         Debug.Log("currentPointInBeats = " + currentPointInBeats);
         Debug.Log("pointFrom " + pointFrom);
         Debug.Log("pointTo " + pointTo);
         Debug.Log("``````````````````````");
-        Debug.Break();
-
+        //Debug.Break();
+        //Debug.Log("4");
         CheckHitAccuracy();
     }
 
     private void DoNoteEffect()
     {
-        Note nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
-
         // In the case of a note with a left arrow
         if (nearestNoteScript.noteDir == "left" && nearestLaneNumber > nearestNoteScript.laneNumber)
         {
@@ -308,12 +358,6 @@ public class Player : MonoBehaviour
 
     public void DoNoteEffectUp()
     {
-        if (!nearestNote)
-        {
-            return;
-        }
-        Note nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
-
         if (nearestNoteScript.noteDir == "up" && isShielding)
         {
             if (nearestNoteScript.gameObject.transform.position.z < transform.position.z 
@@ -329,6 +373,14 @@ public class Player : MonoBehaviour
 
     private void CheckHitAccuracy()
     {
+        newPerfect = gm.perfectMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
+        Debug.Log("newPerfect " + newPerfect);
+        newGreat = gm.greatMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
+        Debug.Log("newGreat " + newGreat);
+        newGood = gm.goodMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
+        Debug.Log("newGood " + newGood);
+
+        Debug.Log("eighthWait " + nearestNoteScript.eighthWait);
         // If the player has already inputed a legal move for the note, do not allow it
         if (!tc.canGetNote)
         {
@@ -344,59 +396,70 @@ public class Player : MonoBehaviour
 
         CheckFirstHitAccuracy();
 
+        // This is score for a glitch? not sure if this happens anymore
         if (pointTo < 0 || pointFrom > 1 && (tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval)))
         {
-            //Debug.Log("Perfect - glitch");
+            Debug.Log("Perfect - glitch");
             HitPerfect();
             ResetNotes();
             return;
         }
 
-        // If the player is closer to the previous note.
+        // If the player is closer to the previous note. 
+        // track the distance between the next note and the current note
         if (pointTo > pointFrom && tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval))
         {
-            if (pointFrom <= gm.perfectMin && pointFrom >= 0)
+            if (pointFrom <= newPerfect && pointFrom >= 0)
             {
-                //Debug.Log("Perfect 1");
+                Debug.Log("Perfect 1");
+                Debug.Log(newPerfect);
                 HitPerfect();
             }
-            else if (pointFrom <= gm.greatMin && pointFrom >= gm.perfectMin)
+            else if (pointFrom <= newGreat && pointFrom >= newPerfect)
             {
-                //Debug.Log("Great 1");
+                Debug.Log("Great 1");
+                Debug.Log(newGreat);
                 HitGreat();
             }
-            else if (pointFrom <= gm.goodMin && pointFrom >= gm.greatMin)
+            else if (pointFrom <= newGood && pointFrom >= newGreat)
             {
-                //Debug.Log("Good 1");
+                Debug.Log("Good 1");
+                Debug.Log(newGood);
                 HitGood();
             }
-            else if (pointFrom >= gm.goodMin && pointFrom <= .5f)
+            else if (pointFrom >= newGood && pointFrom <= .5f)
             {
-                //Debug.Log("Miss 1");
+                Debug.Log("Miss 1");
+                Debug.Log(newGood);
                 Missed();
             }
         }
         // If the player is closer to the next note.
+        // track the distance between the previous note and the current note
         else if (pointTo < pointFrom && tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval))
         {
-            if (pointTo <= gm.perfectMin && pointTo >= 0)
+            if (pointTo <= newPerfect && pointTo >= 0)
             {
-                //Debug.Log("Perfect 2");
+                Debug.Log("Perfect 2");
+                Debug.Log(newPerfect);
                 HitPerfect();
             }
-            else if (pointTo <= gm.greatMin && pointTo >= gm.perfectMin)
+            else if (pointTo <= newGreat && pointTo >= newPerfect)
             {
-                //Debug.Log("Great 2");
+                Debug.Log("Great 2");
+                Debug.Log(newGreat);
                 HitGreat();
             }
-            else if (pointTo <= gm.goodMin && pointTo >= gm.greatMin)
+            else if (pointTo <= newGood && pointTo >= newGreat)
             {
-                //Debug.Log("Good 2");
+                Debug.Log("Good 2");
+                Debug.Log(newGood);
                 HitGood();
             }
-            else if (pointTo >= gm.goodMin && pointTo <= .5f)
+            else if (pointTo >= newGood && pointTo <= .5f)
             {
-                //Debug.Log("Miss 2");
+                Debug.Log("Miss 2");
+                Debug.Log(newGood);
                 Missed();
             }
         }

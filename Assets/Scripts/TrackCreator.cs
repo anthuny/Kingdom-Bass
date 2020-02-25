@@ -293,7 +293,7 @@ public class TrackCreator : MonoBehaviour
     }
     private void Update()
     {
-        UpdateMissCondition();
+        //UpdateMissCondition();
 
         // Index out of bounds check
         if (trackPosIntervalsList.Count >= 1)
@@ -304,7 +304,7 @@ public class TrackCreator : MonoBehaviour
         }
 
         // Start the song 
-        if (Input.GetKeyDown(KeyCode.Space) && !audioSource.isPlaying)
+        if (Input.GetKeyDown(KeyCode.Space) && !audioSource.isPlaying && Time.realtimeSinceStartup > 3)
         {
             dspTrackTime = (float)AudioSettings.dspTime;
 

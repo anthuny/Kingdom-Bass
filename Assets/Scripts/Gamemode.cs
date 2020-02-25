@@ -141,6 +141,8 @@ public class Gamemode : MonoBehaviour
     public float lossMiss;
     public float healthRegenPerSec;
 
+    public float defaultBeatsBetNotes = 3;
+
     void Start()
     { 
         QualitySettings.vSyncCount = 0;

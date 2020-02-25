@@ -265,8 +265,10 @@ public class Note : MonoBehaviour
 
                 tc.nextIndex3++;
 
-                tc.trackPosNumber = tc.trackPosIntervalsList3[tc.nextIndex3 - 1];
-                tc.trackPosNumber2 = tc.trackPosIntervalsList3[tc.nextIndex3];
+                //Debug.Log(tc.nextIndex3);
+                tc.trackPosNumber = tc.noteEighthCount[tc.nextIndex3 - 2];
+
+                tc.trackPosNumber2 = tc.noteEighthCount[tc.nextIndex3 - 1];
 
                 tc.previousNoteBeatTime2 = tc.previousNoteBeatTime + (tc.noteEighthCount[tc.nextIndex3 - 1]);
 
@@ -337,10 +339,11 @@ public class Note : MonoBehaviour
         {
             hitEnd = false;
             hitEndLoop = true;
-            // The float (0.5f) may cause problems when spawning notes at different speeds,
-            // or if the bpm of the song changes
-            Debug.Log((tc.secPerBeat * tc.trackPosIntervalsList[0]) + .03f);
-            Invoke("DestroyNote", (tc.secPerBeat * tc.trackPosIntervalsList[0]) + .03f);
+
+            Debug.Log("nextIndex is" + tc.nextIndex3);
+            player.DestroyFurthestNote();
+            //Invoke("DestroyNote", (tc.secPerBeat * tc.noteEighthCount[tc.nextIndex3 - 2]) + .03f);
+
 
         }
 
@@ -383,8 +386,10 @@ public class Note : MonoBehaviour
         }
     }
 
-    public void DestroyNote()
+    public IEnumerator DestroyNote()
     {
+        yield return new WaitForSeconds(0.2f);
+
         // remove this note to the active notes array
         player.activeNotes.Remove(this.gameObject.transform);
         Destroy(this.gameObject);
