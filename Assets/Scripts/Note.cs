@@ -337,7 +337,7 @@ public class Note : MonoBehaviour
             hitEndLoop = true;
             // The float (0.5f) may cause problems when spawning notes at different speeds,
             // or if the bpm of the song changes
-            Invoke("DestroyNote", (tc.secPerBeat * tc.trackPosIntervalsList[0]) + .03f);
+           // Invoke("DestroyNote", (tc.secPerBeat * tc.trackPosIntervalsList[0]) + .03f);
         }
 
         

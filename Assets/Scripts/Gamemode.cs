@@ -37,7 +37,7 @@ public class Gamemode : MonoBehaviour
     public Text missesText;
     public Text beatsText;
     public Text comboText;
-    public Text healthText
+    public Text healthText;
 
     public Text timeFromLastMoveText;
 
