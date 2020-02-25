@@ -12,8 +12,8 @@ Material:
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 1
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap:
     MotionVector: User
@@ -23,4 +23,5 @@ Material:
     m_TexEnvs: []
     m_Floats: []
     m_Colors:
-    - Color_4DC6AFF4: {r: 0.9999999, g: 0.9999999, b: 0.9999999, a: 0}
+    - Color_4DC6AFF4: {r: 0.3745098, g: 0.3745098, b: 0.3745098, a: 0}
+    - Color_B35EE2F5: {r: 0.8536848, g: 1, b: 0, a: 0}

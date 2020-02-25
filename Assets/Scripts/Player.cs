@@ -136,19 +136,13 @@ public class Player : MonoBehaviour
         {
             movingRight = true;
             // Ensure that the player cannot get score until 1 beat before the first note
-            //Debug.Break();
-            /*
             if (tc.trackPosInBeatsGame > tc.firstNote - 1)
             {
-                //Debug.Break();
                 AssignFromAndToValues();
                 scoreAllowed = false;
                 canIncreaseScore = true;
             }
-            */
-            AssignFromAndToValues();
-            scoreAllowed = false;
-            canIncreaseScore = true;
+
         }
 
         // If:
@@ -159,17 +153,12 @@ public class Player : MonoBehaviour
         {
             movingLeft = true;
             // Ensure that the player cannot get score until 1 beat before the first note
-            /*
             if (tc.trackPosInBeatsGame > tc.firstNote - 1)
             {
                 AssignFromAndToValues();
                 scoreAllowed = false;
                 canIncreaseScore = true;
             }
-            */
-            AssignFromAndToValues();
-            scoreAllowed = false;
-            canIncreaseScore = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -262,19 +251,16 @@ public class Player : MonoBehaviour
 
         currentPointInBeats = tc.trackPosInBeatsGame;
 
-        pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats)));//* tc.nextNoteInBeats3 - tc.previousNoteBeatTime3);
-        pointFrom *= tc.nextNoteInBeats3 - tc.previousNoteBeatTime3;
+        pointFrom = 1 - (Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats));
+
         pointTo = 1 - pointFrom;
 
         gm.scoreIncreased = true;
 
-        Debug.Log("nextNoteInBeats3 = " + tc.nextNoteInBeats3);
-        Debug.Log("previousNoteBeatTime3 = " + tc.previousNoteBeatTime3);
-        Debug.Log("currentPointInBeats = " + currentPointInBeats);
-        Debug.Log("pointFrom " + pointFrom);
-        Debug.Log("pointTo " + pointTo);
-        Debug.Log("``````````````````````");
-        Debug.Break();
+        //Debug.Log("pointFrom " + pointFrom);
+        //Debug.Log("pointTo " + pointTo);
+        //Debug.Log("``````````````````````");
+        //Debug.Break();
 
         CheckHitAccuracy();
     }

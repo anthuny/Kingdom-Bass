@@ -349,7 +349,7 @@ public class TrackCreator : MonoBehaviour
 
                 // Determine what the first next note will be for score measuring
                 pointToNextBeat = trackPosIntervalsList2[0] * (noteTimeTaken + 1);
-                //firstNote = pointToNextBeat;
+                firstNote = pointToNextBeat;
             }
 
             if (trackPosIntervalsList2.Count == 2)
