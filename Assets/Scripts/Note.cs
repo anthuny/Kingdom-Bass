@@ -248,12 +248,14 @@ public class Note : MonoBehaviour
         if (doneOnce2 && !doneOnce3)
         {
             doneOnce3 = true;
-            //Debug.Break();
+
             // Rounds the value to the nearest .25f
+            // This is done because the previousNoteBeatTime will most likely always be slightly off when it should be.
+            // This rounds it to when the beat should happen when the note hit the player
             tc.previousNoteBeatTime = ((Mathf.Round((tc.trackPosInBeatsGame - .25f) * 4)) / 4) + .25f;
 
             tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
-            tc.nextNoteInBeats3 = tc.previousNoteBeatTime3 + (tc.noteEighthCount[tc.nextIndex3] / tc.maxNoteIntervalsEachBeat);
+            tc.nextNoteInBeats3 = tc.previousNoteBeatTime3 + (tc.noteEighthCount[tc.nextIndex3]);
             //Debug.Log(tc.previousNoteBeatTime3);
             //Debug.Log(tc.nextNoteInBeats3);
 
@@ -266,10 +268,10 @@ public class Note : MonoBehaviour
                 tc.trackPosNumber = tc.trackPosIntervalsList3[tc.nextIndex3 - 1];
                 tc.trackPosNumber2 = tc.trackPosIntervalsList3[tc.nextIndex3];
 
-                tc.previousNoteBeatTime2 = tc.previousNoteBeatTime + (tc.noteEighthCount[tc.nextIndex3 - 1] / tc.maxNoteIntervalsEachBeat);
+                tc.previousNoteBeatTime2 = tc.previousNoteBeatTime + (tc.noteEighthCount[tc.nextIndex3 - 1]);
 
                 tc.nextNoteInBeats = tc.previousNoteBeatTime2;
-                tc.nextNoteInBeats2 = tc.nextNoteInBeats + (tc.noteEighthCount[tc.nextIndex3] / tc.maxNoteIntervalsEachBeat);
+                tc.nextNoteInBeats2 = tc.nextNoteInBeats + (tc.noteEighthCount[tc.nextIndex3]);
 
                 float a = (tc.nextNoteInBeats + tc.previousNoteBeatTime) / 2;
                 float b = (tc.previousNoteBeatTime2 + tc.nextNoteInBeats2) / 2;
@@ -337,7 +339,9 @@ public class Note : MonoBehaviour
             hitEndLoop = true;
             // The float (0.5f) may cause problems when spawning notes at different speeds,
             // or if the bpm of the song changes
-           // Invoke("DestroyNote", (tc.secPerBeat * tc.trackPosIntervalsList[0]) + .03f);
+            Debug.Log((tc.secPerBeat * tc.trackPosIntervalsList[0]) + .03f);
+            Invoke("DestroyNote", (tc.secPerBeat * tc.trackPosIntervalsList[0]) + .03f);
+
         }
 
         
