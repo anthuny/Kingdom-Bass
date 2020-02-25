@@ -54,6 +54,8 @@ public class Note : MonoBehaviour
     private float S;
     private float V;
 
+    public bool hasBeenHit = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -351,6 +353,39 @@ public class Note : MonoBehaviour
         // remove this note to the active notes array
         player.activeNotes.Remove(this.gameObject.transform);
         Destroy(this.gameObject);
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+
+        if (hasBeenHit)
+        {
+            return;
+        }
+        Debug.Break();
+        if (other.CompareTag("PERFECT"))
+        {
+            Debug.Log(other.name);
+            hasBeenHit = true;
+            //Debug.Break();
+            return;
+        }
+
+        else if (other.CompareTag("GREAT"))
+        {
+            Debug.Log(other.name);
+            hasBeenHit = true;
+            //Debug.Break();
+            return;
+        }
+
+        else if (other.CompareTag("GOOD"))
+        {
+            Debug.Log(other.name);
+            hasBeenHit = true;
+            //Debug.Break();
+            return;
+        }
     }
 }
 

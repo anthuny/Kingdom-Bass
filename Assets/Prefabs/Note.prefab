@@ -403,7 +403,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.5, y: 3.5922742, z: 0.32225722}
+  m_Size: {x: 1.5, y: 3.5922742, z: 1.5}
   m_Center: {x: 0, y: 0.87113714, z: 0.01325503}
 --- !u!114 &8329235991398997080
 MonoBehaviour:
@@ -433,6 +433,7 @@ MonoBehaviour:
   noteDir: 
   doneUpArrow: 0
   spotLightRef: {fileID: 3066193310721560630}
+  hasBeenHit: 0
 --- !u!1 &8797297969032764751
 GameObject:
   m_ObjectHideFlags: 0

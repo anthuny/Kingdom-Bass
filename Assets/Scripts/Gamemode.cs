@@ -68,15 +68,15 @@ public class Gamemode : MonoBehaviour
     [Tooltip("The higher this value, the faster the increase in player sight for the path will be at the start of the game")]
     public float pathViewDistIncSpeed = .2f;
 
-    [Range(0, 1)]
+    [Range(0, 10)]
     [Header("What percentage of accuracy is required for a PERFECT hit?")] 
     public float prPercent;
     public GameObject perfectCOL;
-    [Range(0, 1)]
+    [Range(0, 10)]
     [Header("What percentage of accuracy is required for a GREAT hit?")]
     public float grPercent;
     public GameObject greatCOL;
-    [Range(0, 1)]
+    [Range(0, 10)]
     [Header("What percentage of accuracy is required for a GOOD hit?")]
     public float goPercent;
     public GameObject goodCOL;
@@ -116,7 +116,7 @@ public class Gamemode : MonoBehaviour
         greatCOL = GameObject.FindGameObjectWithTag("GREAT");
         goodCOL = GameObject.FindGameObjectWithTag("GOOD");
         Vector3 playerT = player.transform.localScale;
-        playerT.y = 2;
+        playerT.y = 1;
 
         //set the Z scale of each to the value of the percentage set in inspector this will only affect the width of the collider relative to the centre of the object
         playerT.z = prPercent;
