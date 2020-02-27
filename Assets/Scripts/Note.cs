@@ -50,10 +50,19 @@ public class Note : MonoBehaviour
     public bool doneUpArrow;
 
     public Renderer spotLightRef;
+    public bool behindPlayer = false;
 
     private float H;
     private float S;
     private float V;
+
+    [Tooltip("The player is only able to obtain 1 amount of score per note." +
+    " If this variable is true, the player is able to still obtain score for this note.")]
+    public bool canGetNote = true;
+
+    [Tooltip("If this is true, this note has been missed")]
+    [HideInInspector]
+    public bool missed;
 
     // Start is called before the first frame update
     void Start()
@@ -258,15 +267,16 @@ public class Note : MonoBehaviour
 
             tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
             tc.nextNoteInBeats3 = tc.previousNoteBeatTime3 + (tc.noteEighthCount[tc.nextIndex3]);
-            Debug.Log("previousNoteBeatTime " + tc.previousNoteBeatTime3);
-            Debug.Log("nextNoteInBeats " + tc.nextNoteInBeats3);
-            Debug.Log("noteEightCount " + tc.noteEighthCount[tc.nextIndex3]);
 
-            Debug.Log("nextIndex3 " + tc.nextIndex3);
+            //Debug.Log("previousNoteBeatTime " + tc.previousNoteBeatTime3);
+            //Debug.Log("nextNoteInBeats " + tc.nextNoteInBeats3);
+            //Debug.Log("noteEightCount " + tc.noteEighthCount[tc.nextIndex3]);
+
+            //Debug.Log("nextIndex3 " + tc.nextIndex3);
  
-            Debug.Break();
+            //Debug.Break();
 
-
+            /*
             if (!tc.doneOnce)
             {
                 tc.doneOnce = true;
@@ -299,16 +309,19 @@ public class Note : MonoBehaviour
                 //Debug.Log("nextNoteDiff " + tc.nextNoteDiff);
                 //Debug.Log("-----------------------------");
             }
+            */
 
 
             // Ensure that the player can gain score for the note, even if they inputed a movement just before passing a note
             // This is reliant on this note staying alive long enough for to switch canGetNote to true from false
+            /*
             if (!tc.canGetNote && !doneOnce4)
             {
                 //Debug.Log("allowing");
                 doneOnce4 = true;
-                tc.canGetNote = true;
+                //tc.canGetNote = true;
             }
+            */
 
             //tc.trackPosIntervalsList2.RemoveAt(0);
             tc.trackPosIntervalsList2.RemoveAt(0);
@@ -320,14 +333,14 @@ public class Note : MonoBehaviour
                 //Debug.Log("should removing thing");
                 tc.deadNoteAssigned = true;
                 tc.trackPosIntervalsList.RemoveAt(0);
-                tc.canGetNote = true;
+                //tc.canGetNote = true;
                 hitEnd = true;
             }
 
             else if (tc.notes.transform.GetChild(0).gameObject == this.gameObject)
             {
                 tc.trackPosIntervalsList.RemoveAt(0);
-                tc.canGetNote = true;
+                //tc.canGetNote = true;
                 hitEnd = true;
             }
 
@@ -341,7 +354,7 @@ public class Note : MonoBehaviour
         {
             doneOnce3 = true;
             tc.trackPosIntervalsList.RemoveAt(0);
-            tc.canGetNote = true;
+            //tc.canGetNote = true;
         }
         if (hitEnd)
         {
@@ -391,6 +404,12 @@ public class Note : MonoBehaviour
                 Debug.Log("`````````````````````````````");
             }
             */
+        }
+
+        // If this note is behind the player, turn behindPlayer to true
+        if (player.transform.position.z > transform.position.z)
+        {
+            behindPlayer = true;
         }
     }
 

@@ -97,10 +97,6 @@ public class TrackCreator : MonoBehaviour
     [HideInInspector]
     public bool deadNoteAssigned;
 
-    [Tooltip("The player is only able to obtain 1 amount of score per note." +
-        " If this variable is true, the player has not done a valid movement")]
-    public bool canGetNote = true;
-
     [HideInInspector]
     public bool doneOnce = false;
     private bool doneOnce2;
@@ -259,6 +255,7 @@ public class TrackCreator : MonoBehaviour
             doneOnce2 = false;
         }
 
+        /*
         // Ensure through a bool, if the player recieves a miss or not for not inputing anything
         if (doneOnce && trackPosInBeatsGame >= nextNoteDiff && !doneOnce2)
         {
@@ -291,6 +288,7 @@ public class TrackCreator : MonoBehaviour
             curNoteDiff = a;
             nextNoteDiff = b;
         }
+        */
     }
     private void Update()
     {

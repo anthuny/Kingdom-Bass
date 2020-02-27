@@ -177,7 +177,7 @@ public class Gamemode : MonoBehaviour
         // If there is a change in score, Update the UI
         if (score != oldScore)
         {
-            comboMulti += 1;
+            //comboMulti += 1;
             UpdateUI();
         }
 
@@ -186,7 +186,7 @@ public class Gamemode : MonoBehaviour
 
         noteCalculationOverText.text = "noteCalculationOver = " + playerScript.noteCalculationOver.ToString();
         scoreAllowedText.text = "scoreAllowed = " + playerScript.scoreAllowed.ToString();
-        canGetNoteText.text = "canGetNote = " + tc.canGetNote.ToString();
+        //canGetNoteText.text = "canGetNote = " + tc.canGetNote.ToString();
         timeFromLastMoveText.text = "Time From Last Movement " + playerScript.elapsedTimeSinceMove.ToString();
         beatsText.text = tc.trackPosInBeats.ToString();
 

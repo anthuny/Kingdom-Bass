@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     public bool doneOnce2;
 
     private float pointFrom;
+    private float missPointFrom;
     private float pointTo;
 
     public bool canIncreaseScore;
@@ -42,6 +43,7 @@ public class Player : MonoBehaviour
     public bool isShielding;
 
     private float currentPointInBeats;
+    private float missCurrentPointInBeats;
 
     public List<Transform> activeNotes = new List<Transform>();
     public List<Transform> notesBehind = new List<Transform>();
@@ -106,6 +108,7 @@ public class Player : MonoBehaviour
         Movement();
         FindNearestNote();
         UpdateShield();
+        AssignMisses();
 
         if (!nearestNote)
         {
@@ -115,6 +118,25 @@ public class Player : MonoBehaviour
         nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
     }
 
+    void AssignMisses()
+    {
+        // If there is a note alive 
+        if (nearestNote)
+        {
+            // If there is a note behind the player and it has not been hit yet AND
+            // the note hasn't been missed yet AND
+            // the player is unable to hit the note anymore give a miss to the player
+            
+            missCurrentPointInBeats = tc.trackPosInBeatsGame;
+            missPointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, missCurrentPointInBeats)));
+            if (nearestNote.GetComponent<Note>().canGetNote && missPointFrom > gm.goodMin + 0.05f && nearestNote.transform.position.z < transform.position.z && !nearestNote.GetComponent<Note>().missed)
+            {
+                nearestNote.GetComponent<Note>().missed = true;
+                Missed();
+            }
+        }
+
+    }
     void UpdateShield()
     {
         shieldMat.SetFloat("Vector1_A7E2E21E", gm.shieldOpacity);
@@ -180,13 +202,7 @@ public class Player : MonoBehaviour
                 StartCoroutine(furthestBehindNote.GetComponent<Note>().DestroyNote());
                 //Debug.Break();
             }
-
-
         }
-
-        // Anthony: I'm up to here. Currently trying to get the furthest note behind the player to destroy 
-        // when there are two notes behind the player. I want a small delay for 2 notes to be behind the player (that's being done
-        // in the destroy function in note script
     }
 
 
@@ -338,38 +354,85 @@ public class Player : MonoBehaviour
         pointTo = 1 - pointFrom;
         gm.scoreIncreased = true;
         //Debug.Log("3");
-        Debug.Log("nextNoteInBeats3 = " + tc.nextNoteInBeats3);
-        Debug.Log("previousNoteBeatTime3 = " + tc.previousNoteBeatTime3);
-        Debug.Log("currentPointInBeats = " + currentPointInBeats);
-        Debug.Log("pointFrom " + pointFrom);
-        Debug.Log("pointTo " + pointTo);
-        Debug.Log("``````````````````````");
+        //Debug.Log("nextNoteInBeats3 = " + tc.nextNoteInBeats3);
+        //Debug.Log("previousNoteBeatTime3 = " + tc.previousNoteBeatTime3);
+        //Debug.Log("currentPointInBeats = " + currentPointInBeats);
+        //Debug.Log("pointFrom " + pointFrom);
+        //Debug.Log("pointTo " + pointTo);
+        //Debug.Log("``````````````````````");
         //Debug.Break();
         //Debug.Log("4");
-        CheckHitAccuracy();
+        CheckForNoteEffect();
     }
 
-    private void DoNoteEffect()
+    private void CheckForNoteEffect()
     {
-        // In the case of a note with a left arrow
-        if (nearestNoteScript.noteDir == "left" && nearestLaneNumber > nearestNoteScript.laneNumber)
-        {
+        //Debug.Log("nearestNoteScript.noteDir " + nearestNoteScript.noteDir);
+        //Debug.Log("nearestNoteScript.noteType " + nearestNoteScript.noteType);
+        //Debug.Log("nearestLaneNumber " + nearestLaneNumber);
+        //Debug.Log("nearestNoteScript.laneNumber " + nearestNoteScript.laneNumber);
+        //Debug.Log("movingLeft " + movingLeft);
+        //Debug.Log("movingRight " + movingRight);
+        //Debug.Log("pointTo " + pointTo);
+        //Debug.Log("pointFrom " + pointFrom);
+        //Debug.Log("pointMin " + gm.goodMin);
 
-            if (nearestNoteScript.noteType == "launch")
+        // In the case of a note with a left arrow
+        if (nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "launch" && nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
+        {
+            CheckHitAccuracy();
+            return;
+        }
+        // In the case of a note with a right arrow
+        else if (nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "launch" && nearestLaneNumber == nearestNoteScript.laneNumber - 1 && movingRight)
+        {
+            CheckHitAccuracy();
+            return;
+        }
+
+        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "right" && nearestLaneNumber == nearestNoteScript.laneNumber - 1 && movingRight)
+        {
+            //Debug.Log("a");
+            if (nearestNoteScript.behindPlayer)
             {
-                //StartCoroutine(cm.RollCamera("left"));
-                playerHitLaunch = true;
+                //Debug.Log("b");
+                if (pointFrom < gm.goodMin)
+                {
+                    CheckHitAccuracy();
+                    playerHitLaunch = true;
+                    return;
+                }
+            }
+            else
+            {
+                if (pointTo < gm.goodMin)
+                {
+                    CheckHitAccuracy();
+                    playerHitLaunch = true;
+                    return;
+                }
             }
         }
 
-        // In the case of a note with a right arrow
-        else if (nearestNoteScript.noteDir == "right" && nearestLaneNumber < nearestNoteScript.laneNumber)
+        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "left" && nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
         {
-
-            if (nearestNoteScript.noteType == "launch")
+            if (nearestNoteScript.behindPlayer)
             {
-                //StartCoroutine(cm.RollCamera("right"));
-                playerHitLaunch = true;
+                if (pointFrom < gm.goodMin)
+                {
+                    CheckHitAccuracy();
+                    playerHitLaunch = true;
+                    return;
+                }
+            }
+            else
+            {
+                if (pointTo < gm.goodMin)
+                {
+                    CheckHitAccuracy();
+                    playerHitLaunch = true;
+                    return;
+                }
             }
         }
     }
@@ -382,7 +445,8 @@ public class Player : MonoBehaviour
                 && nearestLaneNumber == nearestNoteScript.laneNumber && !nearestNoteScript.doneUpArrow)
             {
                 nearestNoteScript.doneUpArrow = true;
-                AssignFromAndToValues();
+                //AssignFromAndToValues();
+                CheckHitAccuracy();
                 //Debug.Break();
             }
         }
@@ -392,21 +456,21 @@ public class Player : MonoBehaviour
     private void CheckHitAccuracy()
     {
         newPerfect = gm.perfectMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
-        Debug.Log("newPerfect " + newPerfect);
+        //Debug.Log("newPerfect " + newPerfect);
         newGreat = gm.greatMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
-        Debug.Log("newGreat " + newGreat);
+        //Debug.Log("newGreat " + newGreat);
         newGood = gm.goodMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
-        Debug.Log("newGood " + newGood);
+        //Debug.Log("newGood " + newGood);
 
-        Debug.Log("eighthWait " + nearestNoteScript.eighthWait);
-        // If the player has already inputed a legal move for the note, do not allow it
-        if (!tc.canGetNote)
+        //Debug.Log("eighthWait " + nearestNoteScript.eighthWait);
+
+        // If the player has already got score for the nearest note, do not allow the note give score
+        if (!nearestNote.GetComponent<Note>().canGetNote)
         {
-            //ResetNotes();
             return;
         }
 
-        tc.canGetNote = false;
+        nearestNote.GetComponent<Note>().canGetNote = false;
 
         // Also the player doesn't recieve any misses for not performing a movement input at all.
 
@@ -429,26 +493,26 @@ public class Player : MonoBehaviour
         {
             if (pointFrom <= newPerfect && pointFrom >= 0)
             {
-                Debug.Log("Perfect 1");
-                Debug.Log(newPerfect);
+                //Debug.Log("Perfect 1");
+                //Debug.Log(newPerfect);
                 HitPerfect();
             }
             else if (pointFrom <= newGreat && pointFrom >= newPerfect)
             {
-                Debug.Log("Great 1");
-                Debug.Log(newGreat);
+                //Debug.Log("Great 1");
+                //Debug.Log(newGreat);
                 HitGreat();
             }
             else if (pointFrom <= newGood && pointFrom >= newGreat)
             {
-                Debug.Log("Good 1");
-                Debug.Log(newGood);
+                //Debug.Log("Good 1");
+                //Debug.Log(newGood);
                 HitGood();
             }
             else if (pointFrom >= newGood && pointFrom <= .5f)
             {
-                Debug.Log("Miss 1");
-                Debug.Log(newGood);
+                //Debug.Log("Miss 1");
+                //Debug.Log(newGood);
                 Missed();
             }
         }
@@ -458,32 +522,32 @@ public class Player : MonoBehaviour
         {
             if (pointTo <= newPerfect && pointTo >= 0)
             {
-                Debug.Log("Perfect 2");
-                Debug.Log(newPerfect);
+                //Debug.Log("Perfect 2");
+                //Debug.Log(newPerfect);
                 HitPerfect();
             }
             else if (pointTo <= newGreat && pointTo >= newPerfect)
             {
-                Debug.Log("Great 2");
-                Debug.Log(newGreat);
+                //Debug.Log("Great 2");
+                //Debug.Log(newGreat);
                 HitGreat();
             }
             else if (pointTo <= newGood && pointTo >= newGreat)
             {
-                Debug.Log("Good 2");
-                Debug.Log(newGood);
+                //Debug.Log("Good 2");
+                //Debug.Log(newGood);
                 HitGood();
             }
             else if (pointTo >= newGood && pointTo <= .5f)
             {
-                Debug.Log("Miss 2");
-                Debug.Log(newGood);
+                //Debug.Log("Miss 2");
+                //Debug.Log(newGood);
                 Missed();
             }
         }
         //Debug.Log("==================================================");
         ResetNotes();
-        Debug.Break();
+        //Debug.Break();
     }
     private void CheckFirstHitAccuracy()
     {
@@ -525,23 +589,23 @@ public class Player : MonoBehaviour
     private void HitPerfect()
     {
         gm.UpdateHealth(gm.regenPerfect);
-        gm.score += (gm.perfectScore*gm.comboMulti);
+        gm.score += (gm.perfectScore * gm.comboMulti);
         gm.perfects++;
-        DoNoteEffect();
+        //CheckForNoteEffect();
     }
     private void HitGreat()
     {
         gm.UpdateHealth(gm.regenGreat);
         gm.score += (gm.goodScore * gm.comboMulti);
         gm.greats++;
-        DoNoteEffect();
+        //CheckForNoteEffect();
     }
     private void HitGood()
     {
         gm.UpdateHealth(gm.regenGood);
         gm.score += (gm.badScore * gm.comboMulti);
         gm.goods++;
-        DoNoteEffect();
+        //CheckForNoteEffect();
     }
     public void Missed()
     {
