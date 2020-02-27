@@ -254,8 +254,12 @@ public class PathManager : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(player.transform.position, Vector3.down, out hit))
         {
-            //Debug.DrawRay(player.transform.position, Vector3.down, Color.green);
-            nearestPath = hit.collider.gameObject;
+            if (hit.transform.CompareTag("Path"))
+            {
+                //Debug.DrawRay(player.transform.position, Vector3.down, Color.green);
+                nearestPath = hit.collider.gameObject;
+            }
+
         }
         else
         {

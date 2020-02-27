@@ -254,16 +254,24 @@ public class Note : MonoBehaviour
             // This rounds it to when the beat should happen when the note hit the player
             tc.previousNoteBeatTime = ((Mathf.Round((tc.trackPosInBeatsGame - .25f) * 4)) / 4) + .25f;
 
+            tc.nextIndex3++;
+
             tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
             tc.nextNoteInBeats3 = tc.previousNoteBeatTime3 + (tc.noteEighthCount[tc.nextIndex3]);
-            //Debug.Log(tc.previousNoteBeatTime3);
-            //Debug.Log(tc.nextNoteInBeats3);
+            Debug.Log("previousNoteBeatTime " + tc.previousNoteBeatTime3);
+            Debug.Log("nextNoteInBeats " + tc.nextNoteInBeats3);
+            Debug.Log("noteEightCount " + tc.noteEighthCount[tc.nextIndex3]);
+
+            Debug.Log("nextIndex3 " + tc.nextIndex3);
+ 
+            Debug.Break();
+
 
             if (!tc.doneOnce)
             {
                 tc.doneOnce = true;
-
-                tc.nextIndex3++;
+                Debug.Log("as");
+                //tc.nextIndex3++;
 
                 //Debug.Log(tc.nextIndex3);
                 tc.trackPosNumber = tc.noteEighthCount[tc.nextIndex3 - 2];
@@ -340,7 +348,7 @@ public class Note : MonoBehaviour
             hitEnd = false;
             hitEndLoop = true;
 
-            Debug.Log("nextIndex is" + tc.nextIndex3);
+            //Debug.Log("nextIndex is" + tc.nextIndex3);
             player.DestroyFurthestNote();
             //Invoke("DestroyNote", (tc.secPerBeat * tc.noteEighthCount[tc.nextIndex3 - 2]) + .03f);
 
@@ -390,9 +398,17 @@ public class Note : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
 
-        // remove this note to the active notes array
+        // remove this note to the 'activeNotes' list
         player.activeNotes.Remove(this.gameObject.transform);
+        // remove this note from the 'noteBehind' list
+        player.notesBehind.Remove(this.gameObject.transform);
+        // remove this note from the 'furthestbehindnote' variable
+        player.furthestBehindNote = null;
+
+        player.Hey();
+
         Destroy(this.gameObject);
+
     }
 }
 

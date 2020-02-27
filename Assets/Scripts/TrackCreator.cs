@@ -55,8 +55,8 @@ public class TrackCreator : MonoBehaviour
     public int nextIndex = 0;
     [HideInInspector]
     public float nextIndex2 = 0;
-
-    public int nextIndex3;
+    [HideInInspector]
+    public int nextIndex3 = 0;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
     [Range(1, 25)]
@@ -262,6 +262,7 @@ public class TrackCreator : MonoBehaviour
         // Ensure through a bool, if the player recieves a miss or not for not inputing anything
         if (doneOnce && trackPosInBeatsGame >= nextNoteDiff && !doneOnce2)
         {
+            Debug.Log("asd");
             doneOnce2 = true;
             
 
@@ -274,7 +275,7 @@ public class TrackCreator : MonoBehaviour
             gm.scoreIncreased = false;
 
             //Currently inbetween beats
-            nextIndex3++;
+           // nextIndex3++;
 
             trackPosNumber = trackPosIntervalsList3[nextIndex3 - 1];
             trackPosNumber2 = trackPosIntervalsList3[nextIndex3];

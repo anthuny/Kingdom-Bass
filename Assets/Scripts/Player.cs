@@ -46,8 +46,9 @@ public class Player : MonoBehaviour
     public List<Transform> activeNotes = new List<Transform>();
     public List<Transform> notesBehind = new List<Transform>();
     public List<float> distances = new List<float>();
+
     public Transform nearestNote;
-    public Transform furthestBehindNote;
+    public GameObject furthestBehindNote;
 
     public Material shieldMat;
     private Color shieldColor;
@@ -57,7 +58,7 @@ public class Player : MonoBehaviour
     float newGreat;
     float newGood;
 
-    GameObject FurthestObject = null;
+
 
     private Note nearestNoteScript;
 
@@ -127,6 +128,10 @@ public class Player : MonoBehaviour
         shieldMat.SetFloat("Vector1_A7E2E21E", 0);
         shieldMat.SetColor("Color_58F8661B", shieldColor * 0);
     }
+    public void Hey()
+    {
+        Invoke("DestroyFurthestNote", 0.2f);
+    }
     void FindNearestNote()
     {
         float minDist = Mathf.Infinity;
@@ -151,9 +156,9 @@ public class Player : MonoBehaviour
         foreach (Transform Object in activeNotes)
         {
             float ObjectDistance = Vector3.Distance(transform.position, Object.transform.position);
-            if (ObjectDistance > FurthestDistance)
+            if (ObjectDistance > FurthestDistance && Object.gameObject.transform.position.z < transform.position.z)
             {
-                FurthestObject = Object.gameObject;
+                furthestBehindNote = Object.gameObject;
                 FurthestDistance = ObjectDistance;
             }
         }
@@ -161,16 +166,22 @@ public class Player : MonoBehaviour
         // If there are 2 or more notes behind the enemy, destroy the most furthest one
         for (int i = 0; i < activeNotes.Count; i++)
         {
-            if (notesBehind.Count >= 2)
-            {
-                StartCoroutine(FurthestObject.GetComponent<Note>().DestroyNote());
-                Debug.Break();
-            }
-
             if (activeNotes[i].gameObject.transform.position.z < transform.position.z)
             {
-                notesBehind.Add(activeNotes[i].gameObject.transform);
+                // Only add the note if it NOT already in the 'notesBehind' list
+                if (!notesBehind.Contains(activeNotes[i].gameObject.transform))
+                {
+                    notesBehind.Add(activeNotes[i].gameObject.transform);
+                }
             }
+
+            if (notesBehind.Count >= 2)
+            {
+                StartCoroutine(furthestBehindNote.GetComponent<Note>().DestroyNote());
+                //Debug.Break();
+            }
+
+
         }
 
         // Anthony: I'm up to here. Currently trying to get the furthest note behind the player to destroy 
@@ -237,8 +248,15 @@ public class Player : MonoBehaviour
             isShielding = true;
         }
     }
+
     void Movement()
     {
+        // Stops strange drifting behaviour
+        Vector3 playerPos2 = transform.position;
+        playerPos2.y = 1;
+        playerPos2.z = 1;
+        transform.position = playerPos2;
+
         // Ensures that there is a nearest path to begin with
         // There must be on for this code to work. 
         if (!pm.nearestPath)
@@ -465,7 +483,7 @@ public class Player : MonoBehaviour
         }
         //Debug.Log("==================================================");
         ResetNotes();
-        //Debug.Break();
+        Debug.Break();
     }
     private void CheckFirstHitAccuracy()
     {
