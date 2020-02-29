@@ -59,6 +59,7 @@ public class Note : MonoBehaviour
     [Tooltip("The player is only able to obtain 1 amount of score per note." +
     " If this variable is true, the player is able to still obtain score for this note.")]
     public bool canGetNote = true;
+    public int hitAmount = 0;
 
     [Tooltip("If this is true, this note has been missed")]
     [HideInInspector]
@@ -68,8 +69,14 @@ public class Note : MonoBehaviour
     private float timer;
 
     public GameObject noteObject;
-    public GameObject aimSprite;
-    
+    public GameObject hitMarker;
+    public GameObject hitMarkerCanvas;
+    public GameObject spotLight;
+
+    Vector3 hitMarkerRot;
+
+    bool doneOnce5;
+
 
     // Start is called before the first frame update
     void Start()
@@ -189,7 +196,7 @@ public class Note : MonoBehaviour
             Sprite blastNote = gm.blast;
 
             // Set the aim sprite to a different sprite
-            aimSprite.GetComponent<Image>().sprite = gm.blastAim;
+            hitMarker.GetComponent<Image>().sprite = gm.blastAim;
 
             transform.GetChild(1).GetComponentInChildren<Image>().sprite = blastNote;
             transform.GetChild(1).GetComponentInChildren<Image>().color = gm.blastNoteC;
@@ -205,20 +212,28 @@ public class Note : MonoBehaviour
             // Increase the visual scale of the note to span across all lanes
             noteObject.GetComponent<RectTransform>().sizeDelta = new Vector3(500, 100, 0);
 
+            // Set the note visual to invisible
+            noteObject.SetActive(false);
+
             // Increase the visual scale of the aimsprite to span across all lanes
-            aimSprite.GetComponent<RectTransform>().sizeDelta = new Vector3(7.5f, 1.5f, 0);
+            hitMarker.GetComponent<RectTransform>().sizeDelta = new Vector3(7.5f, 1.25f, 0);
+
+            // Change the color of the hitMarker
+            hitMarker.GetComponent<Image>().color = gm.blastNoteC;
+
+            // Turn the 'LookAtCam' script on so that the 'hitMarketCanvas' looks at the player
+            hitMarkerCanvas.GetComponent<LookAtCam>().enabled = true;
+
+            // Disable the spotlight
+            spotLight.SetActive(false);
         }
     }
 
-    /*
-    void UpArrowSecurity()
+    void UpdateZRotation()
     {
-        if (this. noteDir == "up")
-        {
-            player.DoNoteEffectUp();
-        }
+        hitMarkerRot.z = 0;
+        hitMarker.GetComponent<RectTransform>().transform.rotation = Quaternion.Euler(hitMarkerRot);
     }
-    */
 
     void Update()
     {
@@ -227,15 +242,9 @@ public class Note : MonoBehaviour
             return;
         }
 
-        if (!offSetCompleted)
+        if (noteType == "blast")
         {
-            timer += Time.deltaTime;
-            if (timer >= tc.noteOffSet)
-            {
-                offSetCompleted = true;
-            }
-
-            return;
+            UpdateZRotation();
         }
 
         //UpArrowSecurity();
@@ -249,12 +258,20 @@ public class Note : MonoBehaviour
         {
             doneOnce = true;
             startTime = tc.trackPos;
-
+            Debug.Log("-----------------------------");
+            Debug.Log("startTime in seconds " + startTime);
+            startTime /= tc.secPerBeat;
+            Debug.Log("startTime in beats " + startTime);
+            startTime = Mathf.Round(startTime * 4) / 4;
+            Debug.Log("startTime in beats rounded " + startTime);
+            startTime *= tc.secPerBeat;
+            Debug.Log("startTime in seconds rounded " + startTime);
+            //Debug.Break();
             // Add this note to the active notes array
             player.activeNotes.Add(this.gameObject.transform);
         }
 
-        // Calculate the percantage of completion of the note on the lane
+        // Calculate the percantage of completion of the note on the lane - not currently used
         percDistance = Mathf.Abs((transform.position.z - player.transform.position.z) / pm.pathLength) * 100;
 
         // Determine the speed the note needs to use to get to the player on the beat
@@ -263,14 +280,22 @@ public class Note : MonoBehaviour
 
         if (curTime <= 1 && !doneOnce2)
         {
+            //Debug.Log("startTime now " + startTime);
             curTime = Mathf.Clamp01((tc.trackPos - startTime) / (tc.noteTimeTaken * tc.secPerBeat));
-
+            //Debug.Log(this.gameObject.name + " trackPosInBeatsGame " + tc.trackPosInBeatsGame);
             Vector3 pos;
             // Interpolate the note between the edge of the note, to the edge of the player (closest edges from eachother, based on curTime)
 
             pos = Vector3.Lerp(new Vector3(transform.position.x, transform.position.y, startingPos.z),
                             new Vector3(transform.position.x, transform.position.y, player.transform.position.z), curTime);
             transform.position = pos;
+        }
+
+        if (curTime > 0 && !doneOnce5)
+        {
+            doneOnce5 = true;
+            Debug.Log("startTime Final " + startTime);
+            //Debug.Break();
         }
 
         if (curTime >= 1)
@@ -288,20 +313,20 @@ public class Note : MonoBehaviour
             // Rounds the value to the nearest .25f
             // This is done because the previousNoteBeatTime will most likely always be slightly off when it should be.
             // This rounds it to when the beat should happen when the note hit the player
-            tc.previousNoteBeatTime = ((Mathf.Round((tc.trackPosInBeatsGame - .25f) * 4)) / 4) + .25f;
+            Debug.Log("trackPosInBeatsGame " + tc.trackPosInBeatsGame);
+            tc.previousNoteBeatTime = Mathf.Round(tc.trackPosInBeatsGame * 2) / 2;
 
             tc.nextIndex3++;
 
             tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
             tc.nextNoteInBeats3 = tc.previousNoteBeatTime3 + (tc.noteEighthCount[tc.nextIndex3]);
 
-            //Debug.Log("previousNoteBeatTime " + tc.previousNoteBeatTime3);
-            //Debug.Log("nextNoteInBeats " + tc.nextNoteInBeats3);
+            Debug.Log("previousNoteBeatTime " + tc.previousNoteBeatTime3);
+            Debug.Log("nextNoteInBeats " + tc.nextNoteInBeats3);
             //Debug.Log("noteEightCount " + tc.noteEighthCount[tc.nextIndex3]);
 
             //Debug.Log("nextIndex3 " + tc.nextIndex3);
- 
-            //Debug.Break();
+            Debug.Break();
 
             /*
             if (!tc.doneOnce)

@@ -110,6 +110,7 @@ public class Gamemode : MonoBehaviour
     public float shieldEmissionIncSpeed = 3;
     //[HideInInspector]
     public float shieldOpacity;
+    public float maxOpacity;
     //[HideInInspector]
     public float shieldEmissionInc;
     [ColorUsageAttribute(true,true)]
@@ -184,6 +185,14 @@ public class Gamemode : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Debug.Log("TEST NUMBER " + (Mathf.Round((tc.trackPosInBeatsGame - .25f) * 4 / 4 + .25f)));
+            Debug.Break();
+        }
+
+
+
         UpdateShield();
 
         jetZ = jetDistance + player.transform.position.z;
@@ -233,9 +242,9 @@ public class Gamemode : MonoBehaviour
             playerScript.shield.transform.localScale += Vector3.one * Time.deltaTime * shieldScaleSpeed;
 
             // if the shield opacity reaches 1, stop it from continuing
-            if (shieldOpacity >= 1 || playerScript.shield.transform.localScale.x >= shieldMaxScale)
+            if (shieldOpacity >= maxOpacity || playerScript.shield.transform.localScale.x >= shieldMaxScale)
             {
-                shieldOpacity = 1;
+                shieldOpacity = maxOpacity;
 
                 // Set the scale of the shield to the max scale
                 playerScript.shield.transform.localScale = new Vector3(shieldMaxScale, shieldMaxScale, shieldMaxScale);

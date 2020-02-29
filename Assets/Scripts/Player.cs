@@ -269,7 +269,6 @@ public class Player : MonoBehaviour
     {
         // Stops strange drifting behaviour
         Vector3 playerPos2 = transform.position;
-        playerPos2.y = 1;
         playerPos2.z = 1;
         transform.position = playerPos2;
 
@@ -353,15 +352,13 @@ public class Player : MonoBehaviour
         //pointFrom *= tc.nextNoteInBeats3 - tc.previousNoteBeatTime3;
         pointTo = 1 - pointFrom;
         gm.scoreIncreased = true;
-        //Debug.Log("3");
-        //Debug.Log("nextNoteInBeats3 = " + tc.nextNoteInBeats3);
-        //Debug.Log("previousNoteBeatTime3 = " + tc.previousNoteBeatTime3);
-        //Debug.Log("currentPointInBeats = " + currentPointInBeats);
-        //Debug.Log("pointFrom " + pointFrom);
-        //Debug.Log("pointTo " + pointTo);
-        //Debug.Log("``````````````````````");
-        //Debug.Break();
-        //Debug.Log("4");
+        Debug.Log("``````````````````````");
+        Debug.Log("nextNoteInBeats3 = " + tc.nextNoteInBeats3);
+        Debug.Log("previousNoteBeatTime3 = " + tc.previousNoteBeatTime3);
+        Debug.Log("currentPointInBeats = " + currentPointInBeats);
+        Debug.Log("pointFrom " + pointFrom);
+        Debug.Log("pointTo " + pointTo);
+
         CheckForNoteEffect();
     }
 
@@ -376,6 +373,28 @@ public class Player : MonoBehaviour
         //Debug.Log("pointTo " + pointTo);
         //Debug.Log("pointFrom " + pointFrom);
         //Debug.Log("pointMin " + gm.goodMin);
+
+        //Debug.Log(nearestNote.GetComponent<Note>().canGetNote);
+
+        // if the nearest not has already been hit once, miss the player for attempt
+        if (nearestNote.GetComponent<Note>().hitAmount == 1)
+        {
+            Missed();
+        }
+
+        nearestNote.GetComponent<Note>().hitAmount++;
+
+        // If the player has already got score for the nearest note, do not allow the note give score.
+        if (!nearestNote.GetComponent<Note>().canGetNote)
+        {
+            return;
+        }
+
+        nearestNote.GetComponent<Note>().canGetNote = false;
+
+
+        //Debug.Log(nearestNote.GetComponent<Note>().canGetNote);
+        //Debug.Break();
 
         // In the case of a note with a left arrow
         if (nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "launch" && nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
@@ -447,6 +466,11 @@ public class Player : MonoBehaviour
                 nearestNoteScript.doneUpArrow = true;
                 //AssignFromAndToValues();
                 CheckHitAccuracy();
+                // Increase the hit amounts of the up note by 1
+                nearestNote.GetComponent<Note>().hitAmount++;
+
+                // Make it so the up arrow can not give score again once done once aready
+                nearestNote.GetComponent<Note>().canGetNote = false;
                 //Debug.Break();
             }
         }
@@ -456,22 +480,13 @@ public class Player : MonoBehaviour
     private void CheckHitAccuracy()
     {
         newPerfect = gm.perfectMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
-        //Debug.Log("newPerfect " + newPerfect);
+        Debug.Log("newPerfect " + newPerfect);
         newGreat = gm.greatMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
-        //Debug.Log("newGreat " + newGreat);
+        Debug.Log("newGreat " + newGreat);
         newGood = gm.goodMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
-        //Debug.Log("newGood " + newGood);
+        Debug.Log("newGood " + newGood);
 
         //Debug.Log("eighthWait " + nearestNoteScript.eighthWait);
-
-        // If the player has already got score for the nearest note, do not allow the note give score
-        if (!nearestNote.GetComponent<Note>().canGetNote)
-        {
-            return;
-        }
-
-        nearestNote.GetComponent<Note>().canGetNote = false;
-
         // Also the player doesn't recieve any misses for not performing a movement input at all.
 
         //Debug.Break();
