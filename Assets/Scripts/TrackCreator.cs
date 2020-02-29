@@ -32,6 +32,7 @@ public class TrackCreator : MonoBehaviour
     public float maxNoteIntervalsEachBeat;
 
     public float trackBpm;
+    public float noteOffSet;
 
     public string noteType1Code;
     public string noteType2Code;

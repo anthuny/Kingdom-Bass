@@ -143,9 +143,24 @@ public class Gamemode : MonoBehaviour
 
     public float defaultBeatsBetNotes = 3;
 
+    [Header("Arror Sprites")]
+    public Sprite leftArrow;
+    public Sprite rightArrow;
+    public Sprite upArrow;
+    public Sprite leftLaunchArrow;
+    public Sprite rightArrowLaunch;
+    public Sprite blast;
+    public Sprite blastAim;
+
+    [Header("UI Camera")]
+    public GameObject UICam;
+
+
     void Start()
     { 
         QualitySettings.vSyncCount = 0;
+
+        UICam.SetActive(true);
 
         player = FindObjectOfType<Player>().gameObject;
         playerScript = player.GetComponent<Player>();

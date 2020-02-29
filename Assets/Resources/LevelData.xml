@@ -5,8 +5,56 @@
     <Lanes AmountOfLanes = "5"></Lanes>
     <Notes>
       <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>3</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>3</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>3</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>3</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>3</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>3</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>3</Note_EighthWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_EighthWait>3</Note_EighthWait>
+      </Note>
+            <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
         <Note_EighthWait>3</Note_EighthWait>
       </Note>

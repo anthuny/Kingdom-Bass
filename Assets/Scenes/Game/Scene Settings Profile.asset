@@ -302,14 +302,14 @@ MonoBehaviour:
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 16.6
+    m_Value: 55.41
     min: 1
   baseHeight:
     m_OverrideState: 1
     m_Value: -21.7
   meanHeight:
     m_OverrideState: 1
-    m_Value: -13.1
+    m_Value: -21.7
   anisotropy:
     m_OverrideState: 1
     m_Value: -0.061

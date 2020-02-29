@@ -64,6 +64,13 @@ public class Note : MonoBehaviour
     [HideInInspector]
     public bool missed;
 
+    private bool offSetCompleted;
+    private float timer;
+
+    public GameObject noteObject;
+    public GameObject aimSprite;
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -80,7 +87,7 @@ public class Note : MonoBehaviour
             case "left":
                 if (noteType == "note")
                 {
-                    Sprite leftArrow = Resources.Load<Sprite>("Sprites/T_LeftArrowV2") as Sprite;
+                    Sprite leftArrow = gm.leftArrow;
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = leftArrow;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalNoteArrowC;
@@ -95,7 +102,7 @@ public class Note : MonoBehaviour
                 }
                 else if (noteType == "launch")
                 {
-                    Sprite leftArrowLaunch = Resources.Load<Sprite>("Sprites/T_LeftArrowLaunchV2") as Sprite;
+                    Sprite leftArrowLaunch = gm.leftLaunchArrow;
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = leftArrowLaunch;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalLaunchArrowC;
@@ -118,7 +125,7 @@ public class Note : MonoBehaviour
             case "right":
                 if (noteType == "note")
                 {
-                    Sprite rightArrow = Resources.Load<Sprite>("Sprites/T_RightArrowV2") as Sprite;
+                    Sprite rightArrow = gm.rightArrow;
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = rightArrow;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalNoteArrowC;
@@ -133,7 +140,7 @@ public class Note : MonoBehaviour
                 }
                 else if (noteType == "launch")
                 {
-                    Sprite rightArrowLaunch = Resources.Load<Sprite>("Sprites/T_RightArrowLaunchV2") as Sprite;
+                    Sprite rightArrowLaunch = gm.rightArrowLaunch;
 
                     transform.GetChild(1).GetComponentInChildren<Image>().sprite = rightArrowLaunch;
                     transform.GetChild(1).GetComponentInChildren<Image>().color = gm.horizontalLaunchArrowC;
@@ -154,7 +161,7 @@ public class Note : MonoBehaviour
                 break;
 
             case "up":
-                Sprite upArrow = Resources.Load<Sprite>("Sprites/T_UpArrowV2") as Sprite;
+                Sprite upArrow = gm.upArrow;
                     
                 transform.GetChild(1).GetComponentInChildren<Image>().sprite = upArrow;
                 transform.GetChild(1).GetComponentInChildren<Image>().color = gm.upArrowC;
@@ -168,29 +175,38 @@ public class Note : MonoBehaviour
                 spotLightRef.material.SetFloat("Vector1_114CB03C", gm.noteSpotLightIntensity);
 
 
-                break;
-            /*
-        case "blast":
-           Sprite blastNote = //put blast sprite in here
-
-            transform.GetChild(1).GetComponentInChildren<Image>().sprite = blastNote
-            transform.GetChild(1).GetComponentInChildren<Image>().color = gm.blastNoteC;
-
-               //Set the colour of the spotlight
-                Color.RGBToHSV(gm.blastNoteC, out H, out S, out V);
-                V += gm.noteSpotLightDiff;
-                spotLightRef.material.SetColor(//add colour for spotlight here);
-
-                // Increase the strength of the spotlight because it is a blast note.
-                spotLightRef.material.SetFloat(//add intensity vector here);
-
-            gameObject.GetComponent<Transform>().localScale.Set(3, 1, 1);
-            break;
-            */
+                break;        
 
             default:
                 Debug.Log(this.gameObject.name + " does not have proper arrow direction");
                 break;
+        }
+
+        // Make the note look like a blast if it is a blast
+        if (noteType == "blast")
+        {                     
+            // Set the note sprite to be the blast sprite
+            Sprite blastNote = gm.blast;
+
+            // Set the aim sprite to a different sprite
+            aimSprite.GetComponent<Image>().sprite = gm.blastAim;
+
+            transform.GetChild(1).GetComponentInChildren<Image>().sprite = blastNote;
+            transform.GetChild(1).GetComponentInChildren<Image>().color = gm.blastNoteC;
+
+            //Set the colour of the spotlight
+            Color.RGBToHSV(gm.blastNoteC, out H, out S, out V);
+            V += gm.noteSpotLightDiff;
+            spotLightRef.material.SetColor("Color_9834739F", Color.HSVToRGB(H, S, V));
+
+            // Increase the strength of the spotlight because it is a blast note.
+            spotLightRef.material.SetFloat("Vector1_114CB03C", gm.noteSpotLightIntensity);
+
+            // Increase the visual scale of the note to span across all lanes
+            noteObject.GetComponent<RectTransform>().sizeDelta = new Vector3(500, 100, 0);
+
+            // Increase the visual scale of the aimsprite to span across all lanes
+            aimSprite.GetComponent<RectTransform>().sizeDelta = new Vector3(7.5f, 1.5f, 0);
         }
     }
 
@@ -208,6 +224,17 @@ public class Note : MonoBehaviour
     {
         if (!canMove)
         {
+            return;
+        }
+
+        if (!offSetCompleted)
+        {
+            timer += Time.deltaTime;
+            if (timer >= tc.noteOffSet)
+            {
+                offSetCompleted = true;
+            }
+
             return;
         }
 
