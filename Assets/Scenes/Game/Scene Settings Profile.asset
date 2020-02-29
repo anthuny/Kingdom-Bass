@@ -168,37 +168,37 @@ MonoBehaviour:
     m_Value: 0
     min: 0
   includeSunInBaking:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
   sunSize:
-    m_OverrideState: 1
-    m_Value: 0.153
+    m_OverrideState: 0
+    m_Value: 0.143
     min: 0
     max: 1
   sunSizeConvergence:
-    m_OverrideState: 1
-    m_Value: 5
+    m_OverrideState: 0
+    m_Value: 2.73
     min: 1
     max: 10
   atmosphereThickness:
     m_OverrideState: 1
-    m_Value: 0.38
+    m_Value: 0.41
     min: 0
     max: 5
   skyTint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   groundColor:
-    m_OverrideState: 1
-    m_Value: {r: 0.24528301, g: 0.24181202, b: 0.24181202, a: 1}
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
     hdr: 0
     showAlpha: 1
     showEyeDropper: 1
   enableSunDisk:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
 --- !u!114 &8267903629015374301
 MonoBehaviour:
@@ -302,21 +302,21 @@ MonoBehaviour:
     showEyeDropper: 1
   meanFreePath:
     m_OverrideState: 1
-    m_Value: 55.41
+    m_Value: 43.1
     min: 1
   baseHeight:
     m_OverrideState: 1
-    m_Value: -21.7
+    m_Value: -14.6
   meanHeight:
     m_OverrideState: 1
-    m_Value: -21.7
+    m_Value: -11
   anisotropy:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: -0.061
     min: -1
     max: 1
   globalLightProbeDimmer:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
     min: 0
     max: 1
