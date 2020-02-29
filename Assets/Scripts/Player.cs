@@ -465,7 +465,8 @@ public class Player : MonoBehaviour
             {
                 nearestNoteScript.doneUpArrow = true;
                 //AssignFromAndToValues();
-                CheckHitAccuracy();
+                // If the player hit the up note, give a 'perfect'
+                HitPerfect();
                 // Increase the hit amounts of the up note by 1
                 nearestNote.GetComponent<Note>().hitAmount++;
 
@@ -613,6 +614,7 @@ public class Player : MonoBehaviour
         gm.UpdateHealth(gm.regenGreat);
         gm.score += (gm.goodScore * gm.comboMulti);
         gm.greats++;
+        //Debug.Break();
         //CheckForNoteEffect();
     }
     private void HitGood()
@@ -620,6 +622,7 @@ public class Player : MonoBehaviour
         gm.UpdateHealth(gm.regenGood);
         gm.score += (gm.badScore * gm.comboMulti);
         gm.goods++;
+        //Debug.Break();
         //CheckForNoteEffect();
     }
     public void Missed()
@@ -634,5 +637,6 @@ public class Player : MonoBehaviour
         gm.scoreIncreased = true;
         // Update score UI because getting a 'Miss' will not trigger score UI change
         gm.UpdateUI();
+        //Debug.Break();
     }
 }

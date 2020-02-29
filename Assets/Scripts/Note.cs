@@ -326,7 +326,7 @@ public class Note : MonoBehaviour
             //Debug.Log("noteEightCount " + tc.noteEighthCount[tc.nextIndex3]);
 
             //Debug.Log("nextIndex3 " + tc.nextIndex3);
-            Debug.Break();
+            //Debug.Break();
 
             /*
             if (!tc.doneOnce)
