@@ -14,8 +14,12 @@ public class Player : MonoBehaviour
 
     private float pathWidth;
 
-    private bool movingRight;
-    private bool movingLeft;
+    public bool movingRight;
+    public bool movingLeft;
+    private bool holdingMovingRightInp;
+    private bool holdingMovingLeftInp;
+    public bool blastInput;
+    public bool aboutToBlast;
     [HideInInspector]
     public int nearestLaneNumber;
 
@@ -126,12 +130,12 @@ public class Player : MonoBehaviour
             // If there is a note behind the player and it has not been hit yet AND
             // the note hasn't been missed yet AND
             // the player is unable to hit the note anymore give a miss to the player
-            
+
             missCurrentPointInBeats = tc.trackPosInBeatsGame;
             missPointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, missCurrentPointInBeats)));
-            if (nearestNote.GetComponent<Note>().canGetNote && missPointFrom > gm.goodMin + 0.05f && nearestNote.transform.position.z < transform.position.z && !nearestNote.GetComponent<Note>().missed)
+            if (nearestNote.GetComponent<Note>().canGetNote && missPointFrom > gm.goodMin + 0.05f && nearestNote.transform.position.z < transform.position.z && !nearestNoteScript.missed && nearestNoteScript.hitAmount == 0)
             {
-                nearestNote.GetComponent<Note>().missed = true;
+                nearestNoteScript.missed = true;
                 Missed();
             }
         }
@@ -208,57 +212,106 @@ public class Player : MonoBehaviour
 
 
     void Inputs()
-    {    
+    {
+        // This is a check for when both moving right and left movement are held
+        if (Input.GetKey(KeyCode.RightShift))
+        {
+            holdingMovingRightInp = true;
+        }
+
+        else
+        {
+            holdingMovingRightInp = false;
+        }
+
+        // This is a check for when both moving right and left movement are held
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            holdingMovingLeftInp = true;
+        }
+
+        else
+        {
+            holdingMovingLeftInp = false;
+        }
+
         // If:
-        //      player is pressing D
+        //      player is pressing for moving right
         //      playing is NOT moving left or right already
         //      player is not in the most RIGHT lane
-        if (Input.GetKeyDown(KeyCode.RightShift) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber)
+        //      blastInput is false
+        //      player is shielding
+        if (Input.GetKeyUp(KeyCode.RightShift) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber && !blastInput && isShielding)
         {
             movingRight = true;
-            // Ensure that the player cannot get score until 1 beat before the first note
-            //Debug.Break();
-            /*
-            if (tc.trackPosInBeatsGame > tc.firstNote - 1)
-            {
-                //Debug.Break();
-                AssignFromAndToValues();
-                scoreAllowed = false;
-                canIncreaseScore = true;
-            }
-            */
-            //Debug.Log("1");
-            AssignFromAndToValues();
+            AssignFromAndToValuesNoteAndLaunch();
             scoreAllowed = false;
             canIncreaseScore = true;
         }
 
         // If:
-        //      player is pressing A
+        //      player is pressing for moving left
         //      playing is NOT moving left or right already
-        //      player is not in the most LEFT lane
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !movingRight && !movingLeft && nearestLaneNumber != 1)
+        //      player is not in the most RIGHT lane
+        //      blastInput is false
+        //      player is NOT shielding
+        if (Input.GetKey(KeyCode.LeftShift) && !movingLeft && !movingRight && nearestLaneNumber != 1 && !blastInput && !isShielding)
         {
             movingLeft = true;
-            // Ensure that the player cannot get score until 1 beat before the first note
-            /*
-            if (tc.trackPosInBeatsGame > tc.firstNote - 1)
-            {
-                AssignFromAndToValues();
-                scoreAllowed = false;
-                canIncreaseScore = true;
-            }
-            */
-            AssignFromAndToValues();
+        }
+
+        // If:
+        //      player is pressing for moving left
+        //      playing is NOT moving left or right already
+        //      player is not in the most LEFT lane
+        //      blastInput is false
+        //      player is shielding
+        if (Input.GetKeyUp(KeyCode.LeftShift) && !movingRight && !movingLeft && nearestLaneNumber != 1 && !blastInput && isShielding)
+        {
+            movingLeft = true;
+            AssignFromAndToValuesNoteAndLaunch();
             scoreAllowed = false;
             canIncreaseScore = true;
         }
 
+        // If:
+        //      player is pressing for moving right
+        //      playing is NOT moving left or right already
+        //      player is not in the most RIGHT lane
+        //      blastInput is false
+        //      player is NOT shielding
+        if (Input.GetKey(KeyCode.RightShift) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber && !blastInput && !isShielding)
+        {
+            movingRight = true;
+        }
+
+        // If both the input for moving left and right are held down
+        // do not allow the player to move left or right after they are let go TOGETHER
+        if (holdingMovingLeftInp && holdingMovingRightInp)
+        {
+            blastInput = true;
+        }
+
+        // Blast action
+        else if (!holdingMovingLeftInp && !holdingMovingRightInp && blastInput && isShielding)
+        {
+            blastInput = false;
+            AssignFromAndToValuesBlast();
+            //Debug.Break();
+        }
+
+        else if (!holdingMovingLeftInp && !holdingMovingRightInp)
+        {
+            blastInput = false;
+        }
+
+        // If input for shield is held down, the player is shielding
         if (Input.GetKeyDown(KeyCode.Space))
         {
             isShielding = false;
         }
 
+        // If input for shield is held down, the player is NOT shielding
         else if (Input.GetKeyUp(KeyCode.Space))
         {
             isShielding = true;
@@ -273,7 +326,7 @@ public class Player : MonoBehaviour
         transform.position = playerPos2;
 
         // Ensures that there is a nearest path to begin with
-        // There must be on for this code to work. 
+        // There must be one for this code to work. 
         if (!pm.nearestPath)
         {
             return;
@@ -326,9 +379,9 @@ public class Player : MonoBehaviour
 
         // Functionality of moving right
         if (movingRight)
-        {        
+        {
             movingLeft = false;
-            rb.AddForce(Vector3.right * gm.playerEvadeStr);          
+            rb.AddForce(Vector3.right * gm.playerEvadeStr);
         }
 
 
@@ -339,30 +392,77 @@ public class Player : MonoBehaviour
             rb.AddForce(Vector3.left * gm.playerEvadeStr);
         }
     }
-    void AssignFromAndToValues()
+
+    void AssignFromAndToValuesBlast()
     {
-        //Debug.Log("2");
-        if (!isShielding)
-        {
-            return;
-        }
+        currentPointInBeats = tc.trackPosInBeatsGame;
+
+        pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats)));
+        pointTo = 1 - pointFrom;
+        gm.scoreIncreased = true;
+
+        CheckForBlastEffect();
+    }
+    void AssignFromAndToValuesNoteAndLaunch()
+    {
         currentPointInBeats = tc.trackPosInBeatsGame;
 
         pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats)));
         //pointFrom *= tc.nextNoteInBeats3 - tc.previousNoteBeatTime3;
         pointTo = 1 - pointFrom;
         gm.scoreIncreased = true;
-        Debug.Log("``````````````````````");
-        Debug.Log("nextNoteInBeats3 = " + tc.nextNoteInBeats3);
-        Debug.Log("previousNoteBeatTime3 = " + tc.previousNoteBeatTime3);
-        Debug.Log("currentPointInBeats = " + currentPointInBeats);
-        Debug.Log("pointFrom " + pointFrom);
-        Debug.Log("pointTo " + pointTo);
-
-        CheckForNoteEffect();
+        //Debug.Log("``````````````````````");
+        //Debug.Log("nextNoteInBeats3 = " + tc.nextNoteInBeats3);
+        //Debug.Log("previousNoteBeatTime3 = " + tc.previousNoteBeatTime3);
+        //Debug.Log("currentPointInBeats = " + currentPointInBeats);
+        //Debug.Log("pointFrom " + pointFrom);
+        //Debug.Log("pointTo " + pointTo);
+        CheckForNoteAndLaunchEffect();
     }
+    private void CheckForBlastEffect()
+    {
+        // if the nearest not has already been hit once, miss the player for attempt
+        if (nearestNote)
+        {
+            if (nearestNoteScript.hitAmount > 1 && !nearestNoteScript.missed)
+            {
+                Missed();
+            }
 
-    private void CheckForNoteEffect()
+            nearestNoteScript.hitAmount++;
+        }
+
+
+        // If the player has already got score for the nearest note, do not allow the note give score.
+        if (!nearestNoteScript.canGetNote)
+        {
+            return;
+        }
+
+        nearestNoteScript.canGetNote = false;
+
+        // in the case of a blast
+        if (nearestNoteScript.noteType == "blast")
+        {
+            if (nearestNoteScript.behindPlayer)
+            {
+                if (pointFrom < gm.goodMin)
+                {
+                    CheckHitAccuracy();
+                    return;
+                }
+            }
+            else
+            {
+                if (pointTo < gm.goodMin)
+                {
+                    CheckHitAccuracy();
+                    return;
+                }
+            }
+        }
+    }
+    private void CheckForNoteAndLaunchEffect()
     {
         //Debug.Log("nearestNoteScript.noteDir " + nearestNoteScript.noteDir);
         //Debug.Log("nearestNoteScript.noteType " + nearestNoteScript.noteType);
@@ -377,44 +477,43 @@ public class Player : MonoBehaviour
         //Debug.Log(nearestNote.GetComponent<Note>().canGetNote);
 
         // if the nearest not has already been hit once, miss the player for attempt
-        if (nearestNote.GetComponent<Note>().hitAmount == 1)
+        if (!nearestNote)
         {
+            return;
+        }
+        if (nearestNoteScript.hitAmount > 1 && !nearestNoteScript.missed)
+        {
+            //Debug.Break();
             Missed();
         }
-
-        nearestNote.GetComponent<Note>().hitAmount++;
+        nearestNoteScript.hitAmount++;
 
         // If the player has already got score for the nearest note, do not allow the note give score.
-        if (!nearestNote.GetComponent<Note>().canGetNote)
+        if (!nearestNoteScript.canGetNote)
         {
             return;
         }
 
-        nearestNote.GetComponent<Note>().canGetNote = false;
-
-
-        //Debug.Log(nearestNote.GetComponent<Note>().canGetNote);
-        //Debug.Break();
+        nearestNoteScript.canGetNote = false;
 
         // In the case of a note with a left arrow
-        if (nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "launch" && nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
+        if (nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast" && nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
         {
             CheckHitAccuracy();
             return;
         }
         // In the case of a note with a right arrow
-        else if (nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "launch" && nearestLaneNumber == nearestNoteScript.laneNumber - 1 && movingRight)
+        else if (nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast" && nearestLaneNumber == nearestNoteScript.laneNumber - 1 && movingRight)
         {
             CheckHitAccuracy();
             return;
         }
 
-        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "right" && nearestLaneNumber == nearestNoteScript.laneNumber - 1 && movingRight)
+        // In the case of a launch with a right arrow
+        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "blast" && nearestLaneNumber == nearestNoteScript.laneNumber - 1 && movingRight)
         {
-            //Debug.Log("a");
             if (nearestNoteScript.behindPlayer)
             {
-                //Debug.Log("b");
                 if (pointFrom < gm.goodMin)
                 {
                     CheckHitAccuracy();
@@ -433,7 +532,8 @@ public class Player : MonoBehaviour
             }
         }
 
-        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "left" && nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
+        // in the case of a launch with a left arrow
+        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "blast" && nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
         {
             if (nearestNoteScript.behindPlayer)
             {
@@ -453,14 +553,19 @@ public class Player : MonoBehaviour
                     return;
                 }
             }
+        }
+
+        if (nearestNoteScript.noteType == "blast")
+        {
+            Missed();
         }
     }
-
     public void DoNoteEffectUp()
     {
-        if (nearestNoteScript.noteDir == "up" && isShielding)
+        // If the nearest up note has not been hit yet, and the player is shielding
+        if (nearestNoteScript.noteDir == "up" && isShielding && nearestNoteScript.hitAmount == 0)
         {
-            if (nearestNoteScript.gameObject.transform.position.z < transform.position.z 
+            if (nearestNoteScript.gameObject.transform.position.z < transform.position.z
                 && nearestLaneNumber == nearestNoteScript.laneNumber && !nearestNoteScript.doneUpArrow)
             {
                 nearestNoteScript.doneUpArrow = true;
@@ -468,32 +573,34 @@ public class Player : MonoBehaviour
                 // If the player hit the up note, give a 'perfect'
                 HitPerfect();
                 // Increase the hit amounts of the up note by 1
-                nearestNote.GetComponent<Note>().hitAmount++;
+                nearestNoteScript.hitAmount++;
 
                 // Make it so the up arrow can not give score again once done once aready
-                nearestNote.GetComponent<Note>().canGetNote = false;
+                nearestNoteScript.canGetNote = false;
                 //Debug.Break();
             }
         }
 
     }
-
     private void CheckHitAccuracy()
     {
+        // If the nearest note has already given score once, stop.
+        if (nearestNoteScript.hitAmount > 1)
+        {
+            return;
+        }
         newPerfect = gm.perfectMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
-        Debug.Log("newPerfect " + newPerfect);
+        //Debug.Log("newPerfect " + newPerfect);
         newGreat = gm.greatMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
-        Debug.Log("newGreat " + newGreat);
+        //Debug.Log("newGreat " + newGreat);
         newGood = gm.goodMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
-        Debug.Log("newGood " + newGood);
+        //Debug.Log("newGood " + newGood);
 
         //Debug.Log("eighthWait " + nearestNoteScript.eighthWait);
-        // Also the player doesn't recieve any misses for not performing a movement input at all.
 
         //Debug.Break();
-
+        // fix this
         CheckFirstHitAccuracy();
-
         // This is score for a glitch? not sure if this happens anymore
         if (pointTo < 0 || pointFrom > 1 && (tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval)))
         {
@@ -502,7 +609,6 @@ public class Player : MonoBehaviour
             ResetNotes();
             return;
         }
-
         // If the player is closer to the previous note. 
         // track the distance between the next note and the current note
         if (pointTo > pointFrom && tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval))
@@ -527,7 +633,6 @@ public class Player : MonoBehaviour
             }
             else if (pointFrom >= newGood && pointFrom <= .5f)
             {
-                //Debug.Log("Miss 1");
                 //Debug.Log(newGood);
                 Missed();
             }
@@ -556,7 +661,6 @@ public class Player : MonoBehaviour
             }
             else if (pointTo >= newGood && pointTo <= .5f)
             {
-                //Debug.Log("Miss 2");
                 //Debug.Log(newGood);
                 Missed();
             }
@@ -627,8 +731,8 @@ public class Player : MonoBehaviour
     }
     public void Missed()
     {
+        nearestNoteScript.missed = true;
         gm.UpdateHealth(gm.lossMiss);
-        //Debug.Log("Missed");
         gm.comboMulti = 1;
         gm.score += gm.missScore;
         gm.misses++;

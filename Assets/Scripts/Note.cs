@@ -258,14 +258,14 @@ public class Note : MonoBehaviour
         {
             doneOnce = true;
             startTime = tc.trackPos;
-            Debug.Log("-----------------------------");
-            Debug.Log("startTime in seconds " + startTime);
+            //Debug.Log("-----------------------------");
+            //Debug.Log("startTime in seconds " + startTime);
             startTime /= tc.secPerBeat;
-            Debug.Log("startTime in beats " + startTime);
+            //Debug.Log("startTime in beats " + startTime);
             startTime = Mathf.Round(startTime * 4) / 4;
-            Debug.Log("startTime in beats rounded " + startTime);
+            //Debug.Log("startTime in beats rounded " + startTime);
             startTime *= tc.secPerBeat;
-            Debug.Log("startTime in seconds rounded " + startTime);
+            //Debug.Log("startTime in seconds rounded " + startTime);
             //Debug.Break();
             // Add this note to the active notes array
             player.activeNotes.Add(this.gameObject.transform);
@@ -294,7 +294,7 @@ public class Note : MonoBehaviour
         if (curTime > 0 && !doneOnce5)
         {
             doneOnce5 = true;
-            Debug.Log("startTime Final " + startTime);
+            //Debug.Log("startTime Final " + startTime);
             //Debug.Break();
         }
 
@@ -313,7 +313,7 @@ public class Note : MonoBehaviour
             // Rounds the value to the nearest .25f
             // This is done because the previousNoteBeatTime will most likely always be slightly off when it should be.
             // This rounds it to when the beat should happen when the note hit the player
-            Debug.Log("trackPosInBeatsGame " + tc.trackPosInBeatsGame);
+            //Debug.Log("trackPosInBeatsGame " + tc.trackPosInBeatsGame);
             tc.previousNoteBeatTime = Mathf.Round(tc.trackPosInBeatsGame * 2) / 2;
 
             tc.nextIndex3++;
@@ -321,8 +321,8 @@ public class Note : MonoBehaviour
             tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
             tc.nextNoteInBeats3 = tc.previousNoteBeatTime3 + (tc.noteEighthCount[tc.nextIndex3]);
 
-            Debug.Log("previousNoteBeatTime " + tc.previousNoteBeatTime3);
-            Debug.Log("nextNoteInBeats " + tc.nextNoteInBeats3);
+            //Debug.Log("previousNoteBeatTime " + tc.previousNoteBeatTime3);
+            //Debug.Log("nextNoteInBeats " + tc.nextNoteInBeats3);
             //Debug.Log("noteEightCount " + tc.noteEighthCount[tc.nextIndex3]);
 
             //Debug.Log("nextIndex3 " + tc.nextIndex3);

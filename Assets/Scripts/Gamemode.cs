@@ -31,19 +31,14 @@ public class Gamemode : MonoBehaviour
 
     public Text scoreText;
     public Text fpsCounterText;
-    public Text perfectsText;
-    public Text greatsText;
-    public Text goodsText;
-    public Text missesText;
+    public Text accuracyText;
     public Text beatsText;
     public Text comboText;
     public Text healthText;
-
-    public Text timeFromLastMoveText;
-
-    public Text canGetNoteText;
-    public Text scoreAllowedText;
-    public Text noteCalculationOverText;
+    public Text movingLeftText;
+    public Text movingRightText;
+    public Text blastInputText;
+    public Text aboutToBlastText;
 
     public float currentFps;
 
@@ -208,11 +203,11 @@ public class Gamemode : MonoBehaviour
         currentFps = 1.0f / Time.deltaTime;
         fpsCounterText.text = "FPS | " + (int)currentFps;
 
-        noteCalculationOverText.text = "noteCalculationOver = " + playerScript.noteCalculationOver.ToString();
-        scoreAllowedText.text = "scoreAllowed = " + playerScript.scoreAllowed.ToString();
-        //canGetNoteText.text = "canGetNote = " + tc.canGetNote.ToString();
-        timeFromLastMoveText.text = "Time From Last Movement " + playerScript.elapsedTimeSinceMove.ToString();
         beatsText.text = tc.trackPosInBeats.ToString();
+        movingLeftText.text = "movingLeft " + playerScript.movingLeft.ToString();
+        movingRightText.text = "movingRight " + playerScript.movingRight.ToString();
+        aboutToBlastText.text = "aboutToBlast " + playerScript.aboutToBlast.ToString();
+        blastInputText.text = "blastInput " + playerScript.blastInput.ToString();
 
         UpdateHealth(healthRegenPerSec);
     }
@@ -315,13 +310,13 @@ public class Gamemode : MonoBehaviour
         oldScore = score;
         scoreIncreased = true;
 
-        scoreText.text = "Score | " + score.ToString();
-        perfectsText.text = "Perfect: " + perfects.ToString()+
+        accuracyText.text = "Perfect: " + perfects.ToString()+
             "\nGreat: " + greats.ToString() +
             "\nGood: " + goods.ToString()+
             "\nMiss: " + misses.ToString();
         comboText.text = ("Combo Multiplier x" + comboMulti.ToString());
         healthText.text = (health.ToString());
+        scoreText.text = score.ToString();
     }
 
     public void UpdateHealth(float amount)
