@@ -305,14 +305,14 @@ public class Player : MonoBehaviour
             blastInput = false;
         }
 
-        // If input for shield is held down, the player is shielding
-        if (Input.GetKeyDown(KeyCode.Space))
+        // if the play inputs to stop shielding stop shielding
+        if (Input.GetKey(KeyCode.Space))
         {
             isShielding = false;
         }
 
-        // If input for shield is held down, the player is NOT shielding
-        else if (Input.GetKeyUp(KeyCode.Space))
+        // Shield is active when the shield button is not being held down
+        else
         {
             isShielding = true;
         }

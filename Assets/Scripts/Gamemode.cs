@@ -43,17 +43,24 @@ public class Gamemode : MonoBehaviour
     [Header("Map Selection")]
     public Text mapSelectText;
     public GameObject scarabBtn;
+    public GameObject testingBtn;
     public GameObject startBtn;
-    [HideInInspector]
+    //[HideInInspector]
     public bool scarabSelected;
+    //[HideInInspector]
+    public bool testingSelected;
 
     [Header("Map Selection Texts")]
     [TextArea(1, 2)]
     public string selectAMapText;
     [TextArea(1, 2)]
     public string textInfoScarab;
-    [HideInInspector]
+    [TextArea(1, 2)]
+    public string textInfoTesting;
+    //[HideInInspector]
     public int scarabCounter = 1;
+    //[HideInInspector]
+    public int testingCounter = 1;
 
     [Header("Other")]
     int debugUICounter = 1;
@@ -226,8 +233,11 @@ public class Gamemode : MonoBehaviour
 
             mapSelectText.text = "";
 
-            // Disable scarab button
+            // Disable buttons
             scarabBtn.SetActive(false);
+            testingBtn.SetActive(false);
+
+
         }
         else
         {
@@ -242,8 +252,9 @@ public class Gamemode : MonoBehaviour
             blastInputText.text = "";
             aboutToBlastText.text = "";
 
-            // Enable scarab button
+            // Enable buttons
             scarabBtn.SetActive(true);
+            testingBtn.SetActive(true);
         }
 
         UpdateHealth(healthRegenPerSec);
@@ -358,21 +369,46 @@ public class Gamemode : MonoBehaviour
 
     public void UpdateMapSelectTextUI()
     {
-        scarabCounter++;
-
+        // scarab map is not selected
         if (scarabCounter % 2 == 1)
         {
+            Debug.Log("1");
             scarabSelected = false;
-
             mapSelectText.text = selectAMapText;
 
             // Disable the start button
             startBtn.SetActive(false);
         }
+
+        // scarab map IS selected
         else
         {
+            Debug.Log("2");
             scarabSelected = true;
             mapSelectText.text = textInfoScarab;
+
+            // Enable the start button
+            startBtn.SetActive(true);
+            Debug.Log("2a");
+        }
+
+        // testing map is not selected
+        if (testingCounter % 2 == 1)
+        {
+            Debug.Log("3");
+            testingSelected = false;
+            mapSelectText.text = selectAMapText;
+
+            // Disable the start button
+            startBtn.SetActive(false);
+        }
+
+        // testing map IS selected
+        else
+        {
+            Debug.Log("4");
+            testingSelected = true;
+            mapSelectText.text = textInfoTesting;
 
             // Enable the start button
             startBtn.SetActive(true);

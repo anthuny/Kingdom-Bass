@@ -72,6 +72,7 @@ public class TrackCreator : MonoBehaviour
     Player player;
 
     XmlDocument scarabLD;
+    XmlDocument testingLD;
 
     [HideInInspector]
     public float nextBeat;
@@ -108,6 +109,10 @@ public class TrackCreator : MonoBehaviour
 
     public bool selectedMap;
     public bool scarabSelected;
+
+    [Header("Map Names")]
+    public string map1;
+    public string map2;
 
     void Start()
     {
@@ -324,6 +329,8 @@ public class TrackCreator : MonoBehaviour
 
     public void LoadMapScarab()
     {
+        gm.scarabCounter++;
+        //gm.testingCounter = 1;
         gm.UpdateMapSelectTextUI();
 
         if (mapSelected)
@@ -331,17 +338,34 @@ public class TrackCreator : MonoBehaviour
             return;
         }
 
-        TextAsset scarabXML = Resources.Load<TextAsset>("Maps/Scarab");
+        TextAsset scarabXML = Resources.Load<TextAsset>("Maps/" + map1);
         scarabLD = new XmlDocument();
         scarabLD.LoadXml(scarabXML.text);
 
-        FindNotes();
+        XmlNodeList notes = scarabLD.SelectNodes("/Levels/Level/Notes/Note");
+
+        foreach (XmlNode note in notes)
+        {
+            GetNote newGetNote = new GetNote(note);
+        }
     }
 
-
-    public void FindNotes()
+    public void LoadMapTesting()
     {
-        XmlNodeList notes = scarabLD.SelectNodes("/Levels/Level/Notes/Note");
+        gm.testingCounter++;
+        //gm.scarabCounter = 1;
+        gm.UpdateMapSelectTextUI();
+
+        if (mapSelected)
+        {
+            return;
+        }
+
+        TextAsset testingXML = Resources.Load<TextAsset>("Maps/" + map2);
+        testingLD = new XmlDocument();
+        testingLD.LoadXml(testingXML.text);
+
+        XmlNodeList notes = testingLD.SelectNodes("/Levels/Level/Notes/Note");
 
         foreach (XmlNode note in notes)
         {
