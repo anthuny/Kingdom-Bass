@@ -40,6 +40,24 @@ public class Gamemode : MonoBehaviour
     public Text blastInputText;
     public Text aboutToBlastText;
 
+    [Header("Map Selection")]
+    public Text mapSelectText;
+    public GameObject scarabBtn;
+    public GameObject startBtn;
+    [HideInInspector]
+    public bool scarabSelected;
+
+    [Header("Map Selection Texts")]
+    [TextArea(1, 2)]
+    public string selectAMapText;
+    [TextArea(1, 2)]
+    public string textInfoScarab;
+    [HideInInspector]
+    public int scarabCounter = 1;
+
+    [Header("Other")]
+    int debugUICounter = 1;
+    bool displayDebugUI;
     public float currentFps;
 
     public float launchRotAmount;
@@ -176,18 +194,13 @@ public class Gamemode : MonoBehaviour
         goodMin = 1 - goodMin;
 
         health = healthMax;
+
+        UpdateMapSelectTextUI();
+        ToggleDebugUI();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Debug.Log("TEST NUMBER " + (Mathf.Round((tc.trackPosInBeatsGame - .25f) * 4 / 4 + .25f)));
-            Debug.Break();
-        }
-
-
-
         UpdateShield();
 
         jetZ = jetDistance + player.transform.position.z;
@@ -201,13 +214,37 @@ public class Gamemode : MonoBehaviour
         }
 
         currentFps = 1.0f / Time.deltaTime;
-        fpsCounterText.text = "FPS | " + (int)currentFps;
 
-        beatsText.text = tc.trackPosInBeats.ToString();
-        movingLeftText.text = "movingLeft " + playerScript.movingLeft.ToString();
-        movingRightText.text = "movingRight " + playerScript.movingRight.ToString();
-        aboutToBlastText.text = "aboutToBlast " + playerScript.aboutToBlast.ToString();
-        blastInputText.text = "blastInput " + playerScript.blastInput.ToString();
+        if (displayDebugUI)
+        {
+            fpsCounterText.text = "FPS | " + (int)currentFps;
+            beatsText.text = tc.trackPosInBeats.ToString();
+            movingLeftText.text = "movingLeft " + playerScript.movingLeft.ToString();
+            movingRightText.text = "movingRight " + playerScript.movingRight.ToString();
+            aboutToBlastText.text = "aboutToBlast " + playerScript.aboutToBlast.ToString();
+            blastInputText.text = "blastInput " + playerScript.blastInput.ToString();
+
+            mapSelectText.text = "";
+
+            // Disable scarab button
+            scarabBtn.SetActive(false);
+        }
+        else
+        {
+            scoreText.text = "";
+            fpsCounterText.text = "";
+            accuracyText.text = "";
+            beatsText.text = "";
+            comboText.text = "";
+            healthText.text = "";
+            movingLeftText.text = "";
+            movingRightText.text = "";
+            blastInputText.text = "";
+            aboutToBlastText.text = "";
+
+            // Enable scarab button
+            scarabBtn.SetActive(true);
+        }
 
         UpdateHealth(healthRegenPerSec);
     }
@@ -317,6 +354,43 @@ public class Gamemode : MonoBehaviour
         comboText.text = ("Combo Multiplier x" + comboMulti.ToString());
         healthText.text = (health.ToString());
         scoreText.text = score.ToString();
+    }
+
+    public void UpdateMapSelectTextUI()
+    {
+        scarabCounter++;
+
+        if (scarabCounter % 2 == 1)
+        {
+            scarabSelected = false;
+
+            mapSelectText.text = selectAMapText;
+
+            // Disable the start button
+            startBtn.SetActive(false);
+        }
+        else
+        {
+            scarabSelected = true;
+            mapSelectText.text = textInfoScarab;
+
+            // Enable the start button
+            startBtn.SetActive(true);
+        }
+    }
+
+    public void ToggleDebugUI()
+    {
+        debugUICounter++;
+
+        if (debugUICounter % 2 == 1)
+        {
+            displayDebugUI = true;
+        }
+        else
+        {
+            displayDebugUI = false;
+        }
     }
 
     public void UpdateHealth(float amount)

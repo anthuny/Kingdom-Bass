@@ -71,7 +71,7 @@ public class TrackCreator : MonoBehaviour
 
     Player player;
 
-    XmlDocument levelDataXml;
+    XmlDocument scarabLD;
 
     [HideInInspector]
     public float nextBeat;
@@ -102,12 +102,12 @@ public class TrackCreator : MonoBehaviour
     public bool doneOnce = false;
     private bool doneOnce2;
     private Transform noteInfront;
-    private void Awake()
-    {
-        TextAsset xmlTextAsset = Resources.Load<TextAsset>("LevelData");
-        levelDataXml = new XmlDocument();
-        levelDataXml.LoadXml(xmlTextAsset.text);
-    }
+
+    [Header("Map Selection")]
+    private bool mapSelected;
+
+    public bool selectedMap;
+    public bool scarabSelected;
 
     void Start()
     {
@@ -131,19 +131,10 @@ public class TrackCreator : MonoBehaviour
         laneCodes[6] = lane7Code;
         laneCodes[7] = lane8Code;
 
-        FindNotes(); 
+
     }
 
-    public void FindNotes()
-    {
-        XmlNodeList notes = levelDataXml.SelectNodes("/Levels/Level/Notes/Note");
-
-        foreach (XmlNode note in notes)
-        {
-            GetNote newGetNote = new GetNote(note);
-        }
-    }
-    public void SpawnNotes(string noteType, string laneNumber, string arrowD, string EighthWait)
+    public void AssignNotes(string noteType, string laneNumber, string arrowD, string EighthWait)
     {
         // Checks for notes in each lane, If it belongs in a lane, make it belong there 
         for (int i = 1; i <= pm.maxLanes; i++)
@@ -179,14 +170,14 @@ public class TrackCreator : MonoBehaviour
 
                 // Add the eightth wait for each note to noteEightCount list
                 noteEighthCount.Add(int.Parse(EighthWait));
-
-                // Exit the function immediately
-                return;
             }
         }
+
+        // Now that all the notes have loaded, allow the player to start
+        mapSelected = true;
     }
 
-    void AssignNotes()
+    void SpawnNotes()
     {
         // Declare what the current segment is, if it hasn't been done already.
         if (!pm.currentSegment)
@@ -255,42 +246,21 @@ public class TrackCreator : MonoBehaviour
             oldNextNoteDiff = nextNoteDiff;
             doneOnce2 = false;
         }
-
-        /*
-        // Ensure through a bool, if the player recieves a miss or not for not inputing anything
-        if (doneOnce && trackPosInBeatsGame >= nextNoteDiff && !doneOnce2)
-        {
-            Debug.Log("asd");
-            doneOnce2 = true;
-            
-
-            if (!gm.scoreIncreased)
-            {
-                //Debug.Break();
-                player.Missed();
-            }
-
-            gm.scoreIncreased = false;
-
-            //Currently inbetween beats
-           // nextIndex3++;
-
-            trackPosNumber = trackPosIntervalsList3[nextIndex3 - 1];
-            trackPosNumber2 = trackPosIntervalsList3[nextIndex3];
-
-            previousNoteBeatTime2 = previousNoteBeatTime + (noteEighthCount[nextIndex3 - 1]);
-
-
-            nextNoteInBeats = previousNoteBeatTime2;
-            nextNoteInBeats2 = nextNoteInBeats + (noteEighthCount[nextIndex3]);
-
-            float a = (nextNoteInBeats + previousNoteBeatTime) / 2;
-            float b = (previousNoteBeatTime2 + nextNoteInBeats2) / 2;
-            curNoteDiff = a;
-            nextNoteDiff = b;
-        }
-        */
     }
+
+    public void StartTrack()
+    {
+        gm.startBtn.SetActive(false);
+        // Start the track 
+        dspTrackTime = (float)AudioSettings.dspTime;
+
+        // Display all debug UI
+        gm.ToggleDebugUI();
+        gm.UpdateUI();
+
+        audioSource.Play();
+    }
+
     private void Update()
     {
         //UpdateMissCondition();
@@ -301,14 +271,6 @@ public class TrackCreator : MonoBehaviour
             // Set the max amount of time the player has to input another movement before their last 
             // input is what is score they will get for the current note
             gm.maxTimeBetweenInputs = ((secPerBeat * trackPosIntervalsList[0]) / 2);
-        }
-
-        // Start the song 
-        if (Input.GetKeyDown(KeyCode.Space) && !audioSource.isPlaying && Time.realtimeSinceStartup > 3)
-        {
-            dspTrackTime = (float)AudioSettings.dspTime;
-
-            audioSource.Play();
         }
 
         // Keep track of the track's position in seconds from when it started
@@ -326,7 +288,7 @@ public class TrackCreator : MonoBehaviour
             // Ensures intro is over before starting
             if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * noteEighthCount[nextIndex]))
             {
-                AssignNotes();
+                SpawnNotes();
 
                 lastBeat += secPerBeat * noteEighthCount[nextIndex];
 
@@ -360,6 +322,33 @@ public class TrackCreator : MonoBehaviour
         }
     }
 
+    public void LoadMapScarab()
+    {
+        gm.UpdateMapSelectTextUI();
+
+        if (mapSelected)
+        {
+            return;
+        }
+
+        TextAsset scarabXML = Resources.Load<TextAsset>("Maps/Scarab");
+        scarabLD = new XmlDocument();
+        scarabLD.LoadXml(scarabXML.text);
+
+        FindNotes();
+    }
+
+
+    public void FindNotes()
+    {
+        XmlNodeList notes = scarabLD.SelectNodes("/Levels/Level/Notes/Note");
+
+        foreach (XmlNode note in notes)
+        {
+            GetNote newGetNote = new GetNote(note);
+        }
+    }
+
     // XML referencing for each note.
     class GetNote
     {
@@ -383,7 +372,7 @@ public class TrackCreator : MonoBehaviour
             XmlNode arrowDNode = curNoteNode.SelectSingleNode("Note_ArrowD");
             XmlNode EighthWaitNode = curNoteNode.SelectSingleNode("Note_EighthWait");
 
-            tc.SpawnNotes(NoteNode.InnerText, laneNode.InnerText, arrowDNode.InnerText, EighthWaitNode.InnerText);
+            tc.AssignNotes(NoteNode.InnerText, laneNode.InnerText, arrowDNode.InnerText, EighthWaitNode.InnerText);
         }
     }
 }
