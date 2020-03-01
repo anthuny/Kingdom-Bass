@@ -25,8 +25,6 @@ public class Gamemode : MonoBehaviour
     public int score = 0;
     private int oldScore;
 
-    public float distPercArrowLock;
-
     public int targetFps;
 
     public Text scoreText;
@@ -63,7 +61,7 @@ public class Gamemode : MonoBehaviour
     public int testingCounter = 1;
 
     [Header("Other")]
-    int debugUICounter = 1;
+    public int debugUICounter = 1;
     bool displayDebugUI;
     public float currentFps;
 
@@ -176,6 +174,9 @@ public class Gamemode : MonoBehaviour
     [Header("UI Camera")]
     public GameObject UICam;
 
+    [Header("Notes")]
+    public float distPercArrowLock;
+
 
     void Start()
     { 
@@ -202,7 +203,6 @@ public class Gamemode : MonoBehaviour
 
         health = healthMax;
 
-        UpdateMapSelectTextUI();
         ToggleDebugUI();
     }
 
@@ -236,8 +236,6 @@ public class Gamemode : MonoBehaviour
             // Disable buttons
             scarabBtn.SetActive(false);
             testingBtn.SetActive(false);
-
-
         }
         else
         {
@@ -367,54 +365,6 @@ public class Gamemode : MonoBehaviour
         scoreText.text = score.ToString();
     }
 
-    public void UpdateMapSelectTextUI()
-    {
-        // scarab map is not selected
-        if (scarabCounter % 2 == 1)
-        {
-            Debug.Log("1");
-            scarabSelected = false;
-            mapSelectText.text = selectAMapText;
-
-            // Disable the start button
-            startBtn.SetActive(false);
-        }
-
-        // scarab map IS selected
-        else
-        {
-            Debug.Log("2");
-            scarabSelected = true;
-            mapSelectText.text = textInfoScarab;
-
-            // Enable the start button
-            startBtn.SetActive(true);
-            Debug.Log("2a");
-        }
-
-        // testing map is not selected
-        if (testingCounter % 2 == 1)
-        {
-            Debug.Log("3");
-            testingSelected = false;
-            mapSelectText.text = selectAMapText;
-
-            // Disable the start button
-            startBtn.SetActive(false);
-        }
-
-        // testing map IS selected
-        else
-        {
-            Debug.Log("4");
-            testingSelected = true;
-            mapSelectText.text = textInfoTesting;
-
-            // Enable the start button
-            startBtn.SetActive(true);
-        }
-    }
-
     public void ToggleDebugUI()
     {
         debugUICounter++;
@@ -441,5 +391,52 @@ public class Gamemode : MonoBehaviour
         {
             health = healthMax;
         }
+    }
+
+    public void EndTrack()
+    {
+        tc.selectedMap = false;
+        ToggleDebugUI();
+
+
+        tc.audioSource.Stop();
+        tc.allNotes.Clear();
+        tc.noteEighthCount.Clear();
+        tc.trackPosIntervalsList.Clear();
+        tc.trackPosIntervalsList2.Clear();
+        tc.trackPosIntervalsList3.Clear();
+        tc.trackPosNumber = 0;
+        tc.trackPosNumber2 = 0;
+        tc.secPerBeat = 0;
+        tc.trackPos = 0;
+        tc.trackPosInBeats = 0;
+        tc.trackPosInBeatsGame = 0;
+        tc.dspTrackTime = 0;
+        tc.previousNoteBeatTime = 0;
+        tc.previousNoteBeatTime2 = 0;
+        tc.previousNoteBeatTime3 = 0;
+        tc.nextNoteInBeats = 0;
+        tc.previousNoteBeatTime = 0;
+        tc.previousNoteBeatTime2 = 0;
+        tc.previousNoteBeatTime3 = 0;
+        tc.nextNoteInBeats = 0;
+        tc.curNoteCount = 0;
+    }
+
+    public void EndTrackNote()
+    {
+        Debug.Log("1");
+        tc.trackInProgress = false;
+
+        // Destroy all notes that are still alive
+        for (int i = 0; i < tc.notes.transform.childCount; i++)
+        {
+            GameObject go = tc.notes.transform.GetChild(i).gameObject;
+            go.GetComponent<Note>().DestroyNote();
+            Debug.Log("2");
+
+        }
+
+            Invoke("EndTrack", tc.trackEndWait);
     }
 }

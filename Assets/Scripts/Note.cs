@@ -301,8 +301,14 @@ public class Note : MonoBehaviour
         if (curTime >= 1)
         {
             doneOnce2 = true;
-            transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
-
+            if (tc.curNoteCount < tc.allNotes.Count)
+            {
+                transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
+            }
+            else
+            {
+                StartCoroutine(ContinueMoving());
+            }
         }
 
 
@@ -319,63 +325,16 @@ public class Note : MonoBehaviour
             tc.nextIndex3++;
 
             tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
-            tc.nextNoteInBeats3 = tc.previousNoteBeatTime3 + (tc.noteEighthCount[tc.nextIndex3]);
 
-            //Debug.Log("previousNoteBeatTime " + tc.previousNoteBeatTime3);
-            //Debug.Log("nextNoteInBeats " + tc.nextNoteInBeats3);
-            //Debug.Log("noteEightCount " + tc.noteEighthCount[tc.nextIndex3]);
-
-            //Debug.Log("nextIndex3 " + tc.nextIndex3);
-            //Debug.Break();
-
-            /*
-            if (!tc.doneOnce)
+            // If this note is the last note in the track. Skip a bunch of steps that would otherwise throw errors
+            // Then after all that, destroy the note.
+            if (tc.curNoteCount >= tc.allNotes.Count)
             {
-                tc.doneOnce = true;
-                Debug.Log("as");
-                //tc.nextIndex3++;
-
-                //Debug.Log(tc.nextIndex3);
-                tc.trackPosNumber = tc.noteEighthCount[tc.nextIndex3 - 2];
-
-                tc.trackPosNumber2 = tc.noteEighthCount[tc.nextIndex3 - 1];
-
-                tc.previousNoteBeatTime2 = tc.previousNoteBeatTime + (tc.noteEighthCount[tc.nextIndex3 - 1]);
-
-                tc.nextNoteInBeats = tc.previousNoteBeatTime2;
-                tc.nextNoteInBeats2 = tc.nextNoteInBeats + (tc.noteEighthCount[tc.nextIndex3]);
-
-                float a = (tc.nextNoteInBeats + tc.previousNoteBeatTime) / 2;
-                float b = (tc.previousNoteBeatTime2 + tc.nextNoteInBeats2) / 2;
-                tc.curNoteDiff = a;
-                tc.nextNoteDiff = b;
-
-                //Debug.Log("nextIndex3 " + tc.nextIndex3);
-                //Debug.Log("previousNotebeatTime " + tc.previousNoteBeatTime);
-                //Debug.Log("previousNoteBeatTime2 " + tc.previousNoteBeatTime2);
-
-                //Debug.Log("nextNoteInBeats " + tc.nextNoteInBeats);
-                //Debug.Log("nextNoteInBeats2 " + tc.nextNoteInBeats2);
-
-                //Debug.Log("currentNoteDiff " + tc.curNoteDiff);
-                //Debug.Log("nextNoteDiff " + tc.nextNoteDiff);
-                //Debug.Log("-----------------------------");
+                QueueEndOfTrack();
             }
-            */
 
+            tc.nextNoteInBeats = tc.previousNoteBeatTime3 + (tc.noteEighthCount[tc.nextIndex3]);
 
-            // Ensure that the player can gain score for the note, even if they inputed a movement just before passing a note
-            // This is reliant on this note staying alive long enough for to switch canGetNote to true from false
-            /*
-            if (!tc.canGetNote && !doneOnce4)
-            {
-                //Debug.Log("allowing");
-                doneOnce4 = true;
-                //tc.canGetNote = true;
-            }
-            */
-
-            //tc.trackPosIntervalsList2.RemoveAt(0);
             tc.trackPosIntervalsList2.RemoveAt(0);
 
             // If this note is the 2nd note of all notes ever.
@@ -415,47 +374,15 @@ public class Note : MonoBehaviour
 
             //Debug.Log("nextIndex is" + tc.nextIndex3);
             player.DestroyFurthestNote();
-            //Invoke("DestroyNote", (tc.secPerBeat * tc.noteEighthCount[tc.nextIndex3 - 2]) + .03f);
-
-
         }
 
         
         if (hitEndLoop)
         {
-
             float halfWay = tc.pointToNextBeat - (tc.previousNoteBeatTime / 2);
             float a = tc.pointToNextBeat - halfWay;
             float halfWay2 = tc.pointToNextBeat2 - (tc.previousNoteBeatTime / 2);
             float b = tc.pointToNextBeat2 - halfWay2;
-
-            //Debug.Log("halfWay1 " + halfWay);
-            //Debug.Log(a);
-            //Debug.Log("halfWay2 " + halfWay2);
-            //Debug.Log(b);
-
-        
-            /*
-            // Calculate the difference between the next beat and the last in timeinbeats
-            float difference = tc.pointToNextBeat - tc.previousNoteBeatTime;
-            Debug.Log("whole thing " + (tc.previousNoteBeatTime + (gm.goodMin * difference)));
-            Debug.Log("previousNoteBeatTime " + tc.previousNoteBeatTime);
-            Debug.Log("pointToNextBeat " + tc.pointToNextBeat);
-            //Debug.Log("a " + (gm.goodMin * difference));
-            // If player can get note, and
-            // they are still in range for the worst score from the beat before in seconds
-            if (tc.canGetNote && tc.trackPosInBeatsGame > tc.previousNoteBeatTime + (gm.goodMin * difference) + 0.1f)
-            {
-                Debug.Log("configuring miss");
-                player.GetComponent<Player>().Missed();
-                hitEndLoop = false;
-
-                Debug.Log("trackPosInBeatsGame " + tc.trackPosInBeatsGame);
-                Debug.Log("previousNoteBeatTime " + tc.previousNoteBeatTime);
-                Debug.Log("difference " + difference);
-                Debug.Log("`````````````````````````````");
-            }
-            */
         }
 
         // If this note is behind the player, turn behindPlayer to true
@@ -465,6 +392,23 @@ public class Note : MonoBehaviour
         }
     }
 
+    void QueueEndOfTrack()
+    {
+        tc.trackPosIntervalsList2.RemoveAt(0);
+        tc.trackPosIntervalsList.RemoveAt(0);
+
+        gm.EndTrackNote();
+        player.DestroyFurthestNote();
+        DestroyNote();
+        return;
+
+    }
+    IEnumerator ContinueMoving()
+    {
+        transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
+        yield return new WaitForSeconds(1f);
+        //QueueEndOfTrack();
+    }
     public IEnumerator DestroyNote()
     {
         yield return new WaitForSeconds(0.2f);
@@ -476,7 +420,7 @@ public class Note : MonoBehaviour
         // remove this note from the 'furthestbehindnote' variable
         player.furthestBehindNote = null;
 
-        player.Hey();
+        player.DestroyFurthestNoteNote();
 
         Destroy(this.gameObject);
 

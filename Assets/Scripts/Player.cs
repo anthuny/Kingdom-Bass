@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
             // the player is unable to hit the note anymore give a miss to the player
 
             missCurrentPointInBeats = tc.trackPosInBeatsGame;
-            missPointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, missCurrentPointInBeats)));
+            missPointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats, tc.previousNoteBeatTime3, missCurrentPointInBeats)));
             if (nearestNote.GetComponent<Note>().canGetNote && missPointFrom > gm.goodMin + 0.05f && nearestNote.transform.position.z < transform.position.z && !nearestNoteScript.missed && nearestNoteScript.hitAmount == 0)
             {
                 nearestNoteScript.missed = true;
@@ -154,7 +154,7 @@ public class Player : MonoBehaviour
         shieldMat.SetFloat("Vector1_A7E2E21E", 0);
         shieldMat.SetColor("Color_58F8661B", shieldColor * 0);
     }
-    public void Hey()
+    public void DestroyFurthestNoteNote()
     {
         Invoke("DestroyFurthestNote", 0.2f);
     }
@@ -178,6 +178,10 @@ public class Player : MonoBehaviour
 
     public void DestroyFurthestNote()
     {
+        if (!tc.trackInProgress)
+        {
+            return;
+        }
         float FurthestDistance = 0;
         foreach (Transform Object in activeNotes)
         {
@@ -397,7 +401,7 @@ public class Player : MonoBehaviour
     {
         currentPointInBeats = tc.trackPosInBeatsGame;
 
-        pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats)));
+        pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats, tc.previousNoteBeatTime3, currentPointInBeats)));
         pointTo = 1 - pointFrom;
         gm.scoreIncreased = true;
 
@@ -407,7 +411,7 @@ public class Player : MonoBehaviour
     {
         currentPointInBeats = tc.trackPosInBeatsGame;
 
-        pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats3, tc.previousNoteBeatTime3, currentPointInBeats)));
+        pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats, tc.previousNoteBeatTime3, currentPointInBeats)));
         //pointFrom *= tc.nextNoteInBeats3 - tc.previousNoteBeatTime3;
         pointTo = 1 - pointFrom;
         gm.scoreIncreased = true;
