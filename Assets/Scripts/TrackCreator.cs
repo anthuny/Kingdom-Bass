@@ -10,7 +10,7 @@ public class TrackCreator : MonoBehaviour
     [TextArea(3, 10)]
     public string song1Text;
 
-    public string[] laneCodes = new string[] {"lane1Code", "lane2Code", "lane3Code", "lane4Code", "lane5Code", "lane6Code", "lane7Code", "lane8Code"};
+    public string[] laneCodes = new string[] { "lane1Code", "lane2Code", "lane3Code", "lane4Code", "lane5Code", "lane6Code", "lane7Code", "lane8Code" };
 
     // Lane codes
     public string lane1Code, lane2Code, lane3Code, lane4Code, lane5Code, lane6Code, lane7Code, lane8Code;
@@ -31,7 +31,6 @@ public class TrackCreator : MonoBehaviour
 
     public GameObject notes;
     public GameObject noteVisual;
-    public float maxNoteIntervalsEachBeat;
 
     public float trackBpm;
     public float noteOffSet;
@@ -52,7 +51,7 @@ public class TrackCreator : MonoBehaviour
 
     public bool trackInProgress;
 
-    float lastBeat;
+    public float lastBeat;
 
     //[HideInInspector]
     [Tooltip("This number determines what note the track has most recently spawned")]
@@ -101,15 +100,18 @@ public class TrackCreator : MonoBehaviour
     private Transform noteInfront;
 
     [Header("Map Selection")]
-    private bool mapSelected;
-
-    public bool selectedMap;
+    public bool mapSelected;
 
     [Header("Map Names")]
     public string map1;
     public string map2;
 
     void Start()
+    {
+        SetupTrackCreator();
+    }
+
+    public void SetupTrackCreator()
     {
         player = FindObjectOfType<Player>();
         gm = FindObjectOfType<Gamemode>();
@@ -133,7 +135,6 @@ public class TrackCreator : MonoBehaviour
 
         StartMapSelectionMode();
     }
-
     void StartMapSelectionMode()
     {
         gm.mapSelectText.text = gm.selectAMapText;
@@ -272,6 +273,8 @@ public class TrackCreator : MonoBehaviour
             return;
         }
 
+        SetupTrackCreator();
+
         if (gm.scarabSelected)
         {
             TextAsset scarabXML = Resources.Load<TextAsset>("Maps/" + map1);
@@ -310,14 +313,6 @@ public class TrackCreator : MonoBehaviour
         if (!audioSource.isPlaying)
         {
             return;
-        }
-
-        // Index out of bounds check
-        if (trackPosIntervalsList.Count >= 1)
-        {
-            // Set the max amount of time the player has to input another movement before their last 
-            // input is what is score they will get for the current note
-            gm.maxTimeBetweenInputs = ((secPerBeat * trackPosIntervalsList[0]) / 2);
         }
 
         // Keep track of the track's position in seconds from when it started

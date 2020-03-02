@@ -395,9 +395,17 @@ public class Gamemode : MonoBehaviour
 
     public void EndTrack()
     {
-        tc.selectedMap = false;
-        ToggleDebugUI();
+        tc.mapSelected = false;
+        tc.trackInProgress = false;
 
+        // Destroy all notes that are still alive
+        for (int i = 0; i < tc.notes.transform.childCount; i++)
+        {
+            GameObject go = tc.notes.transform.GetChild(i).gameObject;
+            StartCoroutine(go.GetComponent<Note>().DestroyNote());
+        }
+
+        ToggleDebugUI();
 
         tc.audioSource.Stop();
         tc.allNotes.Clear();
@@ -411,7 +419,7 @@ public class Gamemode : MonoBehaviour
         tc.trackPos = 0;
         tc.trackPosInBeats = 0;
         tc.trackPosInBeatsGame = 0;
-        tc.dspTrackTime = 0;
+        tc.lastBeat = 0;
         tc.previousNoteBeatTime = 0;
         tc.previousNoteBeatTime2 = 0;
         tc.previousNoteBeatTime3 = 0;
@@ -421,22 +429,15 @@ public class Gamemode : MonoBehaviour
         tc.previousNoteBeatTime3 = 0;
         tc.nextNoteInBeats = 0;
         tc.curNoteCount = 0;
+
+        mapSelectText.text = selectAMapText;
+
+        scarabSelected = false;
+        testingSelected = false;
     }
 
     public void EndTrackNote()
     {
-        Debug.Log("1");
-        tc.trackInProgress = false;
-
-        // Destroy all notes that are still alive
-        for (int i = 0; i < tc.notes.transform.childCount; i++)
-        {
-            GameObject go = tc.notes.transform.GetChild(i).gameObject;
-            go.GetComponent<Note>().DestroyNote();
-            Debug.Log("2");
-
-        }
-
-            Invoke("EndTrack", tc.trackEndWait);
+        Invoke("EndTrack", tc.trackEndWait);
     }
 }

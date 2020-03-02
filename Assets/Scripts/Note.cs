@@ -307,15 +307,20 @@ public class Note : MonoBehaviour
             }
             else
             {
-                StartCoroutine(ContinueMoving());
+                if (tc.trackInProgress)
+                {
+                    transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
+                }
+                else
+                {
+                    return;
+                }
             }
         }
-
 
         if (doneOnce2 && !doneOnce3)
         {
             doneOnce3 = true;
-
             // Rounds the value to the nearest .25f
             // This is done because the previousNoteBeatTime will most likely always be slightly off when it should be.
             // This rounds it to when the beat should happen when the note hit the player
@@ -331,6 +336,7 @@ public class Note : MonoBehaviour
             if (tc.curNoteCount >= tc.allNotes.Count)
             {
                 QueueEndOfTrack();
+                return;
             }
 
             tc.nextNoteInBeats = tc.previousNoteBeatTime3 + (tc.noteEighthCount[tc.nextIndex3]);
@@ -403,16 +409,9 @@ public class Note : MonoBehaviour
         return;
 
     }
-    IEnumerator ContinueMoving()
-    {
-        transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
-        yield return new WaitForSeconds(1f);
-        //QueueEndOfTrack();
-    }
     public IEnumerator DestroyNote()
     {
         yield return new WaitForSeconds(0.2f);
-
         // remove this note to the 'activeNotes' list
         player.activeNotes.Remove(this.gameObject.transform);
         // remove this note from the 'noteBehind' list
