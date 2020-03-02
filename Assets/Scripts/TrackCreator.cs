@@ -22,7 +22,6 @@ public class TrackCreator : MonoBehaviour
 
     public List<float> allNotes = new List<float>();
     public List<int> noteEighthCount = new List<int>();
-    public List<float> trackPosIntervalsList = new List<float>();
     public List<float> trackPosIntervalsList2 = new List<float>();
     public List<float> trackPosIntervalsList3 = new List<float>();
 
@@ -58,7 +57,7 @@ public class TrackCreator : MonoBehaviour
     public int curNoteCount = 0;
     [HideInInspector]
     public float nextIndex2 = 0;
-    [HideInInspector]
+    //[HideInInspector]
     public int nextIndex3 = 0;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
@@ -226,8 +225,8 @@ public class TrackCreator : MonoBehaviour
         pm.currentSegment = pm.nearestPath.transform.parent.gameObject;
         Path path = pm.initialPath.GetComponent<Path>();
 
-        //Re-position the notes
-        for (int i = 0; i < notes.transform.childCount; i++)
+        //Assign the notes
+        for (int i = 0; i < allNotes.Count; i++)
         {
             // If the note is not active, set it active
             if (!notes.transform.GetChild(i).gameObject.activeSelf)
@@ -324,48 +323,46 @@ public class TrackCreator : MonoBehaviour
         // Determine how many beats since the game started
         trackPosInBeatsGame = trackPosInBeats - beatsBeforeStart + 1;
 
+        if (curNoteCount >= allNotes.Count)
+        {
+            return;
+        }
 
-            if (curNoteCount >= allNotes.Count)
-            {
-                return;
-            }
+        // Spawn a note
+        if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * noteEighthCount[curNoteCount]))
+        {
+            SpawnNotes();
 
-            // Spawn a note
-            if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * noteEighthCount[curNoteCount]))
-            {
-                SpawnNotes();
+            // For every note, increase the max accuaracy by 3. (3 is the value perfect gives)
+            gm.totalAccuracyMax += 3;
 
-                // For every note, increase the max accuaracy by 3. (3 is the value perfect gives)
-                gm.totalAccuracyMax += 3;
+            lastBeat += secPerBeat * noteEighthCount[curNoteCount];
 
-                lastBeat += secPerBeat * noteEighthCount[curNoteCount];
+            trackPosIntervals = noteEighthCount[curNoteCount];
+            trackPosIntervals2 = noteEighthCount[curNoteCount];
+            trackPosIntervals3 += noteEighthCount[curNoteCount];
 
-                trackPosIntervals = noteEighthCount[curNoteCount];
-                trackPosIntervals2 = noteEighthCount[curNoteCount];
-                trackPosIntervals3 += noteEighthCount[curNoteCount];
+            trackPosIntervalsList2.Add(trackPosIntervals2);
+            trackPosIntervalsList3.Add(trackPosIntervals3);
 
-                trackPosIntervalsList.Add(trackPosIntervals);
-                trackPosIntervalsList2.Add(trackPosIntervals2);
-                trackPosIntervalsList3.Add(trackPosIntervals3);
+            nextIndex2 = noteEighthCount[0];
+            curNoteCount++;
+        }
 
-                nextIndex2 = noteEighthCount[0];
-                curNoteCount++;
-            }
+        // Index out of bounds check
+        if (trackPosIntervalsList2.Count == 1)
+        {
+            firstInterval = trackPosIntervalsList2[0];
 
-            // Index out of bounds check
-            if (trackPosIntervalsList2.Count == 1)
-            {
-                firstInterval = trackPosIntervalsList2[0];
+            // Determine what the first next note will be for score measuring
+            pointToNextBeat = trackPosIntervalsList2[0] * (noteTimeTaken + 1);
+            //firstNote = pointToNextBeat;
+        }
 
-                // Determine what the first next note will be for score measuring
-                pointToNextBeat = trackPosIntervalsList2[0] * (noteTimeTaken + 1);
-                //firstNote = pointToNextBeat;
-            }
-
-            if (trackPosIntervalsList2.Count == 2)
-            {
-                pointToNextBeat2 = trackPosIntervalsList2[1] * (noteTimeTaken + 1);
-            }
+        if (trackPosIntervalsList2.Count == 2)
+        {
+            pointToNextBeat2 = trackPosIntervalsList2[1] * (noteTimeTaken + 1);
+        }
     }
 
     public void LoadMapScarab()

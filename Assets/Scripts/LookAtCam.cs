@@ -19,11 +19,18 @@ public class LookAtCam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Only if the note is far enough from the player, will the arrow look at the camera's position.
-        if ((gm.distPercArrowLock / pm.pathLength) * 100 < transform.parent.GetComponent<Note>().percDistance)
+        if (this.gameObject.transform.parent.name != "Player")
+        {
+            // Only if the note is far enough from the player, will the arrow look at the camera's position.
+            if ((gm.distPercArrowLock / pm.pathLength) * 100 < transform.parent.GetComponent<Note>().percDistance)
+            {
+                transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position);
+            }
+        }
+
+        else
         {
             transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position);
         }
-
     }
 }

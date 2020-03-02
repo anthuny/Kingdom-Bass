@@ -77,7 +77,7 @@ public class Note : MonoBehaviour
     Vector3 hitMarkerRot;
 
     bool doneOnce5;
-
+    public int noteNumber;
 
     // Start is called before the first frame update
     void Start()
@@ -88,6 +88,9 @@ public class Note : MonoBehaviour
         player = FindObjectOfType<Player>();
         noteRend = meshRendererRef.GetComponent<Renderer>();
         noteWidth = noteRend.bounds.size.z;
+
+        gm.totalNotes++;
+        noteNumber = gm.totalNotes;
 
         //Determine the direction of the arrow on the note
         switch (noteDir)
@@ -248,8 +251,7 @@ public class Note : MonoBehaviour
             UpdateZRotation();
         }
 
-        //UpArrowSecurity();
-        if (this. noteDir == "up")
+        if (this.noteDir == "up" && this.noteType != "blast")
         {
             player.DoNoteEffectUp();
         }
@@ -332,87 +334,41 @@ public class Note : MonoBehaviour
 
             tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
 
-            // If this note is the last note in the track. Skip a bunch of steps that would otherwise throw errors
-            // Then after all that, destroy the note.
-            if (tc.curNoteCount >= tc.allNotes.Count)
+            player.CalculateMissPointFrom();
+
+            QueueEndOfTrack();
+
+            // If this note is behind the player, turn behindPlayer to true
+            if (player.transform.position.z > transform.position.z)
             {
-                QueueEndOfTrack();
-                return;
+                behindPlayer = true;
             }
 
-            tc.nextNoteInBeats = tc.previousNoteBeatTime3 + (tc.noteEighthCount[tc.nextIndex3]);
-
-            tc.trackPosIntervalsList2.RemoveAt(0);
-
-            // If this note is the 2nd note of all notes ever.
-            // Remove interval index 0 when it gets to the end of it's path
-            if (tc.notes.transform.GetChild(1).gameObject == this.gameObject)
-            {
-                //Debug.Log("should removing thing");
-                tc.deadNoteAssigned = true;
-                tc.trackPosIntervalsList.RemoveAt(0);
-                //tc.canGetNote = true;
-                hitEnd = true;
-            }
-
-            else if (tc.notes.transform.GetChild(0).gameObject == this.gameObject)
-            {
-                tc.trackPosIntervalsList.RemoveAt(0);
-                //tc.canGetNote = true;
-                hitEnd = true;
-            }
-
-            else
-            {
-                Debug.Log("error");
-            }
-        }
-
-        if (tc.deadNoteAssigned && doneOnce2 && !doneOnce3)
-        {
-            doneOnce3 = true;
-            tc.trackPosIntervalsList.RemoveAt(0);
-            //tc.canGetNote = true;
-        }
-        if (hitEnd)
-        {
-            hitEnd = false;
-            hitEndLoop = true;
-
-            //Debug.Log("nextIndex is" + tc.nextIndex3);
-            player.DestroyFurthestNote();
-        }
-
-        
-        if (hitEndLoop)
-        {
-            float halfWay = tc.pointToNextBeat - (tc.previousNoteBeatTime / 2);
-            float a = tc.pointToNextBeat - halfWay;
-            float halfWay2 = tc.pointToNextBeat2 - (tc.previousNoteBeatTime / 2);
-            float b = tc.pointToNextBeat2 - halfWay2;
-        }
-
-        // If this note is behind the player, turn behindPlayer to true
-        if (player.transform.position.z > transform.position.z)
-        {
-            behindPlayer = true;
         }
     }
 
     void QueueEndOfTrack()
     {
         tc.trackPosIntervalsList2.RemoveAt(0);
-        tc.trackPosIntervalsList.RemoveAt(0);
 
-        gm.EndTrackNote();
-        player.DestroyFurthestNote();
-        DestroyNote();
-        return;
+        // If this is the last note of the track, end differently
+        if (noteNumber == tc.allNotes.Count)
+        {
+            gm.EndTrackNote();
+        }
+
+        // If this is NOT the last note of the track, end usually
+        else
+        {
+            //player.DestroyFurthestNote();
+            StartCoroutine("DestroyNote");
+        }
 
     }
+
     public IEnumerator DestroyNote()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.8f);
         // remove this note to the 'activeNotes' list
         player.activeNotes.Remove(this.gameObject.transform);
         // remove this note from the 'noteBehind' list

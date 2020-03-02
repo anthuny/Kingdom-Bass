@@ -93,7 +93,7 @@ public class Gamemode : MonoBehaviour
     public float pathViewDistIncSpeed = .2f;
 
     [Range(0, 1)]
-    [Header("The MINIMUM point of how accurate the note must be hit for a PERFECT. 0 - 1")] 
+    [Header("The MINIMUM point of how accurate the note must be hit for a PERFECT. 0 - 1")]
     public float perfectMin;
     [Range(0, 1)]
     [Header("The MINIMUM point of how accurate the note must be hit for a GREAT. 0 - 1")]
@@ -110,13 +110,12 @@ public class Gamemode : MonoBehaviour
     [HideInInspector]
     public int perfects, greats, goods, misses;
 
-    [Header("Accuracy Score Amounts")]
+    [Header("Accuracy")]
     public int perfectScore;
     public int goodScore;
     public int badScore;
     public int missScore;
 
-    [Header("Total Accuracy")]
     //[HideInInspector]
     public float totalAccuracy;
     //[HideInInspector]
@@ -124,7 +123,13 @@ public class Gamemode : MonoBehaviour
     //[HideInInspector]
     public float totalAccuracyMax;
 
+    public string perfectScoreName;
+    public string greatScoreName;
+    public string goodScoreName;
+    public string missScoreName;
+
     public int comboMulti = 1;
+
 
 
     public bool scoreIncreased;
@@ -140,7 +145,7 @@ public class Gamemode : MonoBehaviour
     public float maxOpacity;
     //[HideInInspector]
     public float shieldEmissionInc;
-    [ColorUsageAttribute(true,true)]
+    [ColorUsageAttribute(true, true)]
     public Color shieldColor;
 
     private bool allowIncOpacity;
@@ -185,10 +190,11 @@ public class Gamemode : MonoBehaviour
 
     [Header("Notes")]
     public float distPercArrowLock;
+    public int totalNotes;
 
 
     void Start()
-    { 
+    {
         QualitySettings.vSyncCount = 0;
 
         UICam.SetActive(true);
@@ -248,6 +254,7 @@ public class Gamemode : MonoBehaviour
             movingRightText.text = "movingRight " + playerScript.movingRight.ToString();
             aboutToBlastText.text = "aboutToBlast " + playerScript.aboutToBlast.ToString();
             blastInputText.text = "blastInput " + playerScript.blastInput.ToString();
+            totalAccuracyText.text = "Total Accuracy " + totalAccuracy.ToString("F2") + "%";
 
             mapSelectText.text = "";
 
@@ -267,6 +274,7 @@ public class Gamemode : MonoBehaviour
             movingRightText.text = "";
             blastInputText.text = "";
             aboutToBlastText.text = "";
+            totalAccuracyText.text = "";
 
             // Enable buttons
             scarabBtn.SetActive(true);
@@ -339,7 +347,7 @@ public class Gamemode : MonoBehaviour
 
             // Decrease the scale of the shield
             //playerScript.shield.transform.localScale = Vector3.Lerp(new Vector3(shieldMaxScale, shieldMaxScale, shieldMaxScale),
-             //   new Vector3(shieldMinScale, shieldMinScale, shieldMinScale), shieldScaleSpeed);
+            //   new Vector3(shieldMinScale, shieldMinScale, shieldMinScale), shieldScaleSpeed);
 
             playerScript.shield.transform.localScale -= Vector3.one * Time.deltaTime * shieldScaleSpeed;
 
@@ -374,13 +382,13 @@ public class Gamemode : MonoBehaviour
         oldScore = score;
         scoreIncreased = true;
 
-        accuracyText.text = "Perfect: " + perfects.ToString()+
-            "\nGreat: " + greats.ToString() +
-            "\nGood: " + goods.ToString()+
-            "\nMiss: " + misses.ToString();
-        comboText.text = ("Combo Multiplier x" + comboMulti.ToString());
-        healthText.text = (health.ToString());
-        scoreText.text = score.ToString();
+        accuracyText.text = "Perfect " + perfects.ToString() +
+            "\nGreat " + greats.ToString() +
+            "\nGood " + goods.ToString() +
+            "\nMiss " + misses.ToString();
+        comboText.text = "Combo x " + comboMulti.ToString();
+        healthText.text = "Health " + health.ToString();
+        scoreText.text = "Score " + score.ToString();
     }
 
     public void ToggleDebugUI()
@@ -428,7 +436,6 @@ public class Gamemode : MonoBehaviour
         tc.audioSource.Stop();
         tc.allNotes.Clear();
         tc.noteEighthCount.Clear();
-        tc.trackPosIntervalsList.Clear();
         tc.trackPosIntervalsList2.Clear();
         tc.trackPosIntervalsList3.Clear();
         tc.trackPosNumber = 0;
@@ -442,11 +449,17 @@ public class Gamemode : MonoBehaviour
         tc.previousNoteBeatTime2 = 0;
         tc.previousNoteBeatTime3 = 0;
         tc.nextNoteInBeats = 0;
-        tc.previousNoteBeatTime = 0;
-        tc.previousNoteBeatTime2 = 0;
-        tc.previousNoteBeatTime3 = 0;
-        tc.nextNoteInBeats = 0;
         tc.curNoteCount = 0;
+        tc.nextIndex3 = 0;
+        score = 0;
+        perfects = 0;
+        greats = 0;
+        goods = 0;
+        misses = 0;
+        curAccuracy = 0;
+        totalAccuracy = 0;
+        totalAccuracyMax = 0;
+        totalNotes = 0;
 
         mapSelectText.text = selectAMapText;
 
