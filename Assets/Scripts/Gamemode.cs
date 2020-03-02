@@ -28,6 +28,7 @@ public class Gamemode : MonoBehaviour
     public int targetFps;
 
     public Text scoreText;
+    public Text totalAccuracyText;
     public Text fpsCounterText;
     public Text accuracyText;
     public Text beatsText;
@@ -114,6 +115,14 @@ public class Gamemode : MonoBehaviour
     public int goodScore;
     public int badScore;
     public int missScore;
+
+    [Header("Total Accuracy")]
+    //[HideInInspector]
+    public float totalAccuracy;
+    //[HideInInspector]
+    public float curAccuracy;
+    //[HideInInspector]
+    public float totalAccuracyMax;
 
     public int comboMulti = 1;
 
@@ -204,11 +213,20 @@ public class Gamemode : MonoBehaviour
         health = healthMax;
 
         ToggleDebugUI();
+        StartGame();
+    }
+
+    void StartGame()
+    {
+        totalAccuracy = 100;
+        totalAccuracyText.text = "Total Accuracy: " + totalAccuracy.ToString() + "%";
+
     }
 
     void Update()
     {
         UpdateShield();
+        CalculateTotalAccuracy();
 
         jetZ = jetDistance + player.transform.position.z;
         jet.transform.position = new Vector3(0, jetY, jetZ);
@@ -439,5 +457,41 @@ public class Gamemode : MonoBehaviour
     public void EndTrackNote()
     {
         Invoke("EndTrack", tc.trackEndWait);
+    }
+    
+    public void CalculateTotalAccuracy()
+    {
+        if (!playerScript.nearestNote)
+        {
+            return;
+        }
+
+        if (playerScript.nearestNoteScript.behindPlayer)
+        {
+            playerScript.newPerfect = perfectMin / (playerScript.nearestNoteScript.eighthWait / defaultBeatsBetNotes);
+            //Debug.Log("newPerfect " + newPerfect);
+            playerScript.newGreat = greatMin / (playerScript.nearestNoteScript.eighthWait / defaultBeatsBetNotes);
+            //Debug.Log("newGreat " + newGreat);
+            playerScript.newGood = goodMin / (playerScript.nearestNoteScript.eighthWait / defaultBeatsBetNotes);
+            //Debug.Log("newGood " + newGood);
+
+            // If the note is further then what a 'good' score can give
+            if (playerScript.missPointFrom > playerScript.newGood && !playerScript.nearestNoteScript.noteCalculatedAcc)
+            {
+                // Ensure this code only happens once per note
+                playerScript.nearestNoteScript.noteCalculatedAcc = true;
+
+                UpdateTotalAccuracy();
+            }
+        }
+    }
+
+    public void UpdateTotalAccuracy()
+    {
+        // Update the total accuracy.
+        totalAccuracy = (curAccuracy / totalAccuracyMax) * 100;
+
+        // Display the total accuracy UI only in 2 decimal places
+        totalAccuracyText.text = "Total Accuracy: " + totalAccuracy.ToString("F2") + "%";
     }
 }

@@ -7,7 +7,8 @@ public class Player : MonoBehaviour
 {
     [HideInInspector]
     public Rigidbody rb;
-    private Gamemode gm;
+    [HideInInspector]
+    public Gamemode gm;
     private PathManager pm;
     private TrackCreator tc;
     private CameraBehaviour cm;
@@ -35,8 +36,10 @@ public class Player : MonoBehaviour
     bool doneOnce3;
     public bool doneOnce2;
 
-    private float pointFrom;
-    private float missPointFrom;
+    [HideInInspector]
+    public float pointFrom;
+    [HideInInspector]
+    public float missPointFrom;
     private float pointTo;
 
     public bool canIncreaseScore;
@@ -60,13 +63,13 @@ public class Player : MonoBehaviour
     private Color shieldColor;
     public GameObject shield;
 
-    float newPerfect;
-    float newGreat;
-    float newGood;
+    public float newPerfect;
+    public float newGreat;
+    public float newGood;
 
 
 
-    private Note nearestNoteScript;
+    public Note nearestNoteScript;
 
     // Start is called before the first frame update
     void Start()
@@ -133,9 +136,12 @@ public class Player : MonoBehaviour
 
             missCurrentPointInBeats = tc.trackPosInBeatsGame;
             missPointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats, tc.previousNoteBeatTime3, missCurrentPointInBeats)));
-            if (nearestNote.GetComponent<Note>().canGetNote && missPointFrom > gm.goodMin + 0.05f && nearestNote.transform.position.z < transform.position.z && !nearestNoteScript.missed && nearestNoteScript.hitAmount == 0)
+            if (missPointFrom > newGood + 0.05f && nearestNote.transform.position.z < transform.position.z && nearestNoteScript.canGetNote)
             {
-                nearestNoteScript.missed = true;
+                Debug.Log("late miss");
+                //Debug.Log("missPointFrom " + missPointFrom);
+                //Debug.Log("gm.goodMin " + gm.goodMin);
+                //Debug.Log("newGood " + newGood);
                 Missed();
             }
         }
@@ -212,8 +218,6 @@ public class Player : MonoBehaviour
             }
         }
     }
-
-
 
     void Inputs()
     {
@@ -501,61 +505,68 @@ public class Player : MonoBehaviour
         nearestNoteScript.canGetNote = false;
 
         // In the case of a note with a left arrow
-        if (nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast" && nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
+        if (nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast")
         {
-            CheckHitAccuracy();
-            return;
-        }
-        // In the case of a note with a right arrow
-        else if (nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast" && nearestLaneNumber == nearestNoteScript.laneNumber - 1 && movingRight)
-        {
-            CheckHitAccuracy();
-            return;
-        }
-
-        // In the case of a launch with a right arrow
-        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "blast" && nearestLaneNumber == nearestNoteScript.laneNumber - 1 && movingRight)
-        {
-            if (nearestNoteScript.behindPlayer)
+            if (nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
             {
-                if (pointFrom < gm.goodMin)
-                {
-                    CheckHitAccuracy();
-                    playerHitLaunch = true;
-                    return;
-                }
+                Debug.Log("1");
+                CheckHitAccuracy();
+                return;
             }
             else
             {
-                if (pointTo < gm.goodMin)
-                {
-                    CheckHitAccuracy();
-                    playerHitLaunch = true;
-                    return;
-                }
+                Debug.Log("2");
+                Missed();
+                return;
+            }
+        }
+        // In the case of a note with a right arrow
+        else if (nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast")
+        {
+            if (nearestLaneNumber == nearestNoteScript.laneNumber - 1 && movingRight)
+            {
+                Debug.Log("3");
+                CheckHitAccuracy();
+                return;
+            }
+            else
+            {
+                Debug.Log("4");
+                Missed();
+                return;
+            }
+        }
+
+        // In the case of a launch with a right arrow
+        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "blast")
+        {
+            if (nearestLaneNumber == nearestNoteScript.laneNumber - 1 && movingRight)
+            {
+                Debug.Log("5");
+                CheckHitAccuracy();
+                playerHitLaunch = true;
+                return;
+            }
+            else
+            {
+                Missed();
+                return;
             }
         }
 
         // in the case of a launch with a left arrow
-        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "blast" && nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
+        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "blast")
         {
-            if (nearestNoteScript.behindPlayer)
+            if (nearestLaneNumber == nearestNoteScript.laneNumber + 1 && movingLeft)
             {
-                if (pointFrom < gm.goodMin)
-                {
-                    CheckHitAccuracy();
-                    playerHitLaunch = true;
-                    return;
-                }
+                CheckHitAccuracy();
+                playerHitLaunch = true;
+                return;
             }
             else
             {
-                if (pointTo < gm.goodMin)
-                {
-                    CheckHitAccuracy();
-                    playerHitLaunch = true;
-                    return;
-                }
+                Missed();
+                return;
             }
         }
 
@@ -715,26 +726,36 @@ public class Player : MonoBehaviour
         gm.UpdateHealth(gm.regenPerfect);
         gm.score += (gm.perfectScore * gm.comboMulti);
         gm.perfects++;
-        //CheckForNoteEffect();
+        gm.curAccuracy += 3;
+
+        // Make not invisible
+        MakeNoteInvisible();
     }
     private void HitGreat()
     {
         gm.UpdateHealth(gm.regenGreat);
         gm.score += (gm.goodScore * gm.comboMulti);
         gm.greats++;
-        //Debug.Break();
-        //CheckForNoteEffect();
+
+        gm.curAccuracy += 2;
+
+        // Make not invisible
+        MakeNoteInvisible();
     }
     private void HitGood()
     {
         gm.UpdateHealth(gm.regenGood);
         gm.score += (gm.badScore * gm.comboMulti);
         gm.goods++;
-        //Debug.Break();
-        //CheckForNoteEffect();
+
+        gm.curAccuracy += 1;
+
+        // Make not invisible
+        MakeNoteInvisible();
     }
     public void Missed()
     {
+        nearestNoteScript.canGetNote = false;
         nearestNoteScript.missed = true;
         gm.UpdateHealth(gm.lossMiss);
         gm.comboMulti = 1;
@@ -745,6 +766,18 @@ public class Player : MonoBehaviour
         gm.scoreIncreased = true;
         // Update score UI because getting a 'Miss' will not trigger score UI change
         gm.UpdateUI();
-        //Debug.Break();
+
+        // Do not allow gamemode to do the calculation for total accuracy
+        nearestNoteScript.noteCalculatedAcc = true;
+
+        gm.UpdateTotalAccuracy();
+    }
+
+    void MakeNoteInvisible()
+    {
+        // Disable all aesthetics of a note
+        nearestNoteScript.hitMarkerCanvas.SetActive(false);
+        nearestNoteScript.noteObject.SetActive(false);
+        nearestNoteScript.spotLight.SetActive(false);
     }
 }

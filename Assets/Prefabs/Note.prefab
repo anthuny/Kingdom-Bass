@@ -435,6 +435,7 @@ MonoBehaviour:
   spotLightRef: {fileID: 3066193310721560630}
   behindPlayer: 0
   canGetNote: 1
+  hitAmount: 0
   missed: 0
   noteObject: {fileID: 2805479660196462576}
   hitMarker: {fileID: 3684050155087560558}

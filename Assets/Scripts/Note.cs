@@ -60,9 +60,10 @@ public class Note : MonoBehaviour
     " If this variable is true, the player is able to still obtain score for this note.")]
     public bool canGetNote = true;
     public int hitAmount = 0;
+    public bool noteCalculatedAcc;
 
     [Tooltip("If this is true, this note has been missed")]
-    [HideInInspector]
+    //[HideInInspector]
     public bool missed;
 
     private bool offSetCompleted;

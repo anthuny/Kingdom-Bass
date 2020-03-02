@@ -335,6 +335,9 @@ public class TrackCreator : MonoBehaviour
             {
                 SpawnNotes();
 
+                // For every note, increase the max accuaracy by 3. (3 is the value perfect gives)
+                gm.totalAccuracyMax += 3;
+
                 lastBeat += secPerBeat * noteEighthCount[curNoteCount];
 
                 trackPosIntervals = noteEighthCount[curNoteCount];
