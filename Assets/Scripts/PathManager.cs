@@ -267,17 +267,6 @@ public class PathManager : MonoBehaviour
             return;
         }
 
-        // When the player goes onto a different segment from the last
-        // Reset the percentage tracker for distance
-        if (oldNearestPath != nearestPath)
-        {
-            oldNearestPath = nearestPath;
-
-            //Remove all elements inside the pathNumbers list for the current segment
-            laneNumbers.Clear();
-        }
-
-
         // Search for the nearest path
         if (nearestPath)
         {

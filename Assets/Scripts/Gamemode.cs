@@ -226,7 +226,6 @@ public class Gamemode : MonoBehaviour
     {
         totalAccuracy = 100;
         totalAccuracyText.text = "Total Accuracy: " + totalAccuracy.ToString() + "%";
-
     }
 
     void Update()

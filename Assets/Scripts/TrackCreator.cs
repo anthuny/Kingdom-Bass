@@ -182,6 +182,8 @@ public class TrackCreator : MonoBehaviour
         if (!mapSelected)
         {
             UpdateMapSelectionUI();
+
+            player.oldNearestLaneNumber = player.nearestLaneNumber;
         }
     }
 
