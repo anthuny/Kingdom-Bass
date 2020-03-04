@@ -153,7 +153,6 @@ public class Player : MonoBehaviour
 
             if (missPointFrom > newGood + 0.05f && nearestNote.transform.position.z < transform.position.z && nearestNoteScript.canGetNote)
             {
-                Debug.Log("missed");
                 Missed();
             }
         }
@@ -890,7 +889,6 @@ public class Player : MonoBehaviour
 
     void MakeNoteInvisible()
     {
-        Debug.Break();
         // Disable all aesthetics of a note
         nearestNoteScript.hitMarkerCanvas.SetActive(false);
         nearestNoteScript.noteObject.SetActive(false);

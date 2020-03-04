@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Mat_laser
+  m_Shader: {fileID: -6465566751694194690, guid: 935de70c06f481549bca1cecafc788a2,
+    type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    MotionVector: User
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_40BFF4C2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_46E8CB0E:
+        m_Texture: {fileID: 2800000, guid: 9985f63e79fd1c74dab20d3fe504cbcd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_5AAF08B4: 0
+    - Vector1_98DF1625: 32
+    - Vector1_A81F8F3: 1
+    - Vector1_C14BB634: 1
+    m_Colors:
+    - Color_CFB35B33: {r: 10.680627, g: 10.680627, b: 10.680627, a: 1}
+    - Vector2_7875831A: {r: 1, g: 0, b: 0, a: 0}
+    - Vector2_B099002B: {r: -2.5, g: 0, b: 0, a: 0}

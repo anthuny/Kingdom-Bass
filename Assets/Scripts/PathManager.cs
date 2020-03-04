@@ -216,6 +216,9 @@ public class PathManager : MonoBehaviour
             // If this path is the FIRST path
             if (i == 1)
             {
+                // enable the right divider of the path
+                go.GetComponent<Path>().leftDivider.SetActive(true);
+
                 go.GetComponent<Path>().leftBeam.transform.localPosition = new Vector3(2.326f, 2.082f, 5.135f);
                 go.GetComponent<Path>().leftBeam.transform.localScale = new Vector3(0.13f, 5f, 0.13f);
 
