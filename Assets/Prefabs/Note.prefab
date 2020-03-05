@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2630179365886245552
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6049311476939134177}
+  m_Layer: 12
+  m_Name: Electricty End
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6049311476939134177
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2630179365886245552}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.79, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1539924428822953021}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2805479660196462576
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,6 +419,7 @@ Transform:
   - {fileID: 5416637966909654609}
   - {fileID: 5006512735859823646}
   - {fileID: 985498757058393225}
+  - {fileID: 6049311476939134177}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -436,11 +467,14 @@ MonoBehaviour:
   behindPlayer: 0
   canGetNote: 1
   hitAmount: 0
+  noteCalculatedAcc: 0
   missed: 0
   noteObject: {fileID: 2805479660196462576}
   hitMarker: {fileID: 3684050155087560558}
   hitMarkerCanvas: {fileID: 8797297969032764751}
   spotLight: {fileID: 4320755503754577562}
+  noteNumber: 0
+  ElectrictyEnd: {fileID: 6049311476939134177}
 --- !u!1 &8797297969032764751
 GameObject:
   m_ObjectHideFlags: 0

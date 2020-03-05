@@ -7,7 +7,7 @@ public class KillBox : MonoBehaviour
     public Player player;
     private void OnTriggerEnter(Collider other)
     {
-        player.GetComponent<Player>().Missed();
+        //player.GetComponent<Player>().Missed();
         other.gameObject.GetComponent<Note>().DestroyNote();
     }
 }

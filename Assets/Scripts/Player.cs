@@ -29,7 +29,8 @@ public class Player : MonoBehaviour
 
     public bool noteCalculationOver;
 
-    bool playerHitLaunch;
+    bool hitLLaunch;
+    bool hitRLaunch;
 
     private Renderer rend;
     public float playerWidth;
@@ -56,7 +57,9 @@ public class Player : MonoBehaviour
     private float missCurrentPointInBeats;
 
     public List<Transform> activeNotes = new List<Transform>();
-    public List<Transform> notesBehind = new List<Transform>();
+    public List<Transform> notesInfront = new List<Transform>();
+    public GameObject OldClosestNoteInFront;
+    public Note closestNoteInFrontScript;
     public List<float> distances = new List<float>();
 
     public Transform nearestNote;
@@ -74,9 +77,12 @@ public class Player : MonoBehaviour
 
     public Text accuracyUI;
 
-    bool validMovement;
+    public bool validMovement;
 
-    Vector3 playerPos;
+    [HideInInspector]
+    public Vector3 playerPos;
+    [HideInInspector]
+    public Vector3 oldPlayerPos;
 
     // Start is called before the first frame update
     void Start()
@@ -124,6 +130,7 @@ public class Player : MonoBehaviour
         UpdateShield();
         AssignMisses();
         SetNearestLaneNumber();
+        UpdateNotesInfFront();
 
         if (!nearestNote)
         {
@@ -219,13 +226,36 @@ public class Player : MonoBehaviour
             }
         }
     }
-
-    public void DestroyFurthestNote()
+    public void UpdateNotesInfFront()
     {
-        if (!tc.trackInProgress)
+        // If the track is not in progress
+        // OR there is less then 1 active note, stop
+        if (!tc.trackInProgress || activeNotes.Count < 1)
         {
             return;
         }
+
+
+        // Add a note to a list if it's infront of the player
+        //  If the note is infront of the player, continue
+        if (activeNotes[activeNotes.Count - 1].gameObject.transform.position.z > transform.position.z)
+        {
+            // Only add the note if it NOT already in the list
+            if (!notesInfront.Contains(activeNotes[activeNotes.Count - 1].gameObject.transform))
+            {
+                notesInfront.Add(activeNotes[activeNotes.Count - 1].gameObject.transform);
+            }
+        }
+
+        if (notesInfront.Count > 0)
+        {
+            if (OldClosestNoteInFront != notesInfront[0].gameObject)
+            {
+                OldClosestNoteInFront = notesInfront[0].gameObject;
+                closestNoteInFrontScript = OldClosestNoteInFront.GetComponent<Note>();
+            }
+        }
+
         float FurthestDistance = 0;
         foreach (Transform Object in activeNotes)
         {
@@ -236,27 +266,7 @@ public class Player : MonoBehaviour
                 FurthestDistance = ObjectDistance;
             }
         }
-
-        // If there are 2 or more notes behind the enemy, destroy the most furthest one
-        for (int i = 0; i < activeNotes.Count; i++)
-        {
-            if (activeNotes[i].gameObject.transform.position.z < transform.position.z)
-            {
-                // Only add the note if it NOT already in the 'notesBehind' list
-                if (!notesBehind.Contains(activeNotes[i].gameObject.transform))
-                {
-                    notesBehind.Add(activeNotes[i].gameObject.transform);
-                }
-            }
-
-            if (notesBehind.Count >= 2)
-            {
-                StartCoroutine(furthestBehindNote.GetComponent<Note>().DestroyNote());
-                //Debug.Break();
-            }
-        }
     }
-
     void Inputs()
     {
         // This is a check for when both moving right and left movement are held
@@ -339,7 +349,6 @@ public class Player : MonoBehaviour
             isShielding = true;
         }
     }
-
     void SetNearestLaneNumber()
     {
         // If not moving, AND there is a nearest path to begin with
@@ -354,7 +363,6 @@ public class Player : MonoBehaviour
             }
         }
     }
-
     void Movement()
     {
         // Stops strange drifting behaviour
@@ -371,42 +379,6 @@ public class Player : MonoBehaviour
             return;
         }
 
-        /*
-        // After moving Left. Stop the player from moving into the next lane
-        if (movingLeft && playerPos.x <= pathWidth * (nearestLaneNumber - 2) && !playerHitLaunch)
-        {
-            playerPos.x = pathWidth * (nearestLaneNumber - 2);
-            transform.position = playerPos;
-            movingLeft = false;
-        }
-
-        // After moving Right. Stop the player from moving into the next lane
-        if (movingRight && playerPos.x >= pathWidth * nearestLaneNumber && !playerHitLaunch)
-        {
-            playerPos.x = pathWidth * nearestLaneNumber;
-            transform.position = playerPos;
-            movingRight = false;
-        }
-
-        // If the player moved left to contact a launch note. Do not stop the player at the next lane. Let them reach the end lane
-        if (movingRight && playerPos.x >= ((pathWidth * pm.laneNumbers[0]) - pathWidth) && playerHitLaunch)
-        {
-            playerPos.x = 6;
-            transform.position = playerPos;
-            movingRight = false;
-            playerHitLaunch = false;
-        }
-
-        // If the player moved right to contact a launch note. Do not stop the player at the next lane. Let them reach the end lane
-        if (movingLeft && playerPos.x <= ((pathWidth * pm.maxLanes) - pathWidth) && playerHitLaunch)
-        {
-            playerPos.x = 0;
-            transform.position = playerPos;
-            movingLeft = false;
-            playerHitLaunch = false;
-        }
-
-    */
         // Functionality of moving right with shield
         if (movingRight && isShielding)
         {
@@ -425,6 +397,7 @@ public class Player : MonoBehaviour
         {
             movingRight = false;
             movingLeft = false;
+            validMovement = false;
 
             playerPos.x = pathWidth * nearestLaneNumber;
             transform.position = playerPos;
@@ -448,12 +421,12 @@ public class Player : MonoBehaviour
         {
             movingLeft = false;
             movingRight = false;
+            validMovement = false;
 
             playerPos.x = pathWidth * (nearestLaneNumber - 2);
             transform.position = playerPos;
         }
     }
-
     void AssignFromAndToValuesBlast()
     {
         currentPointInBeats = tc.trackPosInBeatsGame;
@@ -536,7 +509,6 @@ public class Player : MonoBehaviour
 
         if (nearestNoteScript.hitAmount > 1 && !nearestNoteScript.missed)
         {
-            //Debug.Break();
             Missed();
         }
 
@@ -565,10 +537,10 @@ public class Player : MonoBehaviour
         // In the case of a note with a left arrow
         if (nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast")
         {
-            if (oldNearestLaneNumber == nearestLaneNumber + 1)
+            // If the player moved into the correct lane, continue
+            if (nearestNoteScript.laneNumber == oldNearestLaneNumber - 1)
             {
                 CheckHitAccuracy();
-                return;
             }
             else
             {
@@ -579,10 +551,10 @@ public class Player : MonoBehaviour
         // In the case of a note with a right arrow
         else if (nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast")
         {
-            if (oldNearestLaneNumber == nearestLaneNumber - 1)
+            // If the player moved into the correct lane, continue
+            if (nearestNoteScript.laneNumber == oldNearestLaneNumber + 1)
             {
                 CheckHitAccuracy();
-                return;
             }
             else
             {
@@ -594,14 +566,11 @@ public class Player : MonoBehaviour
         // In the case of a launch with a right arrow
         else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "blast")
         {
-            Debug.Log("nearestLaneNumber " + nearestLaneNumber);
-            Debug.Log("oldNearestLaneNumber " + oldNearestLaneNumber);
-            if (oldNearestLaneNumber == nearestLaneNumber - 1)
+            // If the player moved into the correct lane, continue
+            if (nearestNoteScript.laneNumber == oldNearestLaneNumber + 1)
             {
+                hitRLaunch = true;
                 CheckHitAccuracy();
-                RepositionPlayerFromLaunch();
-                playerHitLaunch = true;
-                return;
             }
             else
             {
@@ -613,36 +582,17 @@ public class Player : MonoBehaviour
         // in the case of a launch with a left arrow
         else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "blast")
         {
-            if (oldNearestLaneNumber == nearestLaneNumber + 1)
+            // If the player moved into the correct lane, continue 
+            if (nearestNoteScript.laneNumber == oldNearestLaneNumber - 1)
             {
+                hitLLaunch = true;
                 CheckHitAccuracy();
-                RepositionPlayerFromLaunch();
-                playerHitLaunch = true;
-                return;
             }
             else
             {
                 Missed();
                 return;
             }
-        }
-    }
-
-    void RepositionPlayerFromLaunch()
-    {
-        // If player moved right into a launch note, send them to the furthest lane in the right direction
-        if (oldNearestLaneNumber == nearestLaneNumber + 1)
-        {
-            playerPos.x = 0;
-            transform.position = playerPos;
-            return;
-        }
-
-        // If player moved left into a launch note, send them to the furthest lane in the left direction
-        else if (oldNearestLaneNumber == nearestLaneNumber - 1)
-        {
-            playerPos.x = 6;
-            transform.position = playerPos;
         }
     }
     public void DoNoteEffectUp()
@@ -680,11 +630,9 @@ public class Player : MonoBehaviour
                 nearestNoteScript.canGetNote = false;
                 //Debug.Break();
             }
-             return;
         }
-
-
     }
+
     private void CheckHitAccuracy()
     {
         // If the nearest note has already given score once, stop.
@@ -698,17 +646,11 @@ public class Player : MonoBehaviour
         newGreat = gm.greatMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
         newGood = gm.goodMin / (nearestNoteScript.eighthWait / gm.defaultBeatsBetNotes);
 
-        // Not sure if this is used anymore
-        CheckFirstHitAccuracy();
-
-        // This is score for a glitch? not sure if this happens anymore
-        if (pointTo < 0 || pointFrom > 1 && (tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval)))
+        if (tc.trackPosInBeatsGame < (tc.noteTimeTaken + tc.firstInterval))
         {
-            Debug.Log("Perfect - glitch");
-            HitPerfect();
-            ResetNotes();
-            return;
+            CheckFirstHitAccuracy();
         }
+
         // If the player is closer to the previous note. 
         // track the distance between the next note and the current note
         if (pointTo > pointFrom && tc.trackPosInBeatsGame > (tc.noteTimeTaken + tc.firstInterval))
@@ -805,9 +747,11 @@ public class Player : MonoBehaviour
         noteCalculationOver = false;
         scoreAllowed = false;
     }
-
     private void HitPerfect()
     {
+        // Check if the player needs to move for hitting a launch note
+        MoveForLaunch();
+
         gm.UpdateHealth(gm.regenPerfect);
         gm.score += (gm.perfectScore * gm.comboMulti);
         gm.perfects++;
@@ -826,6 +770,9 @@ public class Player : MonoBehaviour
     }
     private void HitGreat()
     {
+        // Check if the player needs to move for hitting a launch note
+        MoveForLaunch();
+
         gm.UpdateHealth(gm.regenGreat);
         gm.score += (gm.goodScore * gm.comboMulti);
         gm.greats++;
@@ -844,6 +791,9 @@ public class Player : MonoBehaviour
     }
     private void HitGood()
     {
+        // Check if the player needs to move for hitting a launch note
+        MoveForLaunch();
+
         gm.UpdateHealth(gm.regenGood);
         gm.score += (gm.badScore * gm.comboMulti);
         gm.goods++;
@@ -862,6 +812,7 @@ public class Player : MonoBehaviour
     }
     public void Missed()
     {
+
         nearestNoteScript.canGetNote = false;
         nearestNoteScript.missed = true;
         gm.UpdateHealth(gm.lossMiss);
@@ -881,8 +832,6 @@ public class Player : MonoBehaviour
         //Update player accuracy UI
         accuracyUI.text = gm.missScoreName;
 
-        validMovement = false;
-
         // Began the cooldown till the acuracy ui text vanishes
         StartCoroutine("DiminishAccuracyUI");
     }
@@ -893,6 +842,23 @@ public class Player : MonoBehaviour
         nearestNoteScript.hitMarkerCanvas.SetActive(false);
         nearestNoteScript.noteObject.SetActive(false);
         nearestNoteScript.spotLight.SetActive(false);
+    }
+
+    void MoveForLaunch()
+    {
+        if (hitLLaunch)
+        {
+            hitLLaunch = false;
+            playerPos.x = 0;
+            transform.position = playerPos;
+        }
+
+        else if (hitRLaunch)
+        {
+            hitRLaunch = false;
+            playerPos.x = 6;
+            transform.position = playerPos;
+        }
     }
 
     IEnumerator DiminishAccuracyUI()

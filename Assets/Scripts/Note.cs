@@ -79,6 +79,10 @@ public class Note : MonoBehaviour
     bool doneOnce5;
     public int noteNumber;
 
+    [Header("Electricity")]
+    public Transform ElectrictyEnd;
+    public int doneElecrictyEffect;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -319,6 +323,9 @@ public class Note : MonoBehaviour
                     return;
                 }
             }
+
+            // remove this note from notesInFront now that it behind the player
+            player.notesInfront.Remove(this.gameObject.transform);
         }
 
         if (doneOnce2 && !doneOnce3)
@@ -372,11 +379,11 @@ public class Note : MonoBehaviour
         // remove this note to the 'activeNotes' list
         player.activeNotes.Remove(this.gameObject.transform);
         // remove this note from the 'noteBehind' list
-        player.notesBehind.Remove(this.gameObject.transform);
+        player.notesInfront.Remove(this.gameObject.transform);
         // remove this note from the 'furthestbehindnote' variable
         player.furthestBehindNote = null;
 
-        player.DestroyFurthestNoteNote();
+        //player.DestroyFurthestNoteNote();
 
         Destroy(this.gameObject);
 

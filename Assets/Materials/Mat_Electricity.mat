@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_laserStart
-  m_Shader: {fileID: -6465566751694194690, guid: d257b344f1cd55f48b2d85ba14cb375d,
+  m_Name: Mat_Electricity
+  m_Shader: {fileID: -6465566751694194690, guid: 935de70c06f481549bca1cecafc788a2,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -23,20 +23,20 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_40BFF4C2:
-        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_46E8CB0E:
-        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Texture: {fileID: 2800000, guid: 9985f63e79fd1c74dab20d3fe504cbcd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_5AAF08B4: 0.18
-    - Vector1_98DF1625: 7
-    - Vector1_A81F8F3: 1.5
-    - Vector1_C14BB634: 0.487
-    - Vector1_C81FA9C6: 0
+    - Vector1_5AAF08B4: 0.377
+    - Vector1_98DF1625: 6
+    - Vector1_A81F8F3: 0.64
+    - Vector1_C14BB634: 1
+    - Vector1_C81FA9C6: 500
     m_Colors:
-    - Color_CFB35B33: {r: 127.999985, g: 127.999985, b: 127.999985, a: 1}
-    - Vector2_7875831A: {r: 0, g: -2.5, b: 0, a: 0}
-    - Vector2_B099002B: {r: 0, g: 0, b: 0, a: 0}
+    - Color_CFB35B33: {r: 2.9960785, g: 2.9960785, b: 2.9960785, a: 1}
+    - Vector2_7875831A: {r: 8, g: -4, b: 0, a: 0}
+    - Vector2_B099002B: {r: -4, g: 0, b: 0, a: 0}
