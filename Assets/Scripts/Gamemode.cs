@@ -65,6 +65,7 @@ public class Gamemode : MonoBehaviour
     public int debugUICounter = 1;
     bool displayDebugUI;
     public float currentFps;
+    bool doneOnce;
 
     public float launchRotAmount;
     public float launchRotTime;
@@ -176,7 +177,7 @@ public class Gamemode : MonoBehaviour
 
     public float defaultBeatsBetNotes = 3;
 
-    [Header("Arror Sprites")]
+    [Header("Note Sprites")]
     public Sprite leftArrow;
     public Sprite rightArrow;
     public Sprite upArrow;
@@ -184,6 +185,7 @@ public class Gamemode : MonoBehaviour
     public Sprite rightArrowLaunch;
     public Sprite blast;
     public Sprite blastAim;
+    public Sprite bomb;
 
     [Header("UI Camera")]
     public GameObject UICam;
@@ -244,7 +246,6 @@ public class Gamemode : MonoBehaviour
     void Update()
     {
         UpdateShield();
-        CalculateTotalAccuracy();
         UpdateElectricity();
 
         jetZ = jetDistance + player.transform.position.z;
@@ -295,25 +296,43 @@ public class Gamemode : MonoBehaviour
         }
 
         UpdateHealth(healthRegenPerSec);
+
+        if (playerScript.nearestNote && !doneOnce)
+        {
+            doneOnce = true;
+            playerScript.newGoodMiss = goodMin / (playerScript.nearestNoteScript.beatWait / defaultBeatsBetNotes);
+        }
     }
 
     void UpdateElectricity()
     {
+        // Update the elctricity's start location when the player moves
+        if (playerScript.oldPlayerPos != playerScript.playerPos)
+        {
+            playerScript.oldPlayerPos = playerScript.playerPos;
+
+            lr.SetPosition(0, electricityStart.transform.position);
+        }
+
+        // Make the end electricity's end point above the nearest note
+        if (playerScript.closestNoteInFrontScript)
+        {
+            // If there is a note infront of the player, continue
+            if (playerScript.notesInfront.Count > 0)
+            {
+                lr.SetPosition(1, playerScript.closestNoteInFrontScript.ElectrictyEnd.transform.position);
+            }
+        }
+
+        // Set the colour of the laser ball to the ready colour when it should be
         if (playerScript.isShielding && playerScript.notesInfront.Count < 1)
         {
             lr.colorGradient = readyGradient;
 
-            if (playerScript.closestNoteInFrontScript)
-            {
-                playerScript.closestNoteInFrontScript.doneElecrictyEffect = 0;
-
-                if (playerScript.closestNoteInFrontScript.doneElecrictyEffect == 1)
-                {
-                    // Set the colour of the laser ball to the ready colour
-                    ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
-                }
-            }
+            ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
         }
+
+        // Set the colour of the laser ball to the stealth colour when it should be
         else if (!playerScript.isShielding || playerScript.notesInfront.Count < 1)
         {
             if (playerScript.closestNoteInFrontScript)
@@ -321,7 +340,6 @@ public class Gamemode : MonoBehaviour
                 playerScript.closestNoteInFrontScript.doneElecrictyEffect = 0;
             }
 
-            // Set the colour of the laser ball to the stealth colour
             ElectrictyBallPS.material.SetColor("Color_CFB35B33", stealthColor * 15);
 
             lr.colorGradient = stealthGradient;
@@ -336,16 +354,28 @@ public class Gamemode : MonoBehaviour
             }
         }
 
+        // If there is no note infront of the player, disable the electricity
         if (playerScript.notesInfront.Count < 1)
         {
+            lr.startWidth = 0;
+            lr.endWidth = 0;
+            lr.SetPosition(1, new Vector3(3, 0.81f, 70));
             lr.gameObject.SetActive(false);
             return;
         }
+        // If there is a note infront of the player, enable the electricity
         else
         {
             lr.gameObject.SetActive(true);
         }
 
+        // If there is no note in front of the player, do not continue
+        if (!playerScript.closestNoteInFrontScript)
+        {
+            return;
+        }
+
+        // Set the colour of the laser ball to the ready colour when it should be
         if (playerScript.closestNoteInFrontScript.doneElecrictyEffect == 0 && playerScript.isShielding)
         {
             playerScript.closestNoteInFrontScript.doneElecrictyEffect = 1;
@@ -353,41 +383,21 @@ public class Gamemode : MonoBehaviour
             lr.startWidth = 1;
             lr.endWidth = 1;
 
-            // Set the colour of the laser ball to the ready colour
+
             ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
 
             lr.colorGradient = readyGradient;
-
-            Debug.Log("ready");
         }
 
-        // Update the electricty line to decrease in visiblility / intensity if the player got a miss for the note
+        // If the player got a miss for the nearest note infront, set the colour of the laser ball to the missed colour
+        // And disable the electricity
         else if (playerScript.closestNoteInFrontScript.missed && playerScript.closestNoteInFrontScript.doneElecrictyEffect == 1)
         {
             playerScript.closestNoteInFrontScript.doneElecrictyEffect = 2;
             lr.startWidth = 0;
             lr.endWidth = 0;
 
-            // Set the colour of the laser ball to the missed colour
             ElectrictyBallPS.material.SetColor("Color_CFB35B33", missedColour * 15);
-
-            Debug.Log("not ready");
-        }
-
-        // only update the elctricity's start location when the player moves
-        if (playerScript.oldPlayerPos != playerScript.playerPos)
-        {
-            playerScript.oldPlayerPos = playerScript.playerPos;
-
-            lr.SetPosition(0, electricityStart.transform.position);
-        }
-
-        // If there is a note infront of the player, continue
-        if (playerScript.notesInfront.Count > 0)
-        {
-            //lr.gameObject.SetActive(true);
-            // Make the end electricity's end point above the nearest note
-            lr.SetPosition(1, playerScript.closestNoteInFrontScript.ElectrictyEnd.transform.position);
         }
     }
     void UpdateShield()
@@ -531,17 +541,17 @@ public class Gamemode : MonoBehaviour
         tc.trackInProgress = false;
 
         // Destroy all notes that are still alive
-        for (int i = 0; i < tc.notes.transform.childCount; i++)
+        for (int i = 0; i < tc.notesObj.transform.childCount; i++)
         {
-            GameObject go = tc.notes.transform.GetChild(i).gameObject;
+            GameObject go = tc.notesObj.transform.GetChild(i).gameObject;
             StartCoroutine(go.GetComponent<Note>().DestroyNote());
         }
 
         ToggleDebugUI();
 
         tc.audioSource.Stop();
-        tc.allNotes.Clear();
-        tc.noteEighthCount.Clear();
+        tc.noteLanes.Clear();
+        tc.beatWaitCount.Clear();
         tc.trackPosIntervalsList2.Clear();
         tc.trackPosIntervalsList3.Clear();
         tc.trackPosNumber = 0;
@@ -577,33 +587,7 @@ public class Gamemode : MonoBehaviour
     {
         Invoke("EndTrack", tc.trackEndWait);
     }
-    
-    public void CalculateTotalAccuracy()
-    {
-        if (!playerScript.nearestNote)
-        {
-            return;
-        }
-
-        if (playerScript.nearestNoteScript.behindPlayer)
-        {
-            playerScript.newPerfect = perfectMin / (playerScript.nearestNoteScript.eighthWait / defaultBeatsBetNotes);
-            //Debug.Log("newPerfect " + newPerfect);
-            playerScript.newGreat = greatMin / (playerScript.nearestNoteScript.eighthWait / defaultBeatsBetNotes);
-            //Debug.Log("newGreat " + newGreat);
-            playerScript.newGood = goodMin / (playerScript.nearestNoteScript.eighthWait / defaultBeatsBetNotes);
-            //Debug.Log("newGood " + newGood);
-
-            // If the note is further then what a 'good' score can give
-            if (playerScript.missPointFrom > playerScript.newGood && !playerScript.nearestNoteScript.noteCalculatedAcc)
-            {
-                // Ensure this code only happens once per note
-                playerScript.nearestNoteScript.noteCalculatedAcc = true;
-
-                UpdateTotalAccuracy();
-            }
-        }
-    }
+   
 
     public void UpdateTotalAccuracy()
     {
@@ -612,5 +596,6 @@ public class Gamemode : MonoBehaviour
 
         // Display the total accuracy UI only in 2 decimal places
         totalAccuracyText.text = "Total Accuracy: " + totalAccuracy.ToString("F2") + "%";
+        //Debug.Break();
     }
 }

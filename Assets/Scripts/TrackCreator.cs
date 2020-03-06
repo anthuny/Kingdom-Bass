@@ -20,15 +20,18 @@ public class TrackCreator : MonoBehaviour
 
     public float trackEndWait;
 
-    public List<float> allNotes = new List<float>();
-    public List<int> noteEighthCount = new List<int>();
+    public List<float> noteLanes = new List<float>();
+    public List<GameObject> notes = new List<GameObject>();
+    public List<GameObject> allNotes = new List<GameObject>();
+    public List<string> allNoteTypes = new List<string>();
+    public List<int> beatWaitCount = new List<int>();
     public List<float> trackPosIntervalsList2 = new List<float>();
     public List<float> trackPosIntervalsList3 = new List<float>();
 
     public float trackPosNumber;
     public float trackPosNumber2;
 
-    public GameObject notes;
+    public GameObject notesObj;
     public GameObject noteVisual;
 
     public float trackBpm;
@@ -50,6 +53,7 @@ public class TrackCreator : MonoBehaviour
 
     public bool trackInProgress;
 
+    [HideInInspector]
     public float lastBeat;
 
     //[HideInInspector]
@@ -59,6 +63,11 @@ public class TrackCreator : MonoBehaviour
     public float nextIndex2 = 0;
     //[HideInInspector]
     public int nextIndex3 = 0;
+    public int beatWaitNextNote = 0;
+    public int beatWaitAccum = 0;
+    public int newStartingNoteAccum = 0;
+    public int oldNewStartingNoteAccum = 0;
+    public int noteTempNum = 0;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
     [Range(1, 25)]
@@ -105,6 +114,9 @@ public class TrackCreator : MonoBehaviour
     public string map1;
     public string map2;
 
+    public bool searchingNotes;
+    public bool doneOnce3 = false;
+
     void Start()
     {
         SetupTrackCreator();
@@ -139,7 +151,7 @@ public class TrackCreator : MonoBehaviour
         gm.mapSelectText.text = gm.selectAMapText;
     }
 
-    public void AssignNotes(string noteType, string laneNumber, string arrowD, string EighthWait)
+    public void AssignNotes(string noteType, string laneNumber, string arrowD, string beatWait)
     {
         // Checks for notes in each lane, If it belongs in a lane, make it belong there 
         for (int i = 1; i <= pm.maxLanes; i++)
@@ -147,7 +159,7 @@ public class TrackCreator : MonoBehaviour
             if (int.Parse(laneNumber) == i)
             {              
                 // Spawn noteVisual, at notes position
-                GameObject go = Instantiate(noteVisual, notes.transform.position, Quaternion.identity);
+                GameObject go = Instantiate(noteVisual, notesObj.transform.position, Quaternion.identity);
                 Note noteScript = go.GetComponent<Note>();
 
                 // Set the name of the note to the lane it is in
@@ -155,14 +167,14 @@ public class TrackCreator : MonoBehaviour
                 go.name = i.ToString();
 
                 // Parent this note to the notes object 
-                go.transform.SetParent(notes.transform);
+                go.transform.SetParent(notesObj.transform);
 
                 // Set the note type and arrow direction
                 noteScript.noteType = noteType;
                 noteScript.noteDir = arrowD;
 
-                // Set the amount of eighthwaits the note is to perfom
-                noteScript.eighthWait = int.Parse(EighthWait);
+                // Set the amount of beatWaits the note is to perfom
+                noteScript.beatWait = int.Parse(beatWait);
 
                 // Set the lane number of the note 
                 noteScript.laneNumber = i;
@@ -171,10 +183,21 @@ public class TrackCreator : MonoBehaviour
                 go.SetActive(false);
 
                 // Add the note to allNotes list | This is needed for the dynamic spawning times if using it.
-                allNotes.Add(i);
+                noteLanes.Add(i);
 
-                // Add the eightth wait for each note to noteEightCount list
-                noteEighthCount.Add(int.Parse(EighthWait));
+                if (noteType != "bomb")
+                {
+                    // Add the note to the notes non-bomb note list
+                    notes.Add(go);
+                }
+
+                // add notes to the all notes list
+                allNotes.Add(go);
+
+                // Add the beatWait wait for each note to beatWaitcount list
+                beatWaitCount.Add(int.Parse(beatWait));
+
+                allNoteTypes.Add(noteType);
             }
         }
 
@@ -228,17 +251,17 @@ public class TrackCreator : MonoBehaviour
         Path path = pm.initialPath.GetComponent<Path>();
 
         //Assign the notes
-        for (int i = 0; i < allNotes.Count; i++)
+        for (int i = 0; i < noteLanes.Count; i++)
         {
             // If the note is not active, set it active
-            if (!notes.transform.GetChild(i).gameObject.activeSelf)
+            if (!notesObj.transform.GetChild(i).gameObject.activeSelf)
             {
-                notes.transform.GetChild(i).gameObject.SetActive(true);
+                notesObj.transform.GetChild(i).gameObject.SetActive(true);
 
                 for (int z = 0; z < pm.maxLanes; z++)
                 {
                     // Find the note's name that equals the correct code
-                    if (notes.transform.GetChild(i).name.Contains(laneCodes[z]))
+                    if (notesObj.transform.GetChild(i).name.Contains(laneCodes[z]))
                     {
                         // Loop through all paths in the current segment
                         for (int x = 0; x < pm.currentSegment.transform.childCount; x++)
@@ -247,21 +270,21 @@ public class TrackCreator : MonoBehaviour
                             if (pm.currentSegment.transform.GetChild(x).gameObject.GetComponent<Path>().laneNumber == int.Parse(laneCodes[z]))
                             {
                                 // move the note to the correct lane
-                                notes.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, path.pathLength);
+                                notesObj.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, path.pathLength);
 
                                 // Set the starting position variable for the note to it's position after it has been moved to starting position
-                                notes.transform.GetChild(i).GetComponent<Note>().startingPos.z = notes.transform.GetChild(i).GetComponent<Note>().transform.position.z;
+                                notesObj.transform.GetChild(i).GetComponent<Note>().startingPos.z = notesObj.transform.GetChild(i).GetComponent<Note>().transform.position.z;
 
                                 // Determine what the pathwidth is so that the notes are in the correct X axis for their destination
-                                notes.transform.GetChild(i).GetComponent<Note>().pathWidth = path.pathWidth * x;
+                                notesObj.transform.GetChild(i).GetComponent<Note>().pathWidth = path.pathWidth * x;
 
                                 // Allow the note to move when ready
-                                notes.transform.GetChild(i).GetComponent<Note>().canMove = true;
+                                notesObj.transform.GetChild(i).GetComponent<Note>().canMove = true;
                             }
                         }
                     }
                 }
-
+                // Do not remove, important
                 return;
             }
         }
@@ -325,29 +348,26 @@ public class TrackCreator : MonoBehaviour
         // Determine how many beats since the game started
         trackPosInBeatsGame = trackPosInBeats - beatsBeforeStart + 1;
 
-        if (curNoteCount >= allNotes.Count)
+        if (curNoteCount >= noteLanes.Count)
         {
             return;
         }
 
         // Spawn a note
-        if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * noteEighthCount[curNoteCount]))
+        if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * beatWaitCount[curNoteCount]))
         {
             SpawnNotes();
 
-            // For every note, increase the max accuaracy by 3. (3 is the value perfect gives)
-            gm.totalAccuracyMax += 3;
+            lastBeat += secPerBeat * beatWaitCount[curNoteCount];
 
-            lastBeat += secPerBeat * noteEighthCount[curNoteCount];
-
-            trackPosIntervals = noteEighthCount[curNoteCount];
-            trackPosIntervals2 = noteEighthCount[curNoteCount];
-            trackPosIntervals3 += noteEighthCount[curNoteCount];
+            trackPosIntervals = beatWaitCount[curNoteCount];
+            trackPosIntervals2 = beatWaitCount[curNoteCount];
+            trackPosIntervals3 += beatWaitCount[curNoteCount];
 
             trackPosIntervalsList2.Add(trackPosIntervals2);
             trackPosIntervalsList3.Add(trackPosIntervals3);
 
-            nextIndex2 = noteEighthCount[0];
+            nextIndex2 = beatWaitCount[0];
             curNoteCount++;
         }
 
@@ -427,7 +447,7 @@ public class TrackCreator : MonoBehaviour
         public string noteType { get; private set; }
         public string noteLane { get; private set; }
         public string noteArrowD { get; private set; }
-        public string noteEighthWait { get; private set; }
+        public string beatWait { get; private set; }
 
         TrackCreator tc;
 
@@ -437,14 +457,14 @@ public class TrackCreator : MonoBehaviour
             noteType = curNoteNode["Note_Type"].InnerText;
             noteLane = curNoteNode["Note_Lane"].InnerText;
             noteArrowD = curNoteNode["Note_ArrowD"].InnerText;
-            noteEighthWait = curNoteNode["Note_EighthWait"].InnerText;
+            beatWait = curNoteNode["Note_BeatWait"].InnerText;
 
             XmlNode NoteNode = curNoteNode.SelectSingleNode("Note_Type");
             XmlNode laneNode = curNoteNode.SelectSingleNode("Note_Lane");
             XmlNode arrowDNode = curNoteNode.SelectSingleNode("Note_ArrowD");
-            XmlNode EighthWaitNode = curNoteNode.SelectSingleNode("Note_EighthWait");
+            XmlNode BeatWait = curNoteNode.SelectSingleNode("Note_BeatWait");
 
-            tc.AssignNotes(NoteNode.InnerText, laneNode.InnerText, arrowDNode.InnerText, EighthWaitNode.InnerText);
+            tc.AssignNotes(NoteNode.InnerText, laneNode.InnerText, arrowDNode.InnerText, BeatWait.InnerText);
         }
     }
 }

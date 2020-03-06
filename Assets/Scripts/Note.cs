@@ -16,7 +16,7 @@ public class Note : MonoBehaviour
     [HideInInspector]
     private Player player;
     //[HideInInspector]
-    public int eighthWait;
+    public int beatWait;
 
     public bool doneOnce;
     public bool doneOnce2;
@@ -82,6 +82,9 @@ public class Note : MonoBehaviour
     [Header("Electricity")]
     public Transform ElectrictyEnd;
     public int doneElecrictyEffect;
+
+    [Header("Bomb")]
+    public GameObject bombObj;
 
     // Start is called before the first frame update
     void Start()
@@ -189,7 +192,17 @@ public class Note : MonoBehaviour
                 // Increase the strength of the spotlight because it is a note note.
                 spotLightRef.material.SetFloat("Vector1_114CB03C", gm.noteSpotLightIntensity);
 
+                if (noteType == "bomb")
+                {
+                    // Make the bomb visible
+                    bombObj.SetActive(true);
 
+                    // Set the note visual to invisible
+                    noteObject.SetActive(false);
+
+                    // Disable the spotlight
+                    spotLight.SetActive(false);
+                }
                 break;        
 
             default:
@@ -308,7 +321,7 @@ public class Note : MonoBehaviour
         if (curTime >= 1)
         {
             doneOnce2 = true;
-            if (tc.curNoteCount < tc.allNotes.Count)
+            if (tc.curNoteCount < tc.noteLanes.Count)
             {
                 transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
             }
@@ -324,8 +337,21 @@ public class Note : MonoBehaviour
                 }
             }
 
-            // remove this note from notesInFront now that it behind the player
+            // Remove this note many lists when it passes the player
             player.notesInfront.Remove(this.gameObject.transform);
+
+            tc.notes.Remove(this.gameObject);
+            
+            if (player.closestNoteInFront == this.gameObject)
+            {
+                player.closestNoteInFront = null;
+            }
+
+            if (player.closestNoteInFrontScript == this)
+            {
+                player.closestNoteInFrontScript = null;
+            }
+            
         }
 
         if (doneOnce2 && !doneOnce3)
@@ -335,13 +361,25 @@ public class Note : MonoBehaviour
             // This is done because the previousNoteBeatTime will most likely always be slightly off when it should be.
             // This rounds it to when the beat should happen when the note hit the player
             //Debug.Log("trackPosInBeatsGame " + tc.trackPosInBeatsGame);
-            tc.previousNoteBeatTime = Mathf.Round(tc.trackPosInBeatsGame * 2) / 2;
+
+            if (noteType != "bomb")
+            {
+                tc.previousNoteBeatTime = Mathf.Round(tc.trackPosInBeatsGame * 2) / 2;
+
+                tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
+
+                player.CalculateMissPointFrom();
+
+                tc.searchingNotes = false;
+
+                tc.beatWaitNextNote = 0;
+                //tc.beatWaitAccum = 0;
+             
+                player.CalculateMissPointFrom2();
+            }
 
             tc.nextIndex3++;
-
-            tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
-
-            player.CalculateMissPointFrom();
+            //tc.beatWaitNextNote += tc.beatWaitCount[tc.nextIndex3];
 
             QueueEndOfTrack();
 
@@ -351,6 +389,7 @@ public class Note : MonoBehaviour
                 behindPlayer = true;
             }
 
+            // Currently trying to make it so the player's accuracy is correct, even if there are bombs in the way
         }
     }
 
@@ -359,7 +398,7 @@ public class Note : MonoBehaviour
         tc.trackPosIntervalsList2.RemoveAt(0);
 
         // If this is the last note of the track, end differently
-        if (noteNumber == tc.allNotes.Count)
+        if (noteNumber == tc.noteLanes.Count)
         {
             gm.EndTrackNote();
         }
@@ -382,6 +421,8 @@ public class Note : MonoBehaviour
         player.notesInfront.Remove(this.gameObject.transform);
         // remove this note from the 'furthestbehindnote' variable
         player.furthestBehindNote = null;
+
+        tc.notes.Remove(this.gameObject);
 
         //player.DestroyFurthestNoteNote();
 
