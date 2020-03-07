@@ -13,6 +13,9 @@ public class Gamemode : MonoBehaviour
     public float jetZ;
     public float jetY;
 
+    [Header("Map Buttons")]
+    public Button[] mapButtons;
+
     public float jetDistance;
 
     public float playerEvadeStr;
@@ -66,6 +69,7 @@ public class Gamemode : MonoBehaviour
     bool displayDebugUI;
     public float currentFps;
     bool doneOnce;
+    public float defaultBeatsBetNotes = 3;
 
     public float launchRotAmount;
     public float launchRotTime;
@@ -131,8 +135,6 @@ public class Gamemode : MonoBehaviour
 
     public int comboMulti = 1;
 
-
-
     public bool scoreIncreased;
 
     [Tooltip("Max amount of time in seconds for how long it takes for movements to NOT give score")]
@@ -151,8 +153,6 @@ public class Gamemode : MonoBehaviour
 
     private bool allowIncOpacity;
     private bool allowIncEmission;
-    private bool completed1 = true;
-    private bool completed2 = true;
     public float shieldMaxEmission;
     public float shieldPulseSpeed = 5;
     public float shieldMinScale;
@@ -164,18 +164,15 @@ public class Gamemode : MonoBehaviour
     public Color lane2Color;
     public Color lane3Color;
 
-
-    [Header("Health Bar")]
-    private float health;
-
+    [Header("Health")]
     public float healthMax;
     public float regenPerfect;
     public float regenGreat;
     public float regenGood;
     public float lossMiss;
+    public float bombHit;
     public float healthRegenPerSec;
-
-    public float defaultBeatsBetNotes = 3;
+    private float health;
 
     [Header("Note Sprites")]
     public Sprite leftArrow;
@@ -203,6 +200,9 @@ public class Gamemode : MonoBehaviour
     public Color stealthColor;
     public Gradient stealthGradient;
     public Gradient readyGradient;
+
+    [Header("Bombs")]
+    public float bombHitRange;
 
     void Start()
     {
@@ -241,6 +241,8 @@ public class Gamemode : MonoBehaviour
         lr.gameObject.SetActive(true);
         lr.SetPosition(0, electricityStart.transform.position);
         lr.gameObject.SetActive(false);
+
+
     }
 
     void Update()
@@ -273,8 +275,8 @@ public class Gamemode : MonoBehaviour
             mapSelectText.text = "";
 
             // Disable buttons
-            scarabBtn.SetActive(false);
-            testingBtn.SetActive(false);
+            //scarabBtn.SetActive(false);
+            //testingBtn.SetActive(false);
         }
         else
         {
@@ -291,8 +293,8 @@ public class Gamemode : MonoBehaviour
             totalAccuracyText.text = "";
 
             // Enable buttons
-            scarabBtn.SetActive(true);
-            testingBtn.SetActive(true);
+            //scarabBtn.SetActive(true);
+            //testingBtn.SetActive(true);
         }
 
         UpdateHealth(healthRegenPerSec);
@@ -537,18 +539,18 @@ public class Gamemode : MonoBehaviour
 
     public void EndTrack()
     {
-        tc.mapSelected = false;
+        tc.mapHasBeenSelected = false;
         tc.trackInProgress = false;
 
-        // Destroy all notes that are still alive
-        for (int i = 0; i < tc.notesObj.transform.childCount; i++)
-        {
-            GameObject go = tc.notesObj.transform.GetChild(i).gameObject;
-            StartCoroutine(go.GetComponent<Note>().DestroyNote());
-        }
+        DestroyAllNotes();
 
         ToggleDebugUI();
 
+        ToggleMapSelectionButtons(true);
+
+        tc.allNotes.Clear();
+        tc.allNoteTypes.Clear();
+        tc.beatWaitCountAccum.Clear();
         tc.audioSource.Stop();
         tc.noteLanes.Clear();
         tc.beatWaitCount.Clear();
@@ -576,6 +578,18 @@ public class Gamemode : MonoBehaviour
         totalAccuracy = 0;
         totalAccuracyMax = 0;
         totalNotes = 0;
+        tc.notesSpawned = 0;
+
+        playerScript.activeNotes.Clear();
+        playerScript.notesInfront.Clear();
+        playerScript.newPerfect = 0;
+        playerScript.newGood = 0;
+        playerScript.newGood = 0;
+        playerScript.newGoodMiss = 0;
+
+        playerScript.closestNoteInFrontScript = null;
+        playerScript.nearestAnyNote = null;
+        playerScript.nearestAnyNoteScript = null;
 
         mapSelectText.text = selectAMapText;
 
@@ -597,5 +611,24 @@ public class Gamemode : MonoBehaviour
         // Display the total accuracy UI only in 2 decimal places
         totalAccuracyText.text = "Total Accuracy: " + totalAccuracy.ToString("F2") + "%";
         //Debug.Break();
+    }
+
+    public void ToggleMapSelectionButtons(bool fate)
+    {
+        foreach (Button btn in mapButtons)
+        {
+            btn.interactable = fate;
+            btn.transform.GetChild(0).gameObject.SetActive(fate);
+        }
+    }
+
+    void DestroyAllNotes()
+    {
+        // Destroy all notes that are still alive
+        for (int i = 0; i < tc.notesObj.transform.childCount; i++)
+        {
+            GameObject go = tc.notesObj.transform.GetChild(i).gameObject;
+            StartCoroutine(go.GetComponent<Note>().DestroyNote());
+        }
     }
 }

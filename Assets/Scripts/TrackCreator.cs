@@ -2,18 +2,29 @@
 using System.Xml;
 using UnityEngine;
 using System.Collections;
-
+using UnityEngine.UI;
 public class TrackCreator : MonoBehaviour
 {
     private Gamemode gm;
     private PathManager pm;
-    [TextArea(3, 10)]
-    public string song1Text;
+
+    [Header("Maps")]
+    public Map[] mapDetails;
+
+    [Header("Map Selection")]
+    public bool mapHasBeenSelected;
+    [HideInInspector]
+    public Map selectedMap;
+
+    [Header("Map Names")]
+    public string map1;
+    public string map2;
+
 
     public string[] laneCodes = new string[] { "lane1Code", "lane2Code", "lane3Code", "lane4Code", "lane5Code", "lane6Code", "lane7Code", "lane8Code" };
 
     // Lane codes
-    public string lane1Code, lane2Code, lane3Code, lane4Code, lane5Code, lane6Code, lane7Code, lane8Code;
+   // public string lane1Code, lane2Code, lane3Code, lane4Code, lane5Code;
 
     // Note code
     public string noteCode;
@@ -25,6 +36,7 @@ public class TrackCreator : MonoBehaviour
     public List<GameObject> allNotes = new List<GameObject>();
     public List<string> allNoteTypes = new List<string>();
     public List<int> beatWaitCount = new List<int>();
+    public List<int> beatWaitCountAccum = new List<int>();
     public List<float> trackPosIntervalsList2 = new List<float>();
     public List<float> trackPosIntervalsList3 = new List<float>();
 
@@ -34,7 +46,7 @@ public class TrackCreator : MonoBehaviour
     public GameObject notesObj;
     public GameObject noteVisual;
 
-    public float trackBpm;
+    //public float trackBpm;
     public float noteOffSet;
 
     public string noteType1Code;
@@ -50,6 +62,7 @@ public class TrackCreator : MonoBehaviour
     public float previousNoteBeatTime2;
     public float previousNoteBeatTime3;
     public float nextNoteInBeats;
+    public int notesSpawned;
 
     public bool trackInProgress;
 
@@ -64,21 +77,23 @@ public class TrackCreator : MonoBehaviour
     //[HideInInspector]
     public int nextIndex3 = 0;
     public int beatWaitNextNote = 0;
-    public int beatWaitAccum = 0;
+
     public int newStartingNoteAccum = 0;
     public int oldNewStartingNoteAccum = 0;
     public int noteTempNum = 0;
 
+    public int beatWaitAccum = 0;
+    public int newStartingInt = 0;
+
     [Tooltip("Amount of beats that must play before the first note spawns")]
     [Range(1, 25)]
     public int beatsBeforeStart;
-    [Tooltip("The amount of beats that must happen for the note to get to the end")]
-    public float noteTimeTaken;
+
+    private float noteTimeTaken;
 
     Player player;
 
-    XmlDocument scarabLD;
-    XmlDocument testingLD;
+    XmlDocument mapLD;
 
     [HideInInspector]
     public float nextBeat;
@@ -107,22 +122,10 @@ public class TrackCreator : MonoBehaviour
     private bool doneOnce2;
     private Transform noteInfront;
 
-    [Header("Map Selection")]
-    public bool mapSelected;
-
-    [Header("Map Names")]
-    public string map1;
-    public string map2;
-
     public bool searchingNotes;
     public bool doneOnce3 = false;
 
     void Start()
-    {
-        SetupTrackCreator();
-    }
-
-    public void SetupTrackCreator()
     {
         player = FindObjectOfType<Player>();
         gm = FindObjectOfType<Gamemode>();
@@ -130,29 +133,16 @@ public class TrackCreator : MonoBehaviour
 
         // Load the audiosource atteched to this gameobject
         audioSource = GetComponent<AudioSource>();
-
-        // Calculate the number of seconds in each beat
-        secPerBeat = 60f / trackBpm;
-
-        // Assign the laneCode array with the actual codes for each lane
-        laneCodes[0] = lane1Code;
-        laneCodes[1] = lane2Code;
-        laneCodes[2] = lane3Code;
-        laneCodes[3] = lane4Code;
-        laneCodes[4] = lane5Code;
-        laneCodes[5] = lane6Code;
-        laneCodes[6] = lane7Code;
-        laneCodes[7] = lane8Code;
-
-        StartMapSelectionMode();
     }
-    void StartMapSelectionMode()
+
+    private void Update()
     {
-        gm.mapSelectText.text = gm.selectAMapText;
+        QueueNoteSpawns();
     }
 
     public void AssignNotes(string noteType, string laneNumber, string arrowD, string beatWait)
     {
+        //Debug.Break();
         // Checks for notes in each lane, If it belongs in a lane, make it belong there 
         for (int i = 1; i <= pm.maxLanes; i++)
         {
@@ -196,13 +186,20 @@ public class TrackCreator : MonoBehaviour
 
                 // Add the beatWait wait for each note to beatWaitcount list
                 beatWaitCount.Add(int.Parse(beatWait));
+                beatWaitAccum += beatWaitCount[beatWaitCount.Count - 1];
+
+                // Add the beatwaitcount to a list that accumilates for each element
+                beatWaitCountAccum.Add(beatWaitAccum);
+                    
+                // Set this note's beatWaitCur to equal the beatWaitAccum when it spawns
+                go.GetComponent<Note>().beatWaitCur = beatWaitCountAccum[beatWaitCountAccum.Count - 1] - beatWaitCount[0];
 
                 allNoteTypes.Add(noteType);
             }
         }
 
         // Ensure that the ui flip to in-game mode only happens once, rather then for every note in the song
-        if (!mapSelected)
+        if (!mapHasBeenSelected)
         {
             UpdateMapSelectionUI();
 
@@ -213,18 +210,28 @@ public class TrackCreator : MonoBehaviour
     void UpdateMapSelectionUI()
     {
         // Now that all the notes have loaded, allow the player to start
-        mapSelected = true;
+        mapHasBeenSelected = true;
 
         trackInProgress = true;
 
         gm.startBtn.SetActive(false);
 
-        // Start the track 
-        dspTrackTime = (float)AudioSettings.dspTime;
-
         // Display all debug UI
         gm.ToggleDebugUI();
         gm.UpdateUI();
+
+        StartCoroutine("StartSong");
+    }
+
+    IEnumerator StartSong()
+    {
+        yield return new WaitForSeconds(selectedMap.timeBeforeStart);
+
+        // assign the track in the audio source
+        audioSource.clip = selectedMap.track;
+
+        // Start the track timer?
+        dspTrackTime = (float)AudioSettings.dspTime;
 
         audioSource.Play();
     }
@@ -247,6 +254,7 @@ public class TrackCreator : MonoBehaviour
                 return;
             }
         }
+
         pm.currentSegment = pm.nearestPath.transform.parent.gameObject;
         Path path = pm.initialPath.GetComponent<Path>();
 
@@ -280,59 +288,21 @@ public class TrackCreator : MonoBehaviour
 
                                 // Allow the note to move when ready
                                 notesObj.transform.GetChild(i).GetComponent<Note>().canMove = true;
+
+                                // Set the accumulative beat wait of what each note is supposed to be at, for information
+                                //beatWaitAccum += notesObj.transform.GetChild(i).GetComponent<Note>().beatWait;
                             }
                         }
                     }
                 }
-                // Do not remove, important
+
+
                 return;
             }
         }
     }
 
-    public void LoadTrack()
-    {
-        if (mapSelected)
-        {
-            return;
-        }
-
-        SetupTrackCreator();
-
-        if (gm.scarabSelected)
-        {
-            TextAsset scarabXML = Resources.Load<TextAsset>("Maps/" + map1);
-            scarabLD = new XmlDocument();
-            scarabLD.LoadXml(scarabXML.text);
-
-            XmlNodeList notes = scarabLD.SelectNodes("/Levels/Level/Notes/Note");
-
-            foreach (XmlNode note in notes)
-            {
-                GetNote newGetNote = new GetNote(note);
-            }
-
-            return;
-        }
-
-        else if (gm.testingSelected)
-        {
-            TextAsset testingXML = Resources.Load<TextAsset>("Maps/" + map2);
-            testingLD = new XmlDocument();
-            testingLD.LoadXml(testingXML.text);
-
-            XmlNodeList notes = testingLD.SelectNodes("/Levels/Level/Notes/Note");
-
-            foreach (XmlNode note in notes)
-            {
-                GetNote newGetNote = new GetNote(note);
-            }
-
-            return;
-        }
-    }
-
-    private void Update()
+    void QueueNoteSpawns()
     {
         if (!audioSource.isPlaying)
         {
@@ -377,68 +347,61 @@ public class TrackCreator : MonoBehaviour
             firstInterval = trackPosIntervalsList2[0];
 
             // Determine what the first next note will be for score measuring
-            pointToNextBeat = trackPosIntervalsList2[0] * (noteTimeTaken + 1);
+            pointToNextBeat = trackPosIntervalsList2[0] * (selectedMap.noteTimeTaken + 1);
             //firstNote = pointToNextBeat;
         }
 
         if (trackPosIntervalsList2.Count == 2)
         {
-            pointToNextBeat2 = trackPosIntervalsList2[1] * (noteTimeTaken + 1);
+            pointToNextBeat2 = trackPosIntervalsList2[1] * (selectedMap.noteTimeTaken + 1);
         }
     }
 
-    public void LoadMapScarab()
+    public void SelectMap(Button button)
     {
-        gm.scarabCounter++;
+        // Initialize what map was selected
+        selectedMap = button.GetComponent<MapInfo>().map;
 
-        // scarab map is not selected
-        if (gm.scarabCounter % 2 == 1)
+        // Enable the start button if it isn't already
+        if (!gm.startBtn.activeSelf)
         {
-            gm.scarabSelected = false;
-            gm.mapSelectText.text = gm.selectAMapText;
-
-            // Disable the start button
-            gm.startBtn.SetActive(false);
-        }
-
-        // scarab map IS selected
-        else
-        {
-            gm.scarabSelected = true;
-            gm.testingSelected = false;
-            gm.testingCounter = 1;
-            gm.mapSelectText.text = gm.textInfoScarab;
-
-            // Enable the start button
             gm.startBtn.SetActive(true);
         }
     }
 
-    public void LoadMapTesting()
+    public void loadTrack()
     {
-        gm.testingCounter++;
+        // disable all buttons in map selection screen
+        gm.ToggleMapSelectionButtons(false);
 
-        // testing map is not selected
-        if (gm.testingCounter % 2 == 1)
+        // Assign map values (BPM)
+        SetupTrack(selectedMap.bpm);
+
+        mapLD = new XmlDocument();
+
+        mapLD.LoadXml(selectedMap.mapXML.text);
+
+        XmlNodeList notes = mapLD.SelectNodes("/Levels/Level/Notes/Note");
+
+        foreach (XmlNode note in notes)
         {
-            gm.testingSelected = false;
-            gm.mapSelectText.text = gm.selectAMapText;
-
-            // Disable the start button
-            gm.startBtn.SetActive(false);
+            GetNote newGetNote = new GetNote(note);
         }
 
-        // testing map IS selected
-        else
-        {
-            gm.testingSelected = true;
-            gm.scarabSelected = false;
-            gm.scarabCounter = 1;
-            gm.mapSelectText.text = gm.textInfoTesting;
+        return;
+    }
 
-            // Enable the start button
-            gm.startBtn.SetActive(true);
-        }
+    public void SetupTrack(int bpm)
+    {
+        // Calculate the number of seconds in each beat
+        secPerBeat = 60f / bpm;
+
+        StartMapSelectionMode();
+    }
+
+    void StartMapSelectionMode()
+    {
+        gm.mapSelectText.text = gm.selectAMapText;
     }
 
     // XML referencing for each note.
@@ -464,6 +427,7 @@ public class TrackCreator : MonoBehaviour
             XmlNode arrowDNode = curNoteNode.SelectSingleNode("Note_ArrowD");
             XmlNode BeatWait = curNoteNode.SelectSingleNode("Note_BeatWait");
 
+            //Debug.Break();
             tc.AssignNotes(NoteNode.InnerText, laneNode.InnerText, arrowDNode.InnerText, BeatWait.InnerText);
         }
     }

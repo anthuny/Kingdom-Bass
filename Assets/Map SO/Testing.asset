@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5b8352aeabc9964db506d7ca70b2d4e, type: 3}
+  m_Name: Testing
+  m_EditorClassIdentifier: 
+  title: Tutorial
+  bpm: 128
+  length: 2.38
+  difficulty: 1
+  noteTimeTaken: 6
+  timeBeforeStart: 1
+  track: {fileID: 8300000, guid: f593d2d2dc372974fac9c5ef277e6c67, type: 3}
+  mapXML: {fileID: 4900000, guid: 3fa805b28b330744ebe31707620c9fe2, type: 3}

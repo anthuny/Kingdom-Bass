@@ -17,7 +17,7 @@ public class Note : MonoBehaviour
     private Player player;
     //[HideInInspector]
     public int beatWait;
-
+    public int beatWaitCur;
     public bool doneOnce;
     public bool doneOnce2;
     public bool doneOnce3;
@@ -85,6 +85,7 @@ public class Note : MonoBehaviour
 
     [Header("Bomb")]
     public GameObject bombObj;
+    private bool bombHitPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -98,6 +99,8 @@ public class Note : MonoBehaviour
 
         gm.totalNotes++;
         noteNumber = gm.totalNotes;
+
+        tc.notesSpawned++;
 
         //Determine the direction of the arrow on the note
         switch (noteDir)
@@ -263,6 +266,8 @@ public class Note : MonoBehaviour
             return;
         }
 
+        CheckBombHitPlayer();
+
         if (noteType == "blast")
         {
             UpdateZRotation();
@@ -296,12 +301,12 @@ public class Note : MonoBehaviour
 
         // Determine the speed the note needs to use to get to the player on the beat
         //gm.noteSpeed = pm.pathLength / (tc.timeToWait * tc.noteTimeToArriveMult);
-        gm.noteSpeed = pm.pathLength / (tc.secPerBeat * tc.noteTimeTaken);
+        gm.noteSpeed = pm.pathLength / (tc.secPerBeat * tc.selectedMap.noteTimeTaken);
 
         if (curTime <= 1 && !doneOnce2)
         {
             //Debug.Log("startTime now " + startTime);
-            curTime = Mathf.Clamp01((tc.trackPos - startTime) / (tc.noteTimeTaken * tc.secPerBeat));
+            curTime = Mathf.Clamp01((tc.trackPos - startTime) / (tc.selectedMap.noteTimeTaken * tc.secPerBeat));
             //Debug.Log(this.gameObject.name + " trackPosInBeatsGame " + tc.trackPosInBeatsGame);
             Vector3 pos;
             // Interpolate the note between the edge of the note, to the edge of the player (closest edges from eachother, based on curTime)
@@ -372,12 +377,29 @@ public class Note : MonoBehaviour
 
                 tc.searchingNotes = false;
 
-                tc.beatWaitNextNote = 0;
+
+                for (int i = tc.newStartingInt; i < tc.allNotes.Count; i++)
+                {
+                    //Debug.Log("i = " + i);
+                    if (tc.allNotes[i].GetComponent<Note>().noteType != "bomb" && i != tc.newStartingInt)
+                    {
+                        //Debug.Log(i);
+                        tc.oldNewStartingNoteAccum = tc.newStartingNoteAccum;
+                        tc.newStartingNoteAccum = tc.allNotes[i].GetComponent<Note>().beatWaitCur;
+                        //Debug.Log("tc.newStartingNoteAccum" + tc.newStartingNoteAccum);
+                        tc.newStartingInt = i;
+
+                        break;
+                    }
+                }
+                //tc.beatWaitNextNote = 0;
                 //tc.beatWaitAccum = 0;
              
                 player.CalculateMissPointFrom2();
-            }
 
+
+            }
+            //Debug.Break();
             tc.nextIndex3++;
             //tc.beatWaitNextNote += tc.beatWaitCount[tc.nextIndex3];
 
@@ -393,6 +415,21 @@ public class Note : MonoBehaviour
         }
     }
 
+    void CheckBombHitPlayer()
+    {
+        if (noteType == "bomb" && !bombHitPlayer)
+        {
+            float dist = Mathf.Abs(this.gameObject.transform.position.z - player.transform.position.z);
+            if (dist <= gm.bombHitRange && laneNumber == player.nearestLaneNumber)
+            {
+                bombHitPlayer = true;
+                player.Missed(true);
+                Debug.Break();
+            }
+        }
+
+    }
+
     void QueueEndOfTrack()
     {
         tc.trackPosIntervalsList2.RemoveAt(0);
@@ -402,7 +439,7 @@ public class Note : MonoBehaviour
         {
             gm.EndTrackNote();
         }
-
+            
         // If this is NOT the last note of the track, end usually
         else
         {
