@@ -2865,13 +2865,28 @@ MonoBehaviour:
   tutTexts:
   - Hold then Release A to move left as the note reaches you
   - Hold then Release L to move right as the note reaches you
-  - Move Left and Right accordingly
-  tutorialStage: -1
-  nextStageThreshholdBeats: 320000005c00000082000000
+  - Move Left and Right accordingly to the following Horizontal Notes
+  - Move Left and Right accordingly to the following Launches
+  - Move Left and Right accordingly, although stay in the same lane the Up arrow's
+    are in to hit it
+  - Avoid bombs to maintain your combo!
+  - "Blue electricity sparks between you and the next note ahead of you when your
+    shield is active. Moving Left or Right with your shield activated will always
+    trigger the note ahead for score. \r\n\r\nHold Space to deactivate your shield,
+    turning the electricity yellow, allowing you to move Left and Right without triggering
+    any notes.\r\n\r\nDeactivate your shield when you want to travel more then one
+    lane to get to the note ahead. \r\n\r\nMake sure to enable your shield again by
+    letting go of space after you have repositioned yourself for the upcoming note,
+    so that you can be able to trigger it.\r\n\r\n\rWhen your shield is deactivated,
+    instead of moving Left / Right happening when you release A / L. It will happen
+    upon press of A / L.\r\n\r\n"
+  tutorialStage: 0
+  maxTutorialStages: 7
+  nextStageThreshholdBeats: 220000003a000000540000006e00000098000000d200000018010000
   timeForMoveBack: 0.1
   debugUICounter: 1
   currentFps: 0
-  defaultBeatsBetNotes: 2
+  defaultBeatsBetNotes: 4
   launchRotAmount: 3
   launchRotTime: 0.05
   horizontalNoteArrowC: {r: 0.015686275, g: 0.8509804, b: 1, a: 1}
