@@ -286,7 +286,7 @@ public class Player : MonoBehaviour
             if (minDist2 > dist2 && t.GetComponent<Note>().noteType != "bomb")
             {
                 nearestNote = t;
-                minDist = dist2;
+                minDist2 = dist2;
             }
         }
 
@@ -807,8 +807,6 @@ public class Player : MonoBehaviour
             //Debug.Log("Miss 3");
             Missed(false);
         }
-
-
     }
 
     private void HitPerfect()

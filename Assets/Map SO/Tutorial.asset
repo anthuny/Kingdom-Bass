@@ -19,4 +19,4 @@ MonoBehaviour:
   noteTimeTaken: 6
   timeBeforeStart: 1
   track: {fileID: 8300000, guid: 479b7bf9fd9f9a54388687d4cabed03c, type: 3}
-  mapXML: {fileID: 0}
+  mapXML: {fileID: 4900000, guid: fd60d372c335f3248b717054b4ffc850, type: 3}

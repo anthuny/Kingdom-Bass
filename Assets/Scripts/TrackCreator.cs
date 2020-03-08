@@ -35,8 +35,8 @@ public class TrackCreator : MonoBehaviour
     public List<GameObject> notes = new List<GameObject>();
     public List<GameObject> allNotes = new List<GameObject>();
     public List<string> allNoteTypes = new List<string>();
-    public List<int> beatWaitCount = new List<int>();
-    public List<int> beatWaitCountAccum = new List<int>();
+    public List<float> beatWaitCount = new List<float>();
+    public List<float> beatWaitCountAccum = new List<float>();
     public List<float> trackPosIntervalsList2 = new List<float>();
     public List<float> trackPosIntervalsList3 = new List<float>();
 
@@ -78,12 +78,12 @@ public class TrackCreator : MonoBehaviour
     public int nextIndex3 = 0;
     public int beatWaitNextNote = 0;
 
-    public int newStartingNoteAccum = 0;
-    public int oldNewStartingNoteAccum = 0;
-    public int noteTempNum = 0;
+    public float newStartingNoteAccum = 0;
+    public float oldNewStartingNoteAccum = 0;
+    public float noteTempNum = 0;
 
-    public int beatWaitAccum = 0;
-    public int newStartingInt = 0;
+    public float beatWaitAccum = 0;
+    public float newStartingInt = 0;
 
     [Tooltip("Amount of beats that must play before the first note spawns")]
     [Range(1, 25)]
@@ -164,7 +164,7 @@ public class TrackCreator : MonoBehaviour
                 noteScript.noteDir = arrowD;
 
                 // Set the amount of beatWaits the note is to perfom
-                noteScript.beatWait = int.Parse(beatWait);
+                noteScript.beatWait = float.Parse(beatWait);
 
                 // Set the lane number of the note 
                 noteScript.laneNumber = i;
@@ -185,7 +185,7 @@ public class TrackCreator : MonoBehaviour
                 allNotes.Add(go);
 
                 // Add the beatWait wait for each note to beatWaitcount list
-                beatWaitCount.Add(int.Parse(beatWait));
+                beatWaitCount.Add(noteScript.beatWait);
                 beatWaitAccum += beatWaitCount[beatWaitCount.Count - 1];
 
                 // Add the beatwaitcount to a list that accumilates for each element

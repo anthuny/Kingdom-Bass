@@ -231,6 +231,8 @@ public class Gamemode : MonoBehaviour
 
         ToggleDebugUI();
         StartGame();
+
+        UnityEditor.EditorPrefs.SetBool("DeveloperMode", true);
     }
 
     void StartGame()

@@ -16,8 +16,8 @@ public class Note : MonoBehaviour
     [HideInInspector]
     private Player player;
     //[HideInInspector]
-    public int beatWait;
-    public int beatWaitCur;
+    public float beatWait;
+    public float beatWaitCur;
     public bool doneOnce;
     public bool doneOnce2;
     public bool doneOnce3;
@@ -369,16 +369,20 @@ public class Note : MonoBehaviour
 
             if (noteType != "bomb")
             {
-                tc.previousNoteBeatTime = Mathf.Round(tc.trackPosInBeatsGame * 2) / 2;
+                Debug.Log("before tc.trackPosInBeatsGame" + tc.trackPosInBeatsGame);
+                Debug.Break();
+                tc.previousNoteBeatTime = Mathf.Round(tc.trackPosInBeatsGame * 1) / 1;
 
                 tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
+                Debug.Log("after tc.trackPosInBeatsGame" + tc.trackPosInBeatsGame);
+                Debug.Break();
 
                 player.CalculateMissPointFrom();
 
                 tc.searchingNotes = false;
 
 
-                for (int i = tc.newStartingInt; i < tc.allNotes.Count; i++)
+                for (int i = Mathf.RoundToInt(tc.newStartingInt); i < tc.allNotes.Count; i++)
                 {
                     //Debug.Log("i = " + i);
                     if (tc.allNotes[i].GetComponent<Note>().noteType != "bomb" && i != tc.newStartingInt)
@@ -396,8 +400,6 @@ public class Note : MonoBehaviour
                 //tc.beatWaitAccum = 0;
              
                 player.CalculateMissPointFrom2();
-
-
             }
             //Debug.Break();
             tc.nextIndex3++;
