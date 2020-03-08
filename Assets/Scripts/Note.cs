@@ -281,19 +281,32 @@ public class Note : MonoBehaviour
         // Happens once when canMove is triggered true
         if (canMove && !doneOnce)
         {
-            doneOnce = true;
-            startTime = tc.trackPos;
-            //Debug.Log("-----------------------------");
-            //Debug.Log("startTime in seconds " + startTime);
-            startTime /= tc.secPerBeat;
-            //Debug.Log("startTime in beats " + startTime);
-            startTime = Mathf.Round(startTime * 4) / 4;
-            //Debug.Log("startTime in beats rounded " + startTime);
-            startTime *= tc.secPerBeat;
-            //Debug.Log("startTime in seconds rounded " + startTime);
-            //Debug.Break();
-            // Add this note to the active notes array
-            player.activeNotes.Add(this.gameObject.transform);
+            if (noteType != "bomb")
+            {
+                doneOnce = true;
+                startTime = tc.trackPos;
+                //Debug.Log("-----------------------------");
+                //Debug.Log("startTime in seconds " + startTime);
+                startTime /= tc.secPerBeat;
+                //Debug.Log("startTime in beats " + startTime);
+                startTime = Mathf.Round(startTime * 4) / 4;
+                //Debug.Log("startTime in beats rounded " + startTime);
+                startTime *= tc.secPerBeat;
+                //Debug.Log("startTime in seconds rounded " + startTime);
+                //Debug.Break();
+                // Add this note to the active notes array
+                player.activeNotes.Add(this.gameObject.transform);
+            }
+            else
+            {
+                doneOnce = true;
+                startTime = tc.trackPos;
+
+                //Debug.Break();
+                // Add this note to the active notes array
+                player.activeNotes.Add(this.gameObject.transform);
+            }
+
         }
 
         // Calculate the percantage of completion of the note on the lane - not currently used
@@ -345,7 +358,7 @@ public class Note : MonoBehaviour
             // Remove this note many lists when it passes the player
             player.notesInfront.Remove(this.gameObject.transform);
 
-            tc.notes.Remove(this.gameObject);
+            //tc.notes.Remove(this.gameObject);
             
             if (player.closestNoteInFront == this.gameObject)
             {
@@ -369,13 +382,24 @@ public class Note : MonoBehaviour
 
             if (noteType != "bomb")
             {
-                Debug.Log("before tc.trackPosInBeatsGame" + tc.trackPosInBeatsGame);
-                Debug.Break();
-                tc.previousNoteBeatTime = Mathf.Round(tc.trackPosInBeatsGame * 1) / 1;
+                // if previousNoteBeatTime3 hasn't been altered yet, change it to what the game things should be the first 'previousNoteBeatTime3'
+                if (tc.previousNoteBeatTime3 == 0)
+                {
+                    //Debug.Log("before tc.trackPosInBeatsGame" + tc.trackPosInBeatsGame);
+                    tc.previousNoteBeatTime = Mathf.Round(tc.trackPosInBeatsGame * 1) / 1;
 
-                tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
-                Debug.Log("after tc.trackPosInBeatsGame" + tc.trackPosInBeatsGame);
-                Debug.Break();
+                    tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
+                    //Debug.Log("after tc.trackPosInBeatsGame" + tc.trackPosInBeatsGame);
+
+                }
+                // if it is not the first time previousNoteBeatTime3 has been altered. Make it equal what nextNoteInbeats is before nextNotInbeats is updated for the next note
+                else
+                {
+                    tc.previousNoteBeatTime = tc.nextNoteInBeats;
+                    tc.previousNoteBeatTime3 = tc.nextNoteInBeats;
+                }
+
+                //Debug.Break();
 
                 player.CalculateMissPointFrom();
 
@@ -426,10 +450,9 @@ public class Note : MonoBehaviour
             {
                 bombHitPlayer = true;
                 player.Missed(true);
-                Debug.Break();
+                //Debug.Break();
             }
         }
-
     }
 
     void QueueEndOfTrack()

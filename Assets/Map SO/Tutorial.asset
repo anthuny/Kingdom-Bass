@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5b8352aeabc9964db506d7ca70b2d4e, type: 3}
   m_Name: Tutorial
   m_EditorClassIdentifier: 
-  title: Scarab
+  title: Tutorial
   bpm: 120
   length: 2.38
   difficulty: 1
+  subGenre: N/A
   noteTimeTaken: 6
   timeBeforeStart: 1
+  averageBeatsBtwNotes: 2
   track: {fileID: 8300000, guid: 479b7bf9fd9f9a54388687d4cabed03c, type: 3}
+  trackLoop: {fileID: 8300000, guid: 4fcf6c96c5d946f44a8eec3c97a0a87a, type: 3}
   mapXML: {fileID: 4900000, guid: fd60d372c335f3248b717054b4ffc850, type: 3}

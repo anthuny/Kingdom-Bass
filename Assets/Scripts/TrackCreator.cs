@@ -20,6 +20,9 @@ public class TrackCreator : MonoBehaviour
     public string map1;
     public string map2;
 
+    [Header("Tutorial")]
+    public bool increasedStage;
+
 
     public string[] laneCodes = new string[] { "lane1Code", "lane2Code", "lane3Code", "lane4Code", "lane5Code", "lane6Code", "lane7Code", "lane8Code" };
 
@@ -138,6 +141,7 @@ public class TrackCreator : MonoBehaviour
     private void Update()
     {
         QueueNoteSpawns();
+        ChangeTutorialStage();
     }
 
     public void AssignNotes(string noteType, string laneNumber, string arrowD, string beatWait)
@@ -207,6 +211,7 @@ public class TrackCreator : MonoBehaviour
         }
     }
 
+    // After notes have been assigned, call this
     void UpdateMapSelectionUI()
     {
         // Now that all the notes have loaded, allow the player to start
@@ -216,26 +221,91 @@ public class TrackCreator : MonoBehaviour
 
         gm.startBtn.SetActive(false);
 
-        // Display all debug UI
-        gm.ToggleDebugUI();
-        gm.UpdateUI();
-
         StartCoroutine("StartSong");
     }
 
+    // This is called after UpdateMpaSelectionUI is run
     IEnumerator StartSong()
     {
         yield return new WaitForSeconds(selectedMap.timeBeforeStart);
 
-        // assign the track in the audio source
-        audioSource.clip = selectedMap.track;
+        if (selectedMap.title == "Tutorial")
+        {
+            UpdateTutorialSlides();
 
+            gm.ToggleGameUI(false);
+
+            audioSource.clip = selectedMap.track;
+            //audioSource.loop = true;
+        }
+        else
+        {
+            // assign the track in the audio source
+            audioSource.clip = selectedMap.track;
+
+            // Display all debug UI
+            gm.ToggleGameUI(true);
+            gm.UpdateUI();
+        }
         // Start the track timer?
         dspTrackTime = (float)AudioSettings.dspTime;
 
         audioSource.Play();
     }
 
+    // This is called during StartSong if tutorial is on
+    void UpdateTutorialSlides()
+    {
+        increasedStage = true;
+        gm.tutorialStage++;
+
+        // Change the text on the tutorial text to be the first slide of information
+        if (gm.tutorialStage <= gm.maxTutorialStages - 1)
+        {
+            gm.tutAreaInfo = gm.tutTexts[gm.tutorialStage - 1];
+        }
+
+        //Debug.Log(gm.tutTexts[gm.tutorialStage]);
+        //Debug.Break();
+
+        // Assign the correct text for the text
+        gm.tutAreaText.text = gm.tutAreaInfo;
+
+        if (!gm.tutAreaText.gameObject.activeSelf)
+        {
+            // turn the tutorial text to visible
+            gm.tutAreaText.gameObject.SetActive(true);
+        }
+    }
+
+    // Called every update
+    void ChangeTutorialStage()
+    {
+        if (gm.tutorialStage < 1)
+        {
+            return;
+        }
+
+        if (gm.tutorialStage > gm.maxTutorialStages)
+        {
+            gm.tutorialStage = 0;
+            return;
+        }
+        // Only allow an increase in stage when the next stage happens
+        if (gm.tutorialStage > 0)
+        {
+            if (trackPosInBeatsGame > gm.nextStageThreshholdBeats[gm.tutorialStage - 1])
+            {
+                increasedStage = false;
+            }
+        }
+
+
+        if (gm.tutorialStage >= 1 && gm.tutorialStage != gm.maxTutorialStages + 1 && trackPosInBeatsGame > gm.nextStageThreshholdBeats[gm.tutorialStage - 1] && !increasedStage)
+        {
+            UpdateTutorialSlides();
+        }
+    }
     void SpawnNotes()
     {
         // Declare what the current segment is, if it hasn't been done already.
@@ -326,6 +396,7 @@ public class TrackCreator : MonoBehaviour
         // Spawn a note
         if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * beatWaitCount[curNoteCount]))
         {
+            //Debug.Break();
             SpawnNotes();
 
             lastBeat += secPerBeat * beatWaitCount[curNoteCount];
@@ -357,10 +428,15 @@ public class TrackCreator : MonoBehaviour
         }
     }
 
+    // Happens when the player selects a map
     public void SelectMap(Button button)
     {
         // Initialize what map was selected
         selectedMap = button.GetComponent<MapInfo>().map;
+
+        gm.mapSelectText.text = "Title " + selectedMap.title +
+            "\nBPM " + selectedMap.bpm + "\nDifficulty " + selectedMap.difficulty +
+            "\nLength " + selectedMap.length + "\nGenre " + selectedMap.subGenre;
 
         // Enable the start button if it isn't already
         if (!gm.startBtn.activeSelf)
@@ -369,10 +445,15 @@ public class TrackCreator : MonoBehaviour
         }
     }
 
+    // Happens when the player presses the start button
     public void loadTrack()
     {
+        gm.defaultBeatsBetNotes = selectedMap.averageBeatsBtwNotes;
+
         // disable all buttons in map selection screen
         gm.ToggleMapSelectionButtons(false);
+
+        gm.mapSelectText.gameObject.SetActive(false);
 
         // Assign map values (BPM)
         SetupTrack(selectedMap.bpm);
@@ -387,7 +468,6 @@ public class TrackCreator : MonoBehaviour
         {
             GetNote newGetNote = new GetNote(note);
         }
-
         return;
     }
 

@@ -10,10 +10,13 @@ public class Map : ScriptableObject
     public int bpm;
     public float length;
     public float difficulty;
+    public string subGenre;
     public float noteTimeTaken;
     public float timeBeforeStart;
+    public int averageBeatsBtwNotes;
 
     [Header("Track")]
     public AudioClip track;
+    public AudioClip trackLoop;
     public TextAsset mapXML;
 }

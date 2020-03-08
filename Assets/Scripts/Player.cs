@@ -38,11 +38,12 @@ public class Player : MonoBehaviour
     bool doneOnce3;
     public bool doneOnce2;
 
-    [HideInInspector]
-    public float pointFrom;
+
     //[HideInInspector]
     public float missPointFrom;
-    private float pointTo;
+    public float pointTo;
+    //[HideInInspector]
+    public float pointFrom;
 
     public bool isShielding;
 
@@ -124,24 +125,13 @@ public class Player : MonoBehaviour
     void Update()
     {
         Inputs();
-        Movement();
+        StartCoroutine("Movement");
         FindNearestNote();
         UpdateShield();
         AssignMisses();
         SetNearestLaneNumber();
         UpdateNotesInfFront();
         IncMaxAcc();
-
-        if (tc.notesSpawned > 7)
-        {
-            if (missPointFrom > 0.9f)
-            {
-                //Debug.Log("missPointFrom " + missPointFrom);
-                //Debug.Break();
-            }
-
-            //Debug.Log(tc.allNotes[2].GetComponent<Note>().beatWaitCur);
-        }
 
         missCurrentPointInBeats = tc.trackPosInBeatsGame;
 
@@ -159,6 +149,7 @@ public class Player : MonoBehaviour
             //nearestNoteScript = nearestAnyNote.gameObject.GetComponent<Note>();
             // Update this just in case? probably do not need this here
             nearestAnyNoteScript = nearestAnyNote.gameObject.GetComponent<Note>();
+            //nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
 
             // Calculate whether the player is far enough from the nearest note to determine that it's too late to get 'good' or higher score from it
             CalculateMissPointFrom();
@@ -174,9 +165,9 @@ public class Player : MonoBehaviour
             //Debug.Log("nearestNoteScript.noteType " + nearestNoteScript.noteType);
             //Debug.Log("missPointFrom " + missPointFrom);
             //Debug.Log("newGood " + newGood + 0.05);
-            if (missPointFrom > newGoodMiss + 0.05f && nearestAnyNoteScript.canGetNote)
+            if (missPointFrom > newGoodMiss && nearestNoteScript.canGetNote)
             {
-                if (nearestAnyNote.transform.position.z < transform.position.z)
+                if (nearestNote.transform.position.z < transform.position.z)
                 {
                     Missed(false);
                     //Debug.Break();
@@ -192,11 +183,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (oldNewGoodMiss != newGoodMiss)
-        {
-            oldNewGoodMiss = newGoodMiss;
-            newGoodMiss = gm.goodMin / (nearestNoteScript.beatWait / gm.defaultBeatsBetNotes);
-        }
+        newGoodMiss = gm.goodMin / (nearestNoteScript.beatWait / gm.defaultBeatsBetNotes);
 
         if (1 - missPointFrom < newGoodMiss + 0.05f && nearestNote.transform.position.z > transform.position.z && !nearestNoteScript.noteCalculatedAcc && nearestNoteScript.noteType != "bomb")
         {
@@ -428,7 +415,7 @@ public class Player : MonoBehaviour
             }
         }
     }
-    void Movement()
+    IEnumerator Movement()
     {
         // Stops strange drifting behaviour
         Vector3 playerPos2 = transform.position;
@@ -441,11 +428,12 @@ public class Player : MonoBehaviour
         // There must be one for this code to work. 
         if (!pm.nearestPath)
         {
-            return;
+            yield return 0;
         }
 
+        #region Normal - Moving Right
         // Functionality of moving right with shield
-        if (movingRight && isShielding)
+        if (movingRight && isShielding && gm.tutorialStage >= 3)
         {
             movingRight = false;
             movingLeft = false;
@@ -458,7 +446,7 @@ public class Player : MonoBehaviour
         }
 
         // Functionality of moving right without shield
-        else if (movingRight && !isShielding)
+        else if (movingRight && !isShielding && gm.tutorialStage >= 3)
         {
             movingRight = false;
             movingLeft = false;
@@ -467,9 +455,52 @@ public class Player : MonoBehaviour
             playerPos.x = pathWidth * nearestLaneNumber;
             transform.position = playerPos;
         }
+        #endregion 
+        #region Tutorial - Moving Right
+        // Functionality of moving right with shield during first few stages of tutorial
+        if (movingRight && isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
+        {
+            movingRight = false;
+            movingLeft = false;
+            validMovement = true;
 
+            playerPos.x = pathWidth * nearestLaneNumber;
+            transform.position = playerPos;
+
+            SetNearestLaneNumber();
+
+            yield return new WaitForSeconds(gm.timeForMoveBack);
+
+            playerPos.x = pathWidth * (oldNearestLaneNumber - 1);
+            transform.position = playerPos;
+
+            SetNearestLaneNumber();
+        }
+
+        // Functionality of moving right WITHOUT shield during first few stages of tutorial
+        if (movingRight && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
+        {
+            movingRight = false;
+            movingLeft = false;
+            validMovement = false;
+
+            playerPos.x = pathWidth * nearestLaneNumber;
+            transform.position = playerPos;
+
+            SetNearestLaneNumber();
+
+            yield return new WaitForSeconds(gm.timeForMoveBack);
+
+            playerPos.x = pathWidth * (oldNearestLaneNumber - 1);
+            transform.position = playerPos;
+
+            SetNearestLaneNumber();
+        }
+
+        #endregion
+        #region Normal - Moving Left
         // Functionality of moving left with shield
-        if (movingLeft && isShielding)
+        if (movingLeft && isShielding && gm.tutorialStage >= 2)
         {
             movingLeft = false;
             movingRight = false;
@@ -482,7 +513,7 @@ public class Player : MonoBehaviour
         }
 
         // Functionality of moving left without shield
-        if (movingLeft && !isShielding)
+        if (movingLeft && !isShielding && gm.tutorialStage >= 2)
         {
             movingLeft = false;
             movingRight = false;
@@ -491,6 +522,48 @@ public class Player : MonoBehaviour
             playerPos.x = pathWidth * (nearestLaneNumber - 2);
             transform.position = playerPos;
         }
+        #endregion
+        #region Tutorial - Moving Left
+        // Functionality of moving left with shield during first few stages of tutorial
+        if (movingLeft && isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
+        {
+            movingRight = false;
+            movingLeft = false;
+            validMovement = true;
+
+            playerPos.x = pathWidth * (nearestLaneNumber - 2);
+            transform.position = playerPos;
+
+            SetNearestLaneNumber();
+
+            yield return new WaitForSeconds(gm.timeForMoveBack);
+
+            playerPos.x = pathWidth * (oldNearestLaneNumber - 1);
+            transform.position = playerPos;
+
+            SetNearestLaneNumber();
+        }
+
+        // Functionality of moving left without shield during first few stages of tutorial
+        if (movingLeft && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
+        {
+            movingRight = false;
+            movingLeft = false;
+            validMovement = false;
+
+            playerPos.x = pathWidth * (nearestLaneNumber - 2);
+            transform.position = playerPos;
+
+            SetNearestLaneNumber();
+
+            yield return new WaitForSeconds(gm.timeForMoveBack);
+
+            playerPos.x = pathWidth * (oldNearestLaneNumber - 1);
+            transform.position = playerPos;
+
+            SetNearestLaneNumber();
+        }
+        #endregion
     }
     void AssignFromAndToValuesBlast()
     {
@@ -506,7 +579,10 @@ public class Player : MonoBehaviour
     {
         currentPointInBeats = tc.trackPosInBeatsGame;
 
-        pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats, tc.previousNoteBeatTime3, currentPointInBeats)));
+        //pointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats, tc.previousNoteBeatTime3, currentPointInBeats)));
+        //pointTo = 1 - pointFrom;
+
+        pointFrom = missPointFrom;
         pointTo = 1 - pointFrom;
         gm.scoreIncreased = true;
         //Debug.Log("``````````````````````");
@@ -516,6 +592,7 @@ public class Player : MonoBehaviour
         //Debug.Log("pointFrom " + pointFrom);
         //Debug.Log("pointTo " + pointTo);
         CheckForNoteAndLaunchEffect();
+        //Debug.Break();
     }
     private void CheckForBlastEffect()
     {
@@ -710,7 +787,7 @@ public class Player : MonoBehaviour
         newPerfect = gm.perfectMin / (nearestNoteScript.beatWait / gm.defaultBeatsBetNotes);
         newGreat = gm.greatMin / (nearestNoteScript.beatWait / gm.defaultBeatsBetNotes);
         newGood = gm.goodMin / (nearestNoteScript.beatWait / gm.defaultBeatsBetNotes);
-
+        //Debug.Break();
         //Debug.Log("-------------------");
         //Debug.Log("newPerf " + newPerfect);
         //Debug.Log("newGreat " + newGreat);
@@ -775,7 +852,6 @@ public class Player : MonoBehaviour
             }
             else if (pointTo >= newGood && pointTo <= .5f)
             {
-                //Debug.Log(newGood);
                 Missed(false);
             }
         }
@@ -804,7 +880,6 @@ public class Player : MonoBehaviour
         }
         else if (pointTo >= gm.goodMin && pointTo <= .5f)
         {
-            //Debug.Log("Miss 3");
             Missed(false);
         }
     }
@@ -832,6 +907,7 @@ public class Player : MonoBehaviour
         gm.UpdateTotalAccuracy();
 
         validMovement = false;
+        //Debug.Break();
     }
     private void HitGreat()
     {
@@ -856,6 +932,7 @@ public class Player : MonoBehaviour
         gm.UpdateTotalAccuracy();
 
         validMovement = false;
+        //Debug.Break();
     }
     private void HitGood()
     {
@@ -880,13 +957,14 @@ public class Player : MonoBehaviour
         gm.UpdateTotalAccuracy();
 
         validMovement = false;
+        //Debug.Break();
     }
     public void Missed(bool hitByBomb)
     {
         if (!hitByBomb)
         {
-            nearestAnyNoteScript.canGetNote = false;
-            nearestAnyNoteScript.missed = true;
+            nearestNoteScript.canGetNote = false;
+            nearestNoteScript.missed = true;
             gm.UpdateHealth(gm.lossMiss);
             gm.scoreIncreased = true;
 
@@ -900,9 +978,6 @@ public class Player : MonoBehaviour
             gm.misses++;
 
             gm.score += gm.missScore;
-
-            // Update score UI because getting a 'Miss' will not trigger score UI change
-            gm.UpdateUI();
 
             //Update player accuracy UI
             accuracyUI.text = gm.missScoreName;
@@ -920,6 +995,8 @@ public class Player : MonoBehaviour
         }
 
         gm.comboMulti = 1;
+        gm.UpdateUI();
+        //Debug.Break();
     }
 
     void MakeNoteInvisible()

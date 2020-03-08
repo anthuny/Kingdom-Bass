@@ -16,6 +16,9 @@ public class Gamemode : MonoBehaviour
     [Header("Map Buttons")]
     public Button[] mapButtons;
 
+    [Header("Game UI")]
+    public Text[] gameUI;
+
     public float jetDistance;
 
     public float playerEvadeStr;
@@ -44,25 +47,25 @@ public class Gamemode : MonoBehaviour
 
     [Header("Map Selection")]
     public Text mapSelectText;
-    public GameObject scarabBtn;
-    public GameObject testingBtn;
+    [TextArea(1, 2)]
+    public string selectAMapText;
     public GameObject startBtn;
     //[HideInInspector]
     public bool scarabSelected;
     //[HideInInspector]
     public bool testingSelected;
 
-    [Header("Map Selection Texts")]
-    [TextArea(1, 2)]
-    public string selectAMapText;
-    [TextArea(1, 2)]
-    public string textInfoScarab;
-    [TextArea(1, 2)]
-    public string textInfoTesting;
+    [Header("Tutorial")]
+    public Text tutAreaText;
     //[HideInInspector]
-    public int scarabCounter = 1;
+    public string tutAreaInfo;
+    [TextArea(1, 9)]
+    public string[] tutTexts;
     //[HideInInspector]
-    public int testingCounter = 1;
+    public int tutorialStage = 0;
+    public int maxTutorialStages;
+    public int[] nextStageThreshholdBeats;
+    public float timeForMoveBack;
 
     [Header("Other")]
     public int debugUICounter = 1;
@@ -229,10 +232,10 @@ public class Gamemode : MonoBehaviour
 
         health = healthMax;
 
-        ToggleDebugUI();
+        ToggleGameUI(false);
         StartGame();
 
-        UnityEditor.EditorPrefs.SetBool("DeveloperMode", true);
+        //UnityEditor.EditorPrefs.SetBool("DeveloperMode", true);
     }
 
     void StartGame()
@@ -244,7 +247,7 @@ public class Gamemode : MonoBehaviour
         lr.SetPosition(0, electricityStart.transform.position);
         lr.gameObject.SetActive(false);
 
-
+        mapSelectText.text = selectAMapText;
     }
 
     void Update()
@@ -264,40 +267,7 @@ public class Gamemode : MonoBehaviour
 
         currentFps = 1.0f / Time.deltaTime;
 
-        if (displayDebugUI)
-        {
-            fpsCounterText.text = "FPS | " + (int)currentFps;
-            beatsText.text = tc.trackPosInBeats.ToString();
-            movingLeftText.text = "movingLeft " + playerScript.movingLeft.ToString();
-            movingRightText.text = "movingRight " + playerScript.movingRight.ToString();
-            aboutToBlastText.text = "aboutToBlast " + playerScript.aboutToBlast.ToString();
-            blastInputText.text = "blastInput " + playerScript.blastInput.ToString();
-            totalAccuracyText.text = "Total Accuracy " + totalAccuracy.ToString("F2") + "%";
-
-            mapSelectText.text = "";
-
-            // Disable buttons
-            //scarabBtn.SetActive(false);
-            //testingBtn.SetActive(false);
-        }
-        else
-        {
-            scoreText.text = "";
-            fpsCounterText.text = "";
-            accuracyText.text = "";
-            beatsText.text = "";
-            comboText.text = "";
-            healthText.text = "";
-            movingLeftText.text = "";
-            movingRightText.text = "";
-            blastInputText.text = "";
-            aboutToBlastText.text = "";
-            totalAccuracyText.text = "";
-
-            // Enable buttons
-            //scarabBtn.SetActive(true);
-            //testingBtn.SetActive(true);
-        }
+        fpsCounterText.text = Mathf.FloorToInt(currentFps).ToString();
 
         UpdateHealth(healthRegenPerSec);
 
@@ -511,20 +481,6 @@ public class Gamemode : MonoBehaviour
         scoreText.text = "Score " + score.ToString();
     }
 
-    public void ToggleDebugUI()
-    {
-        debugUICounter++;
-
-        if (debugUICounter % 2 == 1)
-        {
-            displayDebugUI = true;
-        }
-        else
-        {
-            displayDebugUI = false;
-        }
-    }
-
     public void UpdateHealth(float amount)
     {
         health += amount;
@@ -546,7 +502,7 @@ public class Gamemode : MonoBehaviour
 
         DestroyAllNotes();
 
-        ToggleDebugUI();
+        ToggleGameUI(false);
 
         ToggleMapSelectionButtons(true);
 
@@ -624,6 +580,13 @@ public class Gamemode : MonoBehaviour
         }
     }
 
+    public void ToggleGameUI(bool fate)
+    {
+        foreach (Text t in gameUI)
+        {
+            t.gameObject.SetActive(fate);
+        }
+    }
     void DestroyAllNotes()
     {
         // Destroy all notes that are still alive

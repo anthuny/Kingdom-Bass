@@ -4,11 +4,138 @@
   <Level>
     <Lanes AmountOfLanes = "5"></Lanes>
     <Notes>
+      <!-- Tutorial stage 1-->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>10</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+
+      <!-- Tutorial stage 2-->
+      
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>10</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+
+      <!-- Tutorial stage 3-->
+
+      <Note>
+      <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>10</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>5</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
@@ -28,10 +155,64 @@
         <Note_ArrowD>right</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
+
+      <!-- Tutorial stage 4-->
+      
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>10</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+
+      <!-- Tutorial stage 5-->
+      
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>10</Note_BeatWait>
+      </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
@@ -42,6 +223,162 @@
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
+        <Note_Lane>5</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+
+      <!-- Tutorial stage 6a-->
+      
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>10</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>bomb</Note_Type>
+        <Note_Lane>5</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>bomb</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>.1</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>bomb</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>.1</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>bomb</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>.1</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>7.7</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+
+      <!-- Tutorial stage 6b-->
+
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>bomb</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>bomb</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>.1</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>bomb</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>.1</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>bomb</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>.1</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>5</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>7.7</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
         <Note_Lane>4</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
@@ -49,7 +386,7 @@
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
     </Notes>
