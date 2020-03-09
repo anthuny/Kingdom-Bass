@@ -28,10 +28,36 @@
         <Note_ArrowD>right</Note_ArrowD>
         <Note_BeatWait>8</Note_BeatWait>
       </Note>
+      <!-- bar 1 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>5</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <!-- bar 2 -->
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
       <Note>
@@ -52,10 +78,11 @@
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
+      <!-- bar 3 -->
       <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
       <Note>
@@ -71,8 +98,40 @@
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
       <Note>
-        <Note_Type>launch</Note_Type>
+        <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <!-- bar 4 -->
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <!-- bar 5 -->
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
@@ -84,7 +143,7 @@
       </Note>
       <Note>
         <Note_Type>launch</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>2</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
@@ -94,6 +153,7 @@
         <Note_ArrowD>right</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
+      <!-- bar 6 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
@@ -118,16 +178,11 @@
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_BeatWait>2</Note_BeatWait>
-      </Note>
+      <!-- bar 7 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
@@ -137,11 +192,18 @@
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
         <Note_Type>blast</Note_Type>
         <Note_Lane>3</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
+      <!-- bar 8 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>5</Note_Lane>
@@ -161,65 +223,12 @@
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
-        <Note_Type>blast</Note_Type>
+        <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>blast</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>launch</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>blast</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>2</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_BeatWait>2</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>blast</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>2</Note_BeatWait>
-      </Note>
+      <!-- bar 9 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
@@ -244,15 +253,72 @@
         <Note_ArrowD>right</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
+      <!-- bar 10 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <!-- bar 11 -->
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <!-- bar 12 -->
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
@@ -262,6 +328,7 @@
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
+      <!-- bar 13 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
@@ -282,14 +349,71 @@
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <!-- bar 14 -->
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <!-- bar 15 -->
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <!-- bar 16 -->
+      <Note>
+        <Note_Type>launch</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>right</Note_ArrowD>
+        <Note_BeatWait>4</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
       <Note>
@@ -299,71 +423,12 @@
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
       <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>launch</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>launch</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>launch</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>launch</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_BeatWait>4</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
+      <!-- bar 17 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
@@ -384,20 +449,21 @@
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
+      <!-- bar 18 -->
       <Note>
         <Note_Type>note</Note_Type>
-        <Note_Lane>3</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
@@ -412,6 +478,7 @@
         <Note_ArrowD>right</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
+      <!-- bar 19 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
@@ -425,7 +492,7 @@
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
-        <Note_Type>blast</Note_Type>
+        <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
@@ -436,6 +503,7 @@
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
+      <!-- bar 20 -->
       <Note>
         <Note_Type>blast</Note_Type>
         <Note_Lane>3</Note_Lane>
@@ -456,10 +524,11 @@
       </Note>
       <Note>
         <Note_Type>note</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
+      <!-- bar 21 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
@@ -484,6 +553,7 @@
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
+      <!-- bar 22 -->
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
@@ -493,7 +563,7 @@
       <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
@@ -508,34 +578,17 @@
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>4</Note_BeatWait>
       </Note>
+      <!-- bar 23 -->
       <Note>
         <Note_Type>launch</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>3</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>launch</Note_Type>
-        <Note_Lane>2</Note_Lane>
+        <Note_Lane>3</Note_Lane>
         <Note_ArrowD>right</Note_ArrowD>
-        <Note_BeatWait>2</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>launch</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>2</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>launch</Note_Type>
-        <Note_Lane>2</Note_Lane>
-        <Note_ArrowD>right</Note_ArrowD>
-        <Note_BeatWait>2</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
@@ -545,8 +598,27 @@
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
       <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <!-- bar 24 -->
+      <Note>
         <Note_Type>note</Note_Type>
         <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>3</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
@@ -556,6 +628,7 @@
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>2</Note_BeatWait>
       </Note>
+      <!-- bar 25 -->
     </Notes>
   </Level>
 </Levels>

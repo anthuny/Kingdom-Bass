@@ -17,7 +17,7 @@ MonoBehaviour:
   length: 2.38
   difficulty: 1
   subGenre: House
-  noteTimeTaken: 3
+  noteTimeTaken: 5
   timeBeforeStart: 1
   averageBeatsBtwNotes: 8
   track: {fileID: 8300000, guid: f593d2d2dc372974fac9c5ef277e6c67, type: 3}

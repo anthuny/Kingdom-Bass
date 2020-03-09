@@ -13,6 +13,9 @@ public class Gamemode : MonoBehaviour
     public float jetZ;
     public float jetY;
 
+    [Header("Menu")]
+    public bool tutPaused;
+
     [Header("Map Buttons")]
     public Button[] mapButtons;
 
@@ -66,6 +69,36 @@ public class Gamemode : MonoBehaviour
     public int maxTutorialStages;
     public int[] nextStageThreshholdBeats;
     public float timeForMoveBack;
+    public GameObject tutorialUI;
+    public GameObject[] allVisuals;
+    public Text[] keyTexts;
+    public string[] keyText;
+    public Image[] arrowNotes;
+    public Image[] arrow;
+    public Text[] supportingTexts;
+    public Text[] spaceSupportingTexts;
+    public Image[] spaceBar;
+    public Image plusSymbol;
+    public Transform firstUI;
+    public Transform secondUI;
+    public Image tutAreaTextBG;
+    public Text tutUnPauseText;
+    [HideInInspector]
+    public Vector3 originalFirstUIPos;
+    [HideInInspector]
+    public Vector3 originalSecondUIPos;
+
+    public Sprite leftArrowNote;
+    public Sprite RightArrowNote;
+    public Sprite leftLaunchNote;
+    public Sprite rightLaunchNote;
+    public Sprite blastNote;
+    public Sprite upArrowNote;
+    public Sprite bombIcon;
+    public Sprite playerShield;
+    public Sprite playerNoShield;
+    //public Sprite unpressedKey;
+    //public Sprite pressedKey;
 
     [Header("Other")]
     public int debugUICounter = 1;
@@ -248,12 +281,22 @@ public class Gamemode : MonoBehaviour
         lr.gameObject.SetActive(false);
 
         mapSelectText.text = selectAMapText;
+
+        playerScript.nearestLaneNumber = 3;
+        playerScript.oldNearestLaneNumber = 2;
+
+        originalFirstUIPos = firstUI.gameObject.GetComponent<RectTransform>().localPosition;
+        originalSecondUIPos = secondUI.gameObject.GetComponent<RectTransform>().localPosition;
+
+        tutorialUI.SetActive(false);
+        //Debug.Break();
     }
 
     void Update()
     {
         UpdateShield();
         UpdateElectricity();
+        TutorialUnpause();
 
         jetZ = jetDistance + player.transform.position.z;
         jet.transform.position = new Vector3(0, jetY, jetZ);
@@ -527,6 +570,11 @@ public class Gamemode : MonoBehaviour
         tc.nextNoteInBeats = 0;
         tc.curNoteCount = 0;
         tc.nextIndex3 = 0;
+        tc.newStartingNoteAccum = 0;
+        tc.oldNewStartingNoteAccum = 0;
+        tc.beatWaitAccum = 0;
+        tc.newStartingInt = 0;
+
         score = 0;
         perfects = 0;
         greats = 0;
@@ -537,6 +585,9 @@ public class Gamemode : MonoBehaviour
         totalAccuracyMax = 0;
         totalNotes = 0;
         tc.notesSpawned = 0;
+        totalAccuracyText.text = 0.ToString() + "%";
+        comboMulti = 1;
+        comboText.text = "1";
 
         playerScript.activeNotes.Clear();
         playerScript.notesInfront.Clear();
@@ -551,8 +602,12 @@ public class Gamemode : MonoBehaviour
 
         mapSelectText.text = selectAMapText;
 
+        tutorialUI.SetActive(false);
+
         scarabSelected = false;
         testingSelected = false;
+
+        playerScript.RepositionPlayer();
     }
 
     public void EndTrackNote()
@@ -594,6 +649,32 @@ public class Gamemode : MonoBehaviour
         {
             GameObject go = tc.notesObj.transform.GetChild(i).gameObject;
             StartCoroutine(go.GetComponent<Note>().DestroyNote());
+        }
+    }
+
+    public void PauseGame(bool fate)
+    {
+        tutPaused = true;
+        AudioListener.pause = true;
+
+        if (!fate)
+        {
+            Debug.Log("enabling tut text");
+            tutUnPauseText.gameObject.SetActive(true);
+        }
+    }
+
+    public void TutorialUnpause()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            tutPaused = false;
+            AudioListener.pause = false;
+
+            if (tutUnPauseText.enabled)
+            {
+                tutUnPauseText.gameObject.SetActive(false);
+            }
         }
     }
 }

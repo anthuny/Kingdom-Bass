@@ -128,6 +128,8 @@ public class TrackCreator : MonoBehaviour
     public bool searchingNotes;
     public bool doneOnce3 = false;
 
+    private Vector3 pos;
+
     void Start()
     {
         player = FindObjectOfType<Player>();
@@ -140,6 +142,11 @@ public class TrackCreator : MonoBehaviour
 
     private void Update()
     {
+        if (gm.tutPaused)
+        {
+            return;
+        }
+
         QueueNoteSpawns();
         ChangeTutorialStage();
     }
@@ -208,6 +215,7 @@ public class TrackCreator : MonoBehaviour
             UpdateMapSelectionUI();
 
             player.oldNearestLaneNumber = player.nearestLaneNumber;
+            //Debug.Log("?");
         }
     }
 
@@ -263,6 +271,396 @@ public class TrackCreator : MonoBehaviour
         if (gm.tutorialStage <= gm.maxTutorialStages - 1)
         {
             gm.tutAreaInfo = gm.tutTexts[gm.tutorialStage - 1];
+
+            // Left regular arrow note
+            #region Tutorial Stage 1
+            if (gm.tutorialStage == 1)
+            {
+                gm.plusSymbol.gameObject.SetActive(false);
+
+                // Enable/disable the correct key images
+                for (int i = 0; i < gm.allVisuals.Length; i++)
+                {
+                    if (i == 0 || i == 1)
+                    {
+                        gm.arrowNotes[i].transform.localScale = Vector3.one * 2.1f;
+                        gm.allVisuals[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        gm.allVisuals[i].gameObject.SetActive(false);
+                    }
+                }
+
+                // enable/disable the correct arrow
+                for (int i = 0; i < gm.arrow.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        gm.arrow[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        gm.arrow[i].gameObject.SetActive(false);
+                    }
+                }
+
+                // Enable/Disable the correct arrow notes
+                for (int i = 0; i < gm.arrowNotes.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        //gm.allVisuals[i].gameObject.transform.localScale = new Vector3(1, 1, 1);
+                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.leftArrowNote;
+                        gm.arrowNotes[i].color = gm.horizontalNoteArrowC;
+                        gm.arrowNotes[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        gm.arrowNotes[i].gameObject.SetActive(false);
+                    }
+                }
+
+                for (int i = 0; i < gm.spaceSupportingTexts.Length; i++)
+                {
+                    gm.spaceSupportingTexts[i].gameObject.SetActive(false);
+                }
+
+                // Enables/Disables the 'Hold / Release' Texts
+                for (int i = 0; i < gm.supportingTexts.Length; i++)
+                {
+                    gm.supportingTexts[i].gameObject.SetActive(true);
+                }
+
+                // Enable/Disable the space bar images
+                for (int i = 0; i < gm.spaceBar.Length; i++)
+                {
+                    gm.spaceBar[i].gameObject.SetActive(false);
+                }
+
+                // Enables/Disables the supporting 'Hold / Release' Texts
+                for (int i = 0; i < gm.spaceSupportingTexts.Length; i++)
+                {
+                    gm.spaceSupportingTexts[i].gameObject.SetActive(false);
+                }
+
+                gm.tutAreaTextBG.gameObject.SetActive(true);
+            }
+            #endregion
+            // Right regular arrow note
+            #region Tutorial Stage 2
+            if (gm.tutorialStage == 2)
+            {
+                // Position the second group of UI to be in the same position the first UI was in
+                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = gm.firstUI.gameObject.GetComponent<RectTransform>().localPosition;
+
+                // Enable/disable the correct key images
+                for (int i = 0; i < gm.allVisuals.Length; i++)
+                {
+                    if (i == 2 || i == 3)
+                    {
+                        gm.allVisuals[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        gm.allVisuals[i].gameObject.SetActive(false);
+                    }
+                }
+
+                // Enable/Disable the correct arrow notes
+                for (int i = 0; i < gm.arrowNotes.Length; i++)
+                {
+                    if (i == 1)
+                    {
+                        //gm.arrowNotes[i].gameObject.transform.position = new Vector3(gm.arrowNotes[i].gameObject.transform.localPosition.x, tempY - 100, gm.arrowNotes[i].gameObject.transform.position.z);
+                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.RightArrowNote;
+                        gm.arrowNotes[i].color = gm.horizontalNoteArrowC;
+                        gm.arrowNotes[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        gm.arrowNotes[i].gameObject.SetActive(false);
+                    }
+                }
+
+                // enable/disable the correct arrow
+                for (int i = 0; i < gm.arrow.Length; i++)
+                {
+                    if (i == 1)
+                    {
+                        gm.arrow[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        gm.arrow[i].gameObject.SetActive(false);
+                    }
+                }
+            }
+            #endregion
+            // Combine left/right regular arrow note
+            #region Tutorial Stage 3   
+            if (gm.tutorialStage == 3)
+            {
+                // Lower the Y position of the secondUI UI area
+                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = gm.originalSecondUIPos;
+
+                //pos.y = -50;
+                //gm.secondUI.position = pos;
+                //gm.secondUI.GetComponent<RectTransform>().localPosition = pos;
+
+                // Enable/disable the correct key images
+                for (int i = 0; i < gm.allVisuals.Length; i++)
+                {
+                    gm.allVisuals[i].gameObject.SetActive(true);
+                }
+
+                // Enable/Disable the correct arrow notes
+                for (int i = 0; i < gm.arrowNotes.Length; i++)
+                {
+                    gm.arrowNotes[i].color = gm.horizontalNoteArrowC;
+                    gm.arrowNotes[i].gameObject.SetActive(true);
+                }
+
+                // enable/disable the correct arrow
+                for (int i = 0; i < gm.arrow.Length; i++)
+                {
+                    gm.arrow[i].gameObject.SetActive(true);
+                }
+            }
+            #endregion
+            // Launch Notes
+            #region Tutorial Stage 4
+            if (gm.tutorialStage == 4)
+            {
+                // Lower the Y position of the secondUI UI area
+                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = gm.originalSecondUIPos;
+
+                //pos.y = -50;
+                //gm.secondUI.position = pos;
+                //gm.secondUI.GetComponent<RectTransform>().localPosition = pos;
+
+                // Enable/disable the correct key images
+                for (int i = 0; i < gm.allVisuals.Length; i++)
+                {
+                    gm.allVisuals[i].gameObject.SetActive(true);
+                }
+
+                // Enable/Disable the correct arrow notes
+                for (int i = 0; i < gm.arrowNotes.Length; i++)
+                {
+                    gm.arrowNotes[i].color = gm.horizontalLaunchArrowC;
+                    gm.arrowNotes[0].GetComponent<Image>().sprite = gm.leftLaunchNote;
+                    gm.arrowNotes[1].GetComponent<Image>().sprite = gm.rightLaunchNote;
+                    gm.arrowNotes[i].gameObject.SetActive(true);
+                }
+
+                // enable/disable the correct arrow
+                for (int i = 0; i < gm.arrow.Length; i++)
+                {
+                    gm.arrow[i].gameObject.SetActive(true);
+                }
+            }
+            #endregion
+            // Up arrow notes
+            #region Tutorial Stage 5
+            if (gm.tutorialStage == 5)
+            {
+                // Lower the Y position of the secondUI UI area
+                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = gm.originalSecondUIPos;
+
+                //pos.y = -50;
+                //gm.secondUI.position = pos;
+                //gm.secondUI.GetComponent<RectTransform>().localPosition = pos;
+
+                // Enable/disable the correct key images
+                for (int i = 0; i < gm.allVisuals.Length; i++)
+                {
+                    gm.allVisuals[i].gameObject.SetActive(false);
+                }
+
+                // Enable/Disable the correct arrow notes
+                for (int i = 0; i < gm.arrowNotes.Length; i++)
+                {
+                    gm.arrowNotes[i].color = gm.upArrowC;
+                    gm.arrowNotes[0].GetComponent<Image>().sprite = gm.upArrowNote;
+                    if (i == 1)
+                    {
+                        gm.arrowNotes[i].gameObject.SetActive(false);
+                    }
+                }
+
+                // enable/disable the correct arrow
+                for (int i = 0; i < gm.arrow.Length; i++)
+                {
+                    gm.arrow[i].gameObject.SetActive(false);
+                }
+
+                // Enables/Disables the 'Hold / Release' Texts
+                for (int i = 0; i < gm.supportingTexts.Length; i++)
+                {
+                    gm.supportingTexts[i].gameObject.SetActive(false);
+                }
+            }
+            #endregion
+            // Blast notes
+            #region Tutorial Stage 6
+            if (gm.tutorialStage == 6)
+            {
+                // Lower the Y position of the secondUI UI area
+                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition.x, 230, gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition.z);
+
+                gm.plusSymbol.gameObject.SetActive(true);
+
+                // Enable/disable the correct key images
+                for (int i = 0; i < gm.allVisuals.Length; i++)
+                {
+                    gm.allVisuals[i].gameObject.SetActive(true);
+                }
+
+                // Enable/Disable the correct arrow notes
+                for (int i = 0; i < gm.arrowNotes.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        gm.arrowNotes[i].color = gm.blastNoteC;
+                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.blastNote;
+                        gm.arrowNotes[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        gm.arrowNotes[i].gameObject.SetActive(false);
+                    }
+                }
+
+                // Enables/Disables the 'Hold / Release' Texts
+                for (int i = 0; i < gm.supportingTexts.Length; i++)
+                {
+                    if (i == 2 || i == 3)
+                    {
+                        gm.supportingTexts[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        gm.supportingTexts[i].gameObject.SetActive(false);
+                    }
+                }
+            }
+            #endregion
+            // Bomb notes
+            #region Tutorial Stage 7
+            if (gm.tutorialStage == 7)
+            {
+                gm.plusSymbol.gameObject.SetActive(false);
+
+                // Enable/disable the correct key images
+                for (int i = 0; i < gm.allVisuals.Length; i++)
+                {
+                    gm.allVisuals[i].gameObject.SetActive(false);
+                }
+
+                // Enable/Disable the correct arrow notes
+                for (int i = 0; i < gm.arrowNotes.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        gm.arrowNotes[i].GetComponent<Image>().color = Color.white;
+                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.bombIcon;
+                        gm.arrowNotes[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        gm.arrowNotes[i].gameObject.SetActive(false);
+                    }
+
+                }
+
+                // enable/disable the correct arrow
+                for (int i = 0; i < gm.arrow.Length; i++)
+                {
+                    gm.arrow[i].gameObject.SetActive(false);
+                }
+
+                // Enables/Disables the 'Hold / Release' Texts
+                for (int i = 0; i < gm.supportingTexts.Length; i++)
+                {
+                    gm.supportingTexts[i].gameObject.SetActive(false);
+                }
+            }
+            #endregion
+            // Shield
+            #region Tutorial Stage 8
+            if (gm.tutorialStage == 8)
+            {
+                // Lower the Y position of the secondUI UI area
+                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = gm.originalSecondUIPos;
+
+                // Enable/disable the correct key images
+                for (int i = 0; i < gm.allVisuals.Length; i++)
+                {
+                    gm.allVisuals[i].gameObject.SetActive(false);
+                }
+
+                // Enable/Disable the correct arrow notes
+                for (int i = 0; i < gm.arrowNotes.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.playerShield;
+                    }
+                    else
+                    {
+                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.playerNoShield;
+                    }
+
+                    gm.arrowNotes[i].GetComponent<Image>().color = Color.white;
+                    gm.arrowNotes[i].transform.localScale *= 1.5f;
+                    gm.arrowNotes[i].gameObject.SetActive(true);
+                }
+
+                // enable/disable the correct arrow
+                for (int i = 0; i < gm.arrow.Length; i++)
+                {
+                    gm.arrow[i].gameObject.SetActive(false);
+                }
+
+                // Enables/Disables the 'Hold / Release' Texts
+                for (int i = 0; i < gm.supportingTexts.Length; i++)
+                {
+                    gm.supportingTexts[i].gameObject.SetActive(false);
+                }
+
+                // Enable/Disable the space bar images
+                for (int i = 0; i < gm.spaceBar.Length; i++)
+                {
+                    gm.spaceBar[i].gameObject.SetActive(true);
+                }
+
+                for (int i = 0; i < gm.spaceSupportingTexts.Length; i++)
+                {
+                    gm.spaceSupportingTexts[i].gameObject.SetActive(true);
+                }
+
+                gm.tutAreaTextBG.gameObject.SetActive(true);
+            }
+            #endregion
+
+            if (gm.tutorialStage < 3)
+                {
+                    foreach (Text t in gm.keyTexts)
+                    {
+                        t.text = gm.keyText[gm.tutorialStage - 1];
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < gm.keyTexts.Length; i++)
+                    {
+                        gm.keyTexts[0].text = "A";
+                        gm.keyTexts[1].text = "A";
+                        gm.keyTexts[2].text = "L";
+                        gm.keyTexts[3].text = "L";
+                    }
+                }
         }
 
         //Debug.Log(gm.tutTexts[gm.tutorialStage]);
@@ -275,6 +673,9 @@ public class TrackCreator : MonoBehaviour
         {
             // turn the tutorial text to visible
             gm.tutAreaText.gameObject.SetActive(true);
+
+            // turn on the tutorial UI
+            gm.tutorialUI.SetActive(true);
         }
     }
 
@@ -297,6 +698,8 @@ public class TrackCreator : MonoBehaviour
             if (trackPosInBeatsGame > gm.nextStageThreshholdBeats[gm.tutorialStage - 1])
             {
                 increasedStage = false;
+                gm.PauseGame(false);
+                player.RepositionPlayer();
             }
         }
 
@@ -308,45 +711,55 @@ public class TrackCreator : MonoBehaviour
     }
     void SpawnNotes()
     {
+        Debug.Log("1");
         // Declare what the current segment is, if it hasn't been done already.
         if (!pm.currentSegment)
         {
+            Debug.Log("a");
             //Find the path the player is on
             RaycastHit hit;
             if (Physics.Raycast(player.transform.position, Vector3.down, out hit))
             {
+                Debug.Log("b");
                 //Debug.DrawRay(player.transform.position, Vector3.down, Color.green);
                 pm.nearestPath = hit.collider.gameObject;
             }
             else
             {
+                Debug.Log("c");
                 //Debug.DrawRay(player.transform.position, Vector3.down, Color.red);
                 return;
             }
         }
 
+        Debug.Log("d");
         pm.currentSegment = pm.nearestPath.transform.parent.gameObject;
         Path path = pm.initialPath.GetComponent<Path>();
 
         //Assign the notes
         for (int i = 0; i < noteLanes.Count; i++)
         {
+            Debug.Log("e");
             // If the note is not active, set it active
             if (!notesObj.transform.GetChild(i).gameObject.activeSelf)
             {
                 notesObj.transform.GetChild(i).gameObject.SetActive(true);
-
+                Debug.Log("f");
                 for (int z = 0; z < pm.maxLanes; z++)
                 {
+                    Debug.Log("g");
                     // Find the note's name that equals the correct code
                     if (notesObj.transform.GetChild(i).name.Contains(laneCodes[z]))
                     {
+                        Debug.Log("h");
                         // Loop through all paths in the current segment
                         for (int x = 0; x < pm.currentSegment.transform.childCount; x++)
                         {
+                            Debug.Log("i");
                             // If the lane number equals the correct one
                             if (pm.currentSegment.transform.GetChild(x).gameObject.GetComponent<Path>().laneNumber == int.Parse(laneCodes[z]))
                             {
+                                Debug.Log("j");
                                 // move the note to the correct lane
                                 notesObj.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, path.pathLength);
 
@@ -366,7 +779,7 @@ public class TrackCreator : MonoBehaviour
                     }
                 }
 
-
+                Debug.Log("?");
                 return;
             }
         }
@@ -374,6 +787,7 @@ public class TrackCreator : MonoBehaviour
 
     void QueueNoteSpawns()
     {
+        Debug.Log("3");
         if (!audioSource.isPlaying)
         {
             return;
@@ -397,6 +811,7 @@ public class TrackCreator : MonoBehaviour
         if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * beatWaitCount[curNoteCount]))
         {
             //Debug.Break();
+            Debug.Log("2");
             SpawnNotes();
 
             lastBeat += secPerBeat * beatWaitCount[curNoteCount];

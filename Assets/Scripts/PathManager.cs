@@ -103,7 +103,11 @@ public class PathManager : MonoBehaviour
 
     private void Update()
     {
-        FindNearestPath();
+        if (gm.tutPaused)
+        {
+            return;
+        }
+        //FindNearestPath();
         DestroyPathsBehind();
         ElapsePathSpawn();
         BeginPathSpawn();
@@ -150,7 +154,7 @@ public class PathManager : MonoBehaviour
             if (i == Mathf.Floor(maxLanes / 2))
             {
                 middleLane = go;
-                player.GetComponent<Player>().RepositionPlayer(go);
+                player.GetComponent<Player>().RepositionPlayer();
 
             }
 
@@ -251,8 +255,10 @@ public class PathManager : MonoBehaviour
         return percentTravelled;
     }
 
-    void FindNearestPath()
+    public void FindNearestPath(bool forScore)
     {
+        //Debug.Log("findnearestpath function started");
+        //Debug.Break();
         //Find the path the player is on
         RaycastHit hit;
         if (Physics.Raycast(player.transform.position, Vector3.down, out hit))
@@ -261,8 +267,11 @@ public class PathManager : MonoBehaviour
             {
                 //Debug.DrawRay(player.transform.position, Vector3.down, Color.green);
                 nearestPath = hit.collider.gameObject;
-            }
+                //Debug.Log("assigned nearestlane number");
+                //Debug.Break();
+                player.SetNearestLaneNumber(forScore, nearestPath);
 
+            }
         }
         else
         {

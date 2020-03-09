@@ -261,7 +261,7 @@ public class Note : MonoBehaviour
 
     void Update()
     {
-        if (!canMove)
+        if (!canMove || gm.tutPaused)
         {
             return;
         }

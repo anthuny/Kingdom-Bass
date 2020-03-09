@@ -101,35 +101,28 @@ public class Player : MonoBehaviour
         ShieldReset();
     }
 
-    public void RepositionPlayer(GameObject go)
+    public void RepositionPlayer()
     {
-        Vector3 p = transform.position;
-        p.x = go.GetComponent<Path>().laneNumber * pm.initialPath.GetComponent<Path>().pathWidth;
-        transform.position = p;
+        playerPos.y = .8f;
+        playerPos.x = 3;
+        transform.position = playerPos;
 
-        //Find the path the player is on
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit))
-        {
-            //Debug.DrawRay(player.transform.position, Vector3.down, Color.green);
-            pm.nearestPath = hit.collider.gameObject;
-        }
-        else
-        {
-            //Debug.DrawRay(player.transform.position, Vector3.down, Color.red);
-            return;
-        }
+        pm.FindNearestPath(false);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (gm.tutPaused)
+        {
+            return;
+        }
         Inputs();
         StartCoroutine("Movement");
         FindNearestNote();
         UpdateShield();
         AssignMisses();
-        SetNearestLaneNumber();
+        //SetNearestLaneNumber();
         UpdateNotesInfFront();
         IncMaxAcc();
 
@@ -401,18 +394,18 @@ public class Player : MonoBehaviour
             isShielding = true;
         }
     }
-    void SetNearestLaneNumber()
+    public void SetNearestLaneNumber(bool forScore, GameObject nearestPath)
     {
         // If not moving, AND there is a nearest path to begin with
         // Update the oldNearestLaneNumber and nearestLaneNumber accordingly
-        if (pm.nearestPath)
+
+        oldNearestLaneNumber = nearestLaneNumber;
+        nearestLaneNumber = nearestPath.GetComponent<Path>().laneNumber;
+        //Debug.Log("nearestLaneNumber " + nearestLaneNumber);
+        //Debug.Break();
+        if (forScore)
         {
-            if (pm.nearestPath.GetComponent<Path>().laneNumber != nearestLaneNumber)
-            {
-                oldNearestLaneNumber = nearestLaneNumber;
-                nearestLaneNumber = pm.nearestPath.GetComponent<Path>().laneNumber;
-                AssignFromAndToValuesNoteAndLaunch();
-            }
+            AssignFromAndToValuesNoteAndLaunch();
         }
     }
     IEnumerator Movement()
@@ -433,7 +426,7 @@ public class Player : MonoBehaviour
 
         #region Normal - Moving Right
         // Functionality of moving right with shield
-        if (movingRight && isShielding && gm.tutorialStage >= 3)
+        if (movingRight && isShielding && tc.selectedMap.title != "Tutorial" || gm.tutorialStage >= 3 && movingRight && isShielding)
         {
             movingRight = false;
             movingLeft = false;
@@ -442,11 +435,11 @@ public class Player : MonoBehaviour
             playerPos.x = pathWidth * nearestLaneNumber;
             transform.position = playerPos;
 
-            SetNearestLaneNumber();
+            pm.FindNearestPath(true);
         }
 
         // Functionality of moving right without shield
-        else if (movingRight && !isShielding && gm.tutorialStage >= 3)
+        else if (movingRight && !isShielding && tc.selectedMap.title != "Tutorial" || gm.tutorialStage >= 3 && movingRight && !isShielding)
         {
             movingRight = false;
             movingLeft = false;
@@ -454,27 +447,35 @@ public class Player : MonoBehaviour
 
             playerPos.x = pathWidth * nearestLaneNumber;
             transform.position = playerPos;
+
+            pm.FindNearestPath(true);
         }
         #endregion 
         #region Tutorial - Moving Right
         // Functionality of moving right with shield during first few stages of tutorial
         if (movingRight && isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
         {
+            //Debug.Log("2");
             movingRight = false;
             movingLeft = false;
             validMovement = true;
 
+            pm.FindNearestPath(false);
+            //Debug.Log("called nearestlanenumberfunction");
+
             playerPos.x = pathWidth * nearestLaneNumber;
             transform.position = playerPos;
 
-            SetNearestLaneNumber();
+            pm.FindNearestPath(true);
+            //Debug.Log("called nearestlanenumberfunction");
 
             yield return new WaitForSeconds(gm.timeForMoveBack);
 
-            playerPos.x = pathWidth * (oldNearestLaneNumber - 1);
+            playerPos.x = 3;
             transform.position = playerPos;
 
-            SetNearestLaneNumber();
+            pm.FindNearestPath(false);
+            //Debug.Log("called nearestlanenumberfunction");
         }
 
         // Functionality of moving right WITHOUT shield during first few stages of tutorial
@@ -487,21 +488,22 @@ public class Player : MonoBehaviour
             playerPos.x = pathWidth * nearestLaneNumber;
             transform.position = playerPos;
 
-            SetNearestLaneNumber();
+            pm.FindNearestPath(true);
 
             yield return new WaitForSeconds(gm.timeForMoveBack);
 
-            playerPos.x = pathWidth * (oldNearestLaneNumber - 1);
+            playerPos.x = 3;
             transform.position = playerPos;
 
-            SetNearestLaneNumber();
+            pm.FindNearestPath(false);
         }
 
         #endregion
         #region Normal - Moving Left
         // Functionality of moving left with shield
-        if (movingLeft && isShielding && gm.tutorialStage >= 2)
+        if (movingLeft && isShielding && tc.selectedMap.title != "Tutorial" || gm.tutorialStage >= 3 && movingLeft && isShielding)
         {
+            //Debug.Log("1");
             movingLeft = false;
             movingRight = false;
             validMovement = true;
@@ -509,11 +511,11 @@ public class Player : MonoBehaviour
             playerPos.x = pathWidth * (nearestLaneNumber - 2);
             transform.position = playerPos;
 
-            SetNearestLaneNumber();
+            pm.FindNearestPath(true);
         }
 
         // Functionality of moving left without shield
-        if (movingLeft && !isShielding && gm.tutorialStage >= 2)
+        if (movingLeft && !isShielding && tc.selectedMap.title != "Tutorial" || gm.tutorialStage >= 3 && movingLeft && !isShielding)
         {
             movingLeft = false;
             movingRight = false;
@@ -521,6 +523,8 @@ public class Player : MonoBehaviour
 
             playerPos.x = pathWidth * (nearestLaneNumber - 2);
             transform.position = playerPos;
+
+            pm.FindNearestPath(true);
         }
         #endregion
         #region Tutorial - Moving Left
@@ -531,17 +535,22 @@ public class Player : MonoBehaviour
             movingLeft = false;
             validMovement = true;
 
+            pm.FindNearestPath(false);
+            //Debug.Log("called nearestlanenumberfunction");
+
             playerPos.x = pathWidth * (nearestLaneNumber - 2);
             transform.position = playerPos;
 
-            SetNearestLaneNumber();
+            pm.FindNearestPath(true);
+            //Debug.Log("called nearestlanenumberfunction");
 
             yield return new WaitForSeconds(gm.timeForMoveBack);
 
-            playerPos.x = pathWidth * (oldNearestLaneNumber - 1);
+            playerPos.x = 3;
             transform.position = playerPos;
 
-            SetNearestLaneNumber();
+            pm.FindNearestPath(false);
+            //Debug.Log("called nearestlanenumberfunction");
         }
 
         // Functionality of moving left without shield during first few stages of tutorial
@@ -554,14 +563,14 @@ public class Player : MonoBehaviour
             playerPos.x = pathWidth * (nearestLaneNumber - 2);
             transform.position = playerPos;
 
-            SetNearestLaneNumber();
+            pm.FindNearestPath(true);
 
             yield return new WaitForSeconds(gm.timeForMoveBack);
 
-            playerPos.x = pathWidth * (oldNearestLaneNumber - 1);
+            playerPos.x = 3;
             transform.position = playerPos;
 
-            SetNearestLaneNumber();
+            pm.FindNearestPath(false);
         }
         #endregion
     }
@@ -681,8 +690,10 @@ public class Player : MonoBehaviour
         if (nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast")
         {
             // If the player moved into the correct lane, continue
-            if (nearestNoteScript.laneNumber == oldNearestLaneNumber - 1)
+            if (nearestNoteScript.laneNumber == oldNearestLaneNumber - 1 && nearestNoteScript.laneNumber == nearestLaneNumber)
             {
+                //Debug.Log("1");
+                //Debug.Log("oldNearestLaneNumber " + oldNearestLaneNumber);
                 CheckHitAccuracy();
             }
             else
@@ -695,8 +706,10 @@ public class Player : MonoBehaviour
         else if (nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast")
         {
             // If the player moved into the correct lane, continue
-            if (nearestNoteScript.laneNumber == oldNearestLaneNumber + 1)
+            if (nearestNoteScript.laneNumber == oldNearestLaneNumber + 1 && nearestNoteScript.laneNumber == nearestLaneNumber)
             {
+                //Debug.Log("2");
+                //Debug.Log("oldNearestLaneNumber " + oldNearestLaneNumber);
                 CheckHitAccuracy();
             }
             else
@@ -710,7 +723,7 @@ public class Player : MonoBehaviour
         else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "blast")
         {
             // If the player moved into the correct lane, continue
-            if (nearestNoteScript.laneNumber == oldNearestLaneNumber + 1)
+            if (nearestNoteScript.laneNumber == oldNearestLaneNumber + 1 && nearestNoteScript.laneNumber == nearestLaneNumber)
             {
                 hitRLaunch = true;
                 CheckHitAccuracy();
@@ -726,7 +739,7 @@ public class Player : MonoBehaviour
         else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "blast")
         {
             // If the player moved into the correct lane, continue 
-            if (nearestNoteScript.laneNumber == oldNearestLaneNumber - 1)
+            if (nearestNoteScript.laneNumber == oldNearestLaneNumber - 1 && nearestNoteScript.laneNumber == nearestLaneNumber)
             {
                 hitLLaunch = true;
                 CheckHitAccuracy();
@@ -1014,6 +1027,8 @@ public class Player : MonoBehaviour
             hitLLaunch = false;
             playerPos.x = 1.5f * (nearestNoteScript.laneNumber - 2);
             transform.position = playerPos;
+
+            pm.FindNearestPath(false);
         }
 
         else if (hitRLaunch)
@@ -1021,6 +1036,8 @@ public class Player : MonoBehaviour
             hitRLaunch = false;
             playerPos.x = 1.5f * (nearestNoteScript.laneNumber);
             transform.position = playerPos;
+
+            pm.FindNearestPath(false);
         }
     }
 
