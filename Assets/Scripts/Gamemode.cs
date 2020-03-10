@@ -48,6 +48,8 @@ public class Gamemode : MonoBehaviour
     public Text blastInputText;
     public Text aboutToBlastText;
 
+    public Text pressKeyToContinueEnd;
+
     [Header("Map Selection")]
     public Text mapSelectText;
     [TextArea(1, 2)]
@@ -105,7 +107,7 @@ public class Gamemode : MonoBehaviour
     bool displayDebugUI;
     public float currentFps;
     bool doneOnce;
-    public float defaultBeatsBetNotes = 3;
+    public float accuracy = 3;
 
     public float launchRotAmount;
     public float launchRotTime;
@@ -289,7 +291,7 @@ public class Gamemode : MonoBehaviour
         originalSecondUIPos = secondUI.gameObject.GetComponent<RectTransform>().localPosition;
 
         tutorialUI.SetActive(false);
-        //Debug.Break();
+        pressKeyToContinueEnd.gameObject.SetActive(false);
     }
 
     void Update()
@@ -317,7 +319,7 @@ public class Gamemode : MonoBehaviour
         if (playerScript.nearestNote && !doneOnce)
         {
             doneOnce = true;
-            playerScript.newGoodMiss = goodMin / (playerScript.nearestNoteScript.beatWait / defaultBeatsBetNotes);
+            playerScript.newGoodMiss = goodMin / (playerScript.nearestNoteScript.beatWait / accuracy);
         }
     }
 
@@ -538,6 +540,10 @@ public class Gamemode : MonoBehaviour
         }
     }
 
+    void PostMapStatistics()
+    {
+        PauseGame(true);
+    }
     public void EndTrack()
     {
         tc.mapHasBeenSelected = false;
@@ -612,10 +618,9 @@ public class Gamemode : MonoBehaviour
 
     public void EndTrackNote()
     {
-        Invoke("EndTrack", tc.trackEndWait);
+        Invoke("PostMapStatistics", tc.trackEndWait);
     }
    
-
     public void UpdateTotalAccuracy()
     {
         // Update the total accuracy.
@@ -659,14 +664,17 @@ public class Gamemode : MonoBehaviour
 
         if (!fate)
         {
-            Debug.Log("enabling tut text");
             tutUnPauseText.gameObject.SetActive(true);
+        }
+        else
+        {
+            pressKeyToContinueEnd.gameObject.SetActive(true);
         }
     }
 
     public void TutorialUnpause()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && tutPaused && tc.selectedMap.title == "Tutorial")
         {
             tutPaused = false;
             AudioListener.pause = false;
@@ -675,6 +683,11 @@ public class Gamemode : MonoBehaviour
             {
                 tutUnPauseText.gameObject.SetActive(false);
             }
+        }
+        else if (Input.GetKeyDown(KeyCode.Return) && tutPaused && tc.selectedMap.title != "Tutorial")
+        {
+            pressKeyToContinueEnd.gameObject.SetActive(false);
+            EndTrack();
         }
     }
 }

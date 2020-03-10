@@ -711,55 +711,44 @@ public class TrackCreator : MonoBehaviour
     }
     void SpawnNotes()
     {
-        Debug.Log("1");
         // Declare what the current segment is, if it hasn't been done already.
         if (!pm.currentSegment)
         {
-            Debug.Log("a");
             //Find the path the player is on
             RaycastHit hit;
             if (Physics.Raycast(player.transform.position, Vector3.down, out hit))
             {
-                Debug.Log("b");
                 //Debug.DrawRay(player.transform.position, Vector3.down, Color.green);
                 pm.nearestPath = hit.collider.gameObject;
             }
             else
             {
-                Debug.Log("c");
                 //Debug.DrawRay(player.transform.position, Vector3.down, Color.red);
                 return;
             }
         }
 
-        Debug.Log("d");
         pm.currentSegment = pm.nearestPath.transform.parent.gameObject;
         Path path = pm.initialPath.GetComponent<Path>();
 
         //Assign the notes
         for (int i = 0; i < noteLanes.Count; i++)
         {
-            Debug.Log("e");
             // If the note is not active, set it active
             if (!notesObj.transform.GetChild(i).gameObject.activeSelf)
             {
                 notesObj.transform.GetChild(i).gameObject.SetActive(true);
-                Debug.Log("f");
                 for (int z = 0; z < pm.maxLanes; z++)
                 {
-                    Debug.Log("g");
                     // Find the note's name that equals the correct code
                     if (notesObj.transform.GetChild(i).name.Contains(laneCodes[z]))
                     {
-                        Debug.Log("h");
                         // Loop through all paths in the current segment
                         for (int x = 0; x < pm.currentSegment.transform.childCount; x++)
                         {
-                            Debug.Log("i");
                             // If the lane number equals the correct one
                             if (pm.currentSegment.transform.GetChild(x).gameObject.GetComponent<Path>().laneNumber == int.Parse(laneCodes[z]))
                             {
-                                Debug.Log("j");
                                 // move the note to the correct lane
                                 notesObj.transform.GetChild(i).position = new Vector3(path.pathWidth * x, 0.02f, path.pathLength);
 
@@ -778,8 +767,6 @@ public class TrackCreator : MonoBehaviour
                         }
                     }
                 }
-
-                Debug.Log("?");
                 return;
             }
         }
@@ -787,7 +774,6 @@ public class TrackCreator : MonoBehaviour
 
     void QueueNoteSpawns()
     {
-        Debug.Log("3");
         if (!audioSource.isPlaying)
         {
             return;
@@ -811,7 +797,6 @@ public class TrackCreator : MonoBehaviour
         if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * beatWaitCount[curNoteCount]))
         {
             //Debug.Break();
-            Debug.Log("2");
             SpawnNotes();
 
             lastBeat += secPerBeat * beatWaitCount[curNoteCount];
@@ -863,7 +848,7 @@ public class TrackCreator : MonoBehaviour
     // Happens when the player presses the start button
     public void loadTrack()
     {
-        gm.defaultBeatsBetNotes = selectedMap.averageBeatsBtwNotes;
+        gm.accuracy = selectedMap.averageBeatsBtwNotes;
 
         // disable all buttons in map selection screen
         gm.ToggleMapSelectionButtons(false);

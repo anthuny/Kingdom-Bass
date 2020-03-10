@@ -176,7 +176,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        newGoodMiss = gm.goodMin / (nearestNoteScript.beatWait / gm.defaultBeatsBetNotes);
+        newGoodMiss = gm.goodMin / (nearestNoteScript.beatWait / gm.accuracy);
 
         if (1 - missPointFrom < newGoodMiss + 0.05f && nearestNote.transform.position.z > transform.position.z && !nearestNoteScript.noteCalculatedAcc && nearestNoteScript.noteType != "bomb")
         {
@@ -797,9 +797,9 @@ public class Player : MonoBehaviour
         }
 
         // Assign the new thresholds for accuracy based on how far the notes are from eachother
-        newPerfect = gm.perfectMin / (nearestNoteScript.beatWait / gm.defaultBeatsBetNotes);
-        newGreat = gm.greatMin / (nearestNoteScript.beatWait / gm.defaultBeatsBetNotes);
-        newGood = gm.goodMin / (nearestNoteScript.beatWait / gm.defaultBeatsBetNotes);
+        newPerfect = gm.perfectMin / (nearestNoteScript.beatWait / gm.accuracy);
+        newGreat = gm.greatMin / (nearestNoteScript.beatWait / gm.accuracy);
+        newGood = gm.goodMin / (nearestNoteScript.beatWait / gm.accuracy);
         //Debug.Break();
         //Debug.Log("-------------------");
         //Debug.Log("newPerf " + newPerfect);
@@ -982,7 +982,7 @@ public class Player : MonoBehaviour
             gm.scoreIncreased = true;
 
             // Increase the max accuracy if the note got missed
-            if (tc.notes[0].gameObject.GetComponent<Note>().missed)
+            if (tc.notes[0].gameObject.GetComponent<Note>().missed && !tc.notes[0].gameObject.GetComponent<Note>().noteCalculatedAcc)
             {
                 tc.notes[0].gameObject.GetComponent<Note>().noteCalculatedAcc = true;
                 gm.totalAccuracyMax += 3;
