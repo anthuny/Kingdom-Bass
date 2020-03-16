@@ -13,6 +13,15 @@ public class Gamemode : MonoBehaviour
     public float jetZ;
     public float jetY;
 
+    [Header("Post Game Statistics")]
+    public Sprite[] ranks;
+    public Image rankImage;
+    public GameObject postMapStatsUI;
+    public Text endScoreText;
+    public Text endTotalAccuracyText;
+    public Text indivAccAmountText;
+    public Text finalComboText;
+
     [Header("Menu")]
     public bool tutPaused;
 
@@ -273,7 +282,7 @@ public class Gamemode : MonoBehaviour
         //UnityEditor.EditorPrefs.SetBool("DeveloperMode", true);
     }
 
-    void StartGame()
+    public void StartGame()
     {
         totalAccuracy = 100;
         totalAccuracyText.text = "Total Accuracy: " + totalAccuracy.ToString() + "%";
@@ -292,6 +301,7 @@ public class Gamemode : MonoBehaviour
 
         tutorialUI.SetActive(false);
         pressKeyToContinueEnd.gameObject.SetActive(false);
+        postMapStatsUI.SetActive(false);
     }
 
     void Update()
@@ -510,7 +520,7 @@ public class Gamemode : MonoBehaviour
     }
     public void UpdateUI()
     {
-        if (score != oldScore)
+        if (score != oldScore && tc.notesSpawned > 0)
         {
             comboMulti += 1;
         }
@@ -542,19 +552,98 @@ public class Gamemode : MonoBehaviour
 
     void PostMapStatistics()
     {
+        // Disable game UI
+        ToggleGameUI(false);
+
+        // Calculate the post map stat UI
+        endScoreText.text = "Score " + score.ToString();
+        endTotalAccuracyText.text = "Accuracy " + totalAccuracy.ToString() + "%";
+        indivAccAmountText.text =  "Perfect " + perfects.ToString() +
+            "\nGreat " + greats.ToString() +
+            "\nGood " + goods.ToString() +
+            "\nMiss " + misses.ToString();
+        finalComboText.text = "Final Combo Multiplier " + comboMulti.ToString();
+
+        #region Calculation for Rank Letter
+
+
+        float perfectPerc = ((float)perfects / (float)tc.notesSpawned) * 100f;
+        float goodPerc = ((float)goods / (float)tc.notesSpawned) * 100f;
+
+        // If player got 100% accuracy, give SS rank
+        if (totalAccuracy == 100)
+        {
+            rankImage.sprite = ranks[0];
+            EndingMap();
+            return;
+        }
+        // If player got over 90% perfects compared to all notes,
+        // AND less then 1% goods compared to all notes,
+        // AND no misses
+        // Give S rank
+        else if (perfectPerc > 90 && goodPerc < 1 && misses == 0)
+        {
+            rankImage.sprite = ranks[1];
+            EndingMap();
+            return;
+        }
+        // If player got over 80% perfects compared to all notes, AND no misses
+        // OR over 90% perfects compared to all notes
+        // Give A rank
+        else if ((perfectPerc > 80 && misses == 0) || perfectPerc > 90)
+        {
+            rankImage.sprite = ranks[2];
+            EndingMap();
+            return;
+        }
+        // If player got over 70% perfects compared to all notes, AND no misses
+        // OR over 80% perfects compared to all notes
+        // Give B rank
+        else if ((perfectPerc > 70 && misses == 0) || perfectPerc > 80)
+        {
+            rankImage.sprite = ranks[3];
+            EndingMap();
+            return;
+        }
+        // If player got over 60^ perfects compared to all notes.
+        // Give C rank
+        else if (perfectPerc > 60)
+        {
+            rankImage.sprite = ranks[4];
+            EndingMap();
+            return;
+        }
+        // If the player did not get a rank from any condition above, give rank D
+        // Give D rank
+        else
+        {
+            rankImage.sprite = ranks[5];
+            EndingMap();
+            return;
+        }
+        #endregion
+    }
+
+    void EndingMap()
+    {
+        // Enable the post map stats UI to see
+        postMapStatsUI.SetActive(true);
+
         PauseGame(true);
     }
     public void EndTrack()
     {
+        // Enable the post map stats UI to see
+        postMapStatsUI.SetActive(false);
+
         tc.mapHasBeenSelected = false;
         tc.trackInProgress = false;
 
         DestroyAllNotes();
 
-        ToggleGameUI(false);
-
         ToggleMapSelectionButtons(true);
 
+        tc.notesSpawned = 0;
         tc.allNotes.Clear();
         tc.allNoteTypes.Clear();
         tc.beatWaitCountAccum.Clear();
@@ -590,7 +679,6 @@ public class Gamemode : MonoBehaviour
         totalAccuracy = 0;
         totalAccuracyMax = 0;
         totalNotes = 0;
-        tc.notesSpawned = 0;
         totalAccuracyText.text = 0.ToString() + "%";
         comboMulti = 1;
         comboText.text = "1";
@@ -657,14 +745,16 @@ public class Gamemode : MonoBehaviour
         }
     }
 
+    // If fate is true, the pause is for the end of a map
+    // if fate is false, it's for the tutorial stage pauses
     public void PauseGame(bool fate)
     {
-        tutPaused = true;
         AudioListener.pause = true;
 
         if (!fate)
         {
             tutUnPauseText.gameObject.SetActive(true);
+            tutPaused = true;
         }
         else
         {
@@ -684,8 +774,10 @@ public class Gamemode : MonoBehaviour
                 tutUnPauseText.gameObject.SetActive(false);
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Return) && tutPaused && tc.selectedMap.title != "Tutorial")
+        // Map has ended, press any key to continue
+        else if (Input.GetKeyDown(KeyCode.Return) && tc.selectedMap.title != "Tutorial")
         {
+            AudioListener.pause = false;
             pressKeyToContinueEnd.gameObject.SetActive(false);
             EndTrack();
         }

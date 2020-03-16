@@ -5,10 +5,64 @@
     <Lanes AmountOfLanes = "5"></Lanes>
     <Notes>
       <Note>
-        <Note_Type>launch</Note_Type>
+        <Note_Type>note</Note_Type>
         <Note_Lane>2</Note_Lane>
         <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+        <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+        <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>note</Note_Type>
+        <Note_Lane>2</Note_Lane>
+        <Note_ArrowD>left</Note_ArrowD>
+        <Note_BeatWait>2</Note_BeatWait>
       </Note>
     </Notes>
   </Level>

@@ -8,9 +8,6 @@ public class TrackCreator : MonoBehaviour
     private Gamemode gm;
     private PathManager pm;
 
-    [Header("Maps")]
-    public Map[] mapDetails;
-
     [Header("Map Selection")]
     public bool mapHasBeenSelected;
     [HideInInspector]
@@ -130,6 +127,8 @@ public class TrackCreator : MonoBehaviour
 
     private Vector3 pos;
 
+    public Path path;
+
     void Start()
     {
         player = FindObjectOfType<Player>();
@@ -157,14 +156,32 @@ public class TrackCreator : MonoBehaviour
         // Checks for notes in each lane, If it belongs in a lane, make it belong there 
         for (int i = 1; i <= pm.maxLanes; i++)
         {
-            if (int.Parse(laneNumber) == i)
-            {              
+            //Debug.Log("laneNumber " + laneNumber);
+            //Debug.Log("beatWait " + beatWait);
+            //Debug.Break();
+
+            if (laneNumber.Substring(0, 1).Contains(i.ToString()))
+            {
                 // Spawn noteVisual, at notes position
                 GameObject go = Instantiate(noteVisual, notesObj.transform.position, Quaternion.identity);
                 Note noteScript = go.GetComponent<Note>();
 
+                // If the note has another note in the same beat wait to spawn
+                for (int y = 0; y < laneNumber.Length - 1; y++)
+                {
+                    if (laneNumber.Length > 1)
+                    {
+                        string secondChar = laneNumber.Substring(y + 1, 1);
+
+                        noteScript.nextBombLane.Add(int.Parse(secondChar));
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
                 // Set the name of the note to the lane it is in
-                // TODO : Add the type of note aswell when I add the note in the game
                 go.name = i.ToString();
 
                 // Parent this note to the notes object 
@@ -174,7 +191,8 @@ public class TrackCreator : MonoBehaviour
                 noteScript.noteType = noteType;
                 noteScript.noteDir = arrowD;
 
-                // Set the amount of beatWaits the note is to perfom
+
+                // Set the amount of beatWaits the note is to perform
                 noteScript.beatWait = float.Parse(beatWait);
 
                 // Set the lane number of the note 
@@ -258,7 +276,9 @@ public class TrackCreator : MonoBehaviour
         // Start the track timer?
         dspTrackTime = (float)AudioSettings.dspTime;
 
+        gm.StartGame();
         audioSource.Play();
+
     }
 
     // This is called during StartSong if tutorial is on
@@ -729,7 +749,7 @@ public class TrackCreator : MonoBehaviour
         }
 
         pm.currentSegment = pm.nearestPath.transform.parent.gameObject;
-        Path path = pm.initialPath.GetComponent<Path>();
+        path = pm.initialPath.GetComponent<Path>();
 
         //Assign the notes
         for (int i = 0; i < noteLanes.Count; i++)
@@ -848,6 +868,7 @@ public class TrackCreator : MonoBehaviour
     // Happens when the player presses the start button
     public void loadTrack()
     {
+        
         gm.accuracy = selectedMap.averageBeatsBtwNotes;
 
         // disable all buttons in map selection screen

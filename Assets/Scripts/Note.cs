@@ -86,6 +86,8 @@ public class Note : MonoBehaviour
     [Header("Bomb")]
     public GameObject bombObj;
     private bool bombHitPlayer;
+    public List<int> nextBombLane = new List<int>();
+    public bool clone;
 
     // Start is called before the first frame update
     void Start()
@@ -97,10 +99,51 @@ public class Note : MonoBehaviour
         noteRend = meshRendererRef.GetComponent<Renderer>();
         noteWidth = noteRend.bounds.size.z;
 
-        gm.totalNotes++;
-        noteNumber = gm.totalNotes;
+        if (nextBombLane.Count > 0)
+        {
+            for (int i = 0; i < nextBombLane.Count; i++)
+            {
+                GameObject go = Instantiate(tc.noteVisual, tc.notesObj.transform.position, Quaternion.identity);
+                Note noteScript = go.GetComponent<Note>();
+                noteScript.clone = true;
+                noteScript.beatWait = beatWait;
+                noteScript.beatWaitCur = beatWaitCur;
+                noteScript.laneNumber = nextBombLane[i];
+                noteScript.noteType = noteType;
+                noteScript.noteDir = noteDir;
+                noteScript.noteNumber = noteNumber;
+                noteScript.gameObject.name = noteScript.laneNumber + " Clone";
 
-        tc.notesSpawned++;
+                // move the note to the correct lane
+                go.transform.position = new Vector3(tc.path.pathWidth * (nextBombLane[i] - 1),
+                    0.02f, pm.initialPath.GetComponent<Path>().pathLength);
+
+                noteScript.startingPos.z = go.transform.position.z;
+
+                noteScript.pathWidth = tc.path.pathWidth * (nextBombLane[i] - 1);
+
+                // Allow the note to move when ready
+                noteScript.canMove = true;
+
+                // Get the index count of this note for reference
+                int indexCount = this.gameObject.transform.GetSiblingIndex();
+
+                // Set the bomb to the correct order in the children count
+                go.transform.SetParent(tc.notesObj.transform);
+                go.transform.SetSiblingIndex(indexCount + 1);
+            }
+        }
+
+        if (!clone)
+        {
+            if (noteType != "bomb")
+            {
+                tc.notesSpawned++;
+            }
+
+            gm.totalNotes++;
+            noteNumber = gm.totalNotes;
+        }
 
         //Determine the direction of the arrow on the note
         switch (noteDir)
@@ -420,14 +463,14 @@ public class Note : MonoBehaviour
                         break;
                     }
                 }
-                //tc.beatWaitNextNote = 0;
-                //tc.beatWaitAccum = 0;
-             
+
                 player.CalculateMissPointFrom2();
             }
-            //Debug.Break();
-            tc.nextIndex3++;
-            //tc.beatWaitNextNote += tc.beatWaitCount[tc.nextIndex3];
+
+            if (!clone)
+            {
+                tc.nextIndex3++;
+            }
 
             QueueEndOfTrack();
 
@@ -457,6 +500,12 @@ public class Note : MonoBehaviour
 
     void QueueEndOfTrack()
     {
+        if (clone)
+        {
+            StartCoroutine("DestroyNote");
+            return;
+        }
+
         tc.trackPosIntervalsList2.RemoveAt(0);
 
         // If this is the last note of the track, end differently
@@ -471,25 +520,28 @@ public class Note : MonoBehaviour
             //player.DestroyFurthestNote();
             StartCoroutine("DestroyNote");
         }
-
     }
 
     public IEnumerator DestroyNote()
     {
+        #region This only does something if the note is NOT a bomb
         yield return new WaitForSeconds(0.8f);
         // remove this note to the 'activeNotes' list
         player.activeNotes.Remove(this.gameObject.transform);
         // remove this note from the 'noteBehind' list
         player.notesInfront.Remove(this.gameObject.transform);
-        // remove this note from the 'furthestbehindnote' variable
-        player.furthestBehindNote = null;
 
         tc.notes.Remove(this.gameObject);
+        #endregion
 
-        //player.DestroyFurthestNoteNote();
+        if (!clone)
+        {
+            // remove this note from the 'furthestbehindnote' variable
+            player.furthestBehindNote = null;
+        }
 
+        // Destroy this note
         Destroy(this.gameObject);
-
     }
 }
 
