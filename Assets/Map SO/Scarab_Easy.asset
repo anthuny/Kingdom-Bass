@@ -20,6 +20,7 @@ MonoBehaviour:
   noteTimeTaken: 5
   timeBeforeStart: 1
   averageBeatsBtwNotes: 8
+  healthDrain: 1
   track: {fileID: 8300000, guid: f593d2d2dc372974fac9c5ef277e6c67, type: 3}
   trackLoop: {fileID: 0}
   mapXML: {fileID: 4900000, guid: 9b0c9e562c42e2d4fbd8203c8b6e7d52, type: 3}

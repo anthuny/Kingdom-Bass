@@ -14,6 +14,8 @@ public class Map : ScriptableObject
     public float noteTimeTaken;
     public float timeBeforeStart;
     public int averageBeatsBtwNotes;
+    [Tooltip("1 is normal, higher = more health loss upon bad performance, lower = less health loss upon bad performance")]
+    public float healthDrain;
 
     [Header("Track")]
     public AudioClip track;

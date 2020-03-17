@@ -1,17 +1,24 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Gamemode : MonoBehaviour
 {
     private TrackCreator tc;
-    private GameObject player;
-    private Player playerScript;
+    private AudioManager am;
+    public GameObject player;
+    public Player playerScript;
     [HideInInspector]
     public GameObject jet;
     public float jetZ;
     public float jetY;
+
+    [Header("Game Pause")]
+    public bool gamePaused;
+    public GameObject pausedUI;
+    public Text countdownText;
+    public bool countingDown;
+    public bool cantPause = true;
 
     [Header("Post Game Statistics")]
     public Sprite[] ranks;
@@ -21,12 +28,14 @@ public class Gamemode : MonoBehaviour
     public Text endTotalAccuracyText;
     public Text indivAccAmountText;
     public Text finalComboText;
+    public GameObject postMapUI;
 
     [Header("Menu")]
     public bool tutPaused;
 
     [Header("Map Buttons")]
     public Button[] mapButtons;
+    public GameObject mapSelectionUI;
 
     [Header("Game UI")]
     public Text[] gameUI;
@@ -64,10 +73,6 @@ public class Gamemode : MonoBehaviour
     [TextArea(1, 2)]
     public string selectAMapText;
     public GameObject startBtn;
-    //[HideInInspector]
-    public bool scarabSelected;
-    //[HideInInspector]
-    public bool testingSelected;
 
     [Header("Tutorial")]
     public Text tutAreaText;
@@ -216,10 +221,22 @@ public class Gamemode : MonoBehaviour
     public float regenPerfect;
     public float regenGreat;
     public float regenGood;
-    public float lossMiss;
-    public float bombHit;
-    public float healthRegenPerSec;
-    private float health;
+    public float regenMiss;
+    public float regenBomb;
+    public float healthRegen;
+    public float healthRegenInterval;
+    public float audioSpeedDec;
+    public float minPitchDec;
+    public float minPitchVolDecStart;
+    private AudioSource activeTrack;
+    float t = 1;
+    float y = 1;
+    public GameObject gameOverUI;
+    //public Map retryingMap;
+
+    public float health;
+    public bool playerDead;
+    public bool killingPlayer;
 
     [Header("Note Sprites")]
     public Sprite leftArrow;
@@ -261,6 +278,7 @@ public class Gamemode : MonoBehaviour
         playerScript = player.GetComponent<Player>();
         jet = FindObjectOfType<Jet>().gameObject;
         tc = FindObjectOfType<TrackCreator>();
+        am = FindObjectOfType<AudioManager>();
 
         UpdateUI();
 
@@ -290,6 +308,12 @@ public class Gamemode : MonoBehaviour
         lr.gameObject.SetActive(true);
         lr.SetPosition(0, electricityStart.transform.position);
         lr.gameObject.SetActive(false);
+        gameOverUI.SetActive(false);
+        postMapUI.SetActive(false);
+        pausedUI.SetActive(false);
+        countdownText.gameObject.SetActive(false);
+        countingDown = false;
+        //cantPause = true;
 
         mapSelectText.text = selectAMapText;
 
@@ -299,16 +323,34 @@ public class Gamemode : MonoBehaviour
         originalFirstUIPos = firstUI.gameObject.GetComponent<RectTransform>().localPosition;
         originalSecondUIPos = secondUI.gameObject.GetComponent<RectTransform>().localPosition;
 
-        tutorialUI.SetActive(false);
-        pressKeyToContinueEnd.gameObject.SetActive(false);
+        //pressKeyToContinueEnd.gameObject.SetActive(false);
         postMapStatsUI.SetActive(false);
+
+        if (tc.selectedMap)
+        {
+            // Update health altered values based on the health drain value of the map
+            regenGood *= tc.selectedMap.healthDrain;
+            regenGreat *= tc.selectedMap.healthDrain;
+            regenPerfect *= tc.selectedMap.healthDrain;
+            regenMiss *= tc.selectedMap.healthDrain;
+            regenBomb *= tc.selectedMap.healthDrain;
+
+            // begin the loop for health regeneration
+            InvokeRepeating("UpdateHealthRegen", 0, healthRegenInterval);
+        }
     }
 
+    void UpdateHealthRegen()
+    {
+        UpdateHealth(healthRegen);
+    }
     void Update()
     {
         UpdateShield();
         UpdateElectricity();
         TutorialUnpause();
+        PlayerDeath();
+        PauseInput();
 
         jetZ = jetDistance + player.transform.position.z;
         jet.transform.position = new Vector3(0, jetY, jetZ);
@@ -323,8 +365,6 @@ public class Gamemode : MonoBehaviour
         currentFps = 1.0f / Time.deltaTime;
 
         fpsCounterText.text = Mathf.FloorToInt(currentFps).ToString();
-
-        UpdateHealth(healthRegenPerSec);
 
         if (playerScript.nearestNote && !doneOnce)
         {
@@ -532,24 +572,124 @@ public class Gamemode : MonoBehaviour
             "\nGood " + goods.ToString() +
             "\nMiss " + misses.ToString();
         comboText.text = "Combo x " + comboMulti.ToString();
-        healthText.text = "Health " + health.ToString();
+        if (health >= 0)
+        {
+            healthText.text = "Health " + health.ToString();
+        }
+        else
+        {
+            healthText.text = "Health 0";
+        }
+
         scoreText.text = "Score " + score.ToString();
     }
 
     public void UpdateHealth(float amount)
     {
-        health += amount;
-
-        if (health<=0)
+        if (health <= 0 && !playerDead)
         {
+            killingPlayer = true;
             health = 0f;
+            PlayerDeath();
+            am.PlaySound("TrackDeath");
+            return;
         }
-        else if (health>=healthMax)
+        else if (health > healthMax)
         {
             health = healthMax;
+            return;
+        }
+        else if (health != healthMax && !playerDead || amount != healthRegen && !playerDead)
+        {
+            health += amount;
+            UpdateUI();
         }
     }
 
+    void PlayerDeath()
+    {
+        if (killingPlayer)
+        {
+            playerDead = true;
+
+            // If the pitch of the track has not yet reached it's minimum:
+            if (t > minPitchDec)
+            {
+                // Get access to the active track playing
+                foreach (AudioSource aSource in am.gameObject.GetComponents<AudioSource>())
+                {
+                    if (aSource.clip.name == tc.selectedMap.title)
+                    {
+                        if (aSource.isPlaying)
+                        {
+                            activeTrack = aSource;
+                        }
+                    }
+                }
+
+                // Decrease the pitch of the audio track over time
+                t -= Time.deltaTime * audioSpeedDec;
+                activeTrack.pitch = t;
+            }
+            // Ensure that the pitch of the playing track is left at a specific pitch
+            else 
+            {
+                t = minPitchDec;
+            }
+
+            // If the pitch has reached a threshhold AND the volume of the track is still above 0
+            if (t <= minPitchVolDecStart && y > 0)
+            {
+                // Decrease the volume of the audio track over time
+                y -= Time.deltaTime * (audioSpeedDec * 2.5f);
+                activeTrack.volume = y;
+            }
+            // If the volume of the played track reaches 0 or less, queue the 'death' screen
+            else if (y <= 0)
+            {
+                if (killingPlayer)
+                {
+                    killingPlayer = false;
+                    GameOver();
+                    y = 1;
+                }
+            }
+        }
+    }
+
+    // Happens when player dies
+    void GameOver()
+    {
+        // Disable game UI
+        ToggleGameUI(false);
+
+        DestroyAllRemainingNotes();
+
+        gameOverUI.SetActive(true);
+
+        AudioListener.pause = true;
+    }
+
+    // Replay button
+    public void Replay()
+    {
+        DestroyAllRemainingNotes();
+        pausedUI.SetActive(false);
+        gamePaused = false;
+        EndTrack(true);
+    }
+
+    // This function only happens when the game needs to restart from either DYING or RESTARTING or GOING TO MAP SELECTION
+    void DestroyAllRemainingNotes()
+    {
+        DestroyAllNotes(true);
+        tc.notes.Clear();
+        playerScript.furthestBehindNote = null;
+        playerScript.activeNotes.Clear();
+        playerScript.notesInfront.Clear();
+        // remove this note from the 'furthestbehindnote' variable
+        playerScript.furthestBehindNote = null;
+    }
     void PostMapStatistics()
     {
         // Disable game UI
@@ -629,25 +769,51 @@ public class Gamemode : MonoBehaviour
         // Enable the post map stats UI to see
         postMapStatsUI.SetActive(true);
 
-        PauseGame(true);
+        // Enable post map buttons to see
+        postMapUI.SetActive(true);
     }
-    public void EndTrack()
+
+    // main menu button
+    public void SendToMapSelection()
     {
-        // Enable the post map stats UI to see
-        postMapStatsUI.SetActive(false);
+        DestroyAllRemainingNotes();
+        pausedUI.SetActive(false);
+        gamePaused = false;
+        cantPause = true;
+        EndTrack(false);
+    }
+    public void EndTrack(bool retry)
+    {
+        gameOverUI.SetActive(false);
+        postMapUI.SetActive(false);
+
+        // Disable the post map stats UI
+        if (postMapStatsUI.activeSelf)
+        {
+            postMapStatsUI.SetActive(false);
+        }
 
         tc.mapHasBeenSelected = false;
         tc.trackInProgress = false;
 
-        DestroyAllNotes();
+        // Disable game UI
+        ToggleGameUI(false);
 
-        ToggleMapSelectionButtons(true);
+        t = 1;
+        y = 1;
+
+        if (activeTrack)
+        {
+            activeTrack.pitch = 1;
+            activeTrack.volume = 1;
+            activeTrack.Stop();
+        }
 
         tc.notesSpawned = 0;
         tc.allNotes.Clear();
         tc.allNoteTypes.Clear();
         tc.beatWaitCountAccum.Clear();
-        tc.audioSource.Stop();
+
         tc.noteLanes.Clear();
         tc.beatWaitCount.Clear();
         tc.trackPosIntervalsList2.Clear();
@@ -694,14 +860,32 @@ public class Gamemode : MonoBehaviour
         playerScript.nearestAnyNote = null;
         playerScript.nearestAnyNoteScript = null;
 
-        mapSelectText.text = selectAMapText;
 
-        tutorialUI.SetActive(false);
+        if (!retry)
+        {
+            mapSelectText.text = selectAMapText;
+            mapSelectText.gameObject.SetActive(true);
 
-        scarabSelected = false;
-        testingSelected = false;
+            tutorialUI.SetActive(false);
+
+            // If the player reached the end of the map
+            if (!playerDead && health <= 0)
+            {
+                DestroyAllNotes(false);
+            }
+            playerDead = false;
+
+            mapSelectionUI.SetActive(true);
+        }
+        else
+        {
+            //DestroyAllRemainingNotes();
+            StartCoroutine(tc.LoadTrackCo());
+        }
 
         playerScript.RepositionPlayer();
+
+        health = healthMax;
     }
 
     public void EndTrackNote()
@@ -719,15 +903,6 @@ public class Gamemode : MonoBehaviour
         //Debug.Break();
     }
 
-    public void ToggleMapSelectionButtons(bool fate)
-    {
-        foreach (Button btn in mapButtons)
-        {
-            btn.interactable = fate;
-            btn.transform.GetChild(0).gameObject.SetActive(fate);
-        }
-    }
-
     public void ToggleGameUI(bool fate)
     {
         foreach (Text t in gameUI)
@@ -735,31 +910,88 @@ public class Gamemode : MonoBehaviour
             t.gameObject.SetActive(fate);
         }
     }
-    void DestroyAllNotes()
+    void DestroyAllNotes(bool playerDied)
     {
-        // Destroy all notes that are still alive
-        for (int i = 0; i < tc.notesObj.transform.childCount; i++)
+        // Destroy all notes that are still alive if the playe ended the map
+        if (!playerDied)
         {
-            GameObject go = tc.notesObj.transform.GetChild(i).gameObject;
-            StartCoroutine(go.GetComponent<Note>().DestroyNote());
+            for (int i = 0; i < tc.notesObj.transform.childCount; i++)
+            {
+                GameObject go = tc.notesObj.transform.GetChild(i).gameObject;
+                StartCoroutine(go.GetComponent<Note>().DestroyNote());
+            }
+        }
+
+        // Destroy all notes differently if the player dies during the map
+        else
+        {
+            for (int i = 0; i < tc.notesObj.transform.childCount; i++)
+            {
+                Destroy(tc.notesObj.transform.GetChild(i).gameObject);
+            }
         }
     }
-
+    
+    void PauseInput()
+    {
+        // Input to pause the game
+        if (Input.GetKeyDown(KeyCode.Escape) && !mapSelectionUI.activeSelf && !countingDown && !gamePaused && !tc.allNotes[tc.allNotes.Count - 1].GetComponent<Note>().behindPlayer && !cantPause)
+        {
+            PauseGame(false);
+        }
+        // Input to resume the game
+        else if (Input.GetKeyDown(KeyCode.Escape) && gamePaused && !countingDown)
+        {
+            StartCoroutine(UnpauseGame());
+        }
+    }
     // If fate is true, the pause is for the end of a map
     // if fate is false, it's for the tutorial stage pauses
-    public void PauseGame(bool fate)
+    public void PauseGame(bool tutPause)
     {
         AudioListener.pause = true;
 
-        if (!fate)
+        if (tutPause)
         {
             tutUnPauseText.gameObject.SetActive(true);
             tutPaused = true;
         }
         else
         {
-            pressKeyToContinueEnd.gameObject.SetActive(true);
+            gamePaused = true;
+            cantPause = true;
+            pausedUI.SetActive(true);
         }
+    }
+
+    // This exists so the continue button in the pause menu can be linked to this
+    public void UnPauseGameBut()
+    {
+        StartCoroutine(UnpauseGame());
+    }
+    public IEnumerator UnpauseGame()
+    {
+        countingDown = true;
+        pausedUI.SetActive(false);
+        countdownText.gameObject.SetActive(true);
+
+        countdownText.text = "3";
+
+        yield return new WaitForSeconds(1f);
+
+        countdownText.text = "2";
+
+        yield return new WaitForSeconds(1f);
+
+        countdownText.text = "1";
+
+        yield return new WaitForSeconds(1f);
+
+        countdownText.gameObject.SetActive(false);
+        gamePaused = false;
+        countingDown = false;
+        cantPause = false;
+        AudioListener.pause = false;
     }
 
     public void TutorialUnpause()
@@ -774,12 +1006,6 @@ public class Gamemode : MonoBehaviour
                 tutUnPauseText.gameObject.SetActive(false);
             }
         }
-        // Map has ended, press any key to continue
-        else if (Input.GetKeyDown(KeyCode.Return) && tc.selectedMap.title != "Tutorial")
-        {
-            AudioListener.pause = false;
-            pressKeyToContinueEnd.gameObject.SetActive(false);
-            EndTrack();
-        }
+
     }
 }

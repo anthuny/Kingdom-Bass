@@ -318,6 +318,12 @@ public class Player : MonoBehaviour
     }
     void Inputs()
     {
+        // Do not allow any player movements if the game is paused
+        if (gm.gamePaused)
+        {
+            return;
+        }
+
         // This is a check for when both moving right and left movement are held
         if (Input.GetKey(KeyCode.L))
         {
@@ -974,11 +980,17 @@ public class Player : MonoBehaviour
     }
     public void Missed(bool hitByBomb)
     {
+        if (nearestNote == null)
+        {
+            Debug.Log("?");
+            return;
+        }
+
         if (!hitByBomb)
         {
             nearestNoteScript.canGetNote = false;
             nearestNoteScript.missed = true;
-            gm.UpdateHealth(gm.lossMiss);
+            gm.UpdateHealth(gm.regenMiss);
             gm.scoreIncreased = true;
 
             // Increase the max accuracy if the note got missed
@@ -1004,7 +1016,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            gm.UpdateHealth(gm.bombHit);
+            gm.UpdateHealth(gm.regenBomb);
         }
 
         gm.comboMulti = 1;

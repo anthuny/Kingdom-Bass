@@ -524,24 +524,25 @@ public class Note : MonoBehaviour
 
     public IEnumerator DestroyNote()
     {
-        #region This only does something if the note is NOT a bomb
         yield return new WaitForSeconds(0.8f);
-        // remove this note to the 'activeNotes' list
-        player.activeNotes.Remove(this.gameObject.transform);
-        // remove this note from the 'noteBehind' list
-        player.notesInfront.Remove(this.gameObject.transform);
-
-        tc.notes.Remove(this.gameObject);
-        #endregion
 
         if (!clone)
         {
             // remove this note from the 'furthestbehindnote' variable
-            player.furthestBehindNote = null;
+            gm.playerScript.furthestBehindNote = null;
         }
+
+        #region This only does something if the note is NOT a bomb
+        // remove this note to the 'activeNotes' list
+        player.activeNotes.Remove(this.gameObject.transform);
+
+        // remove this note from the 'noteBehind' list
+        player.notesInfront.Remove(this.gameObject.transform);
+        tc.notes.Remove(this.gameObject);
 
         // Destroy this note
         Destroy(this.gameObject);
+        #endregion
     }
 }
 

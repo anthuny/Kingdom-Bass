@@ -7,10 +7,11 @@ public class TrackCreator : MonoBehaviour
 {
     private Gamemode gm;
     private PathManager pm;
+    private AudioManager am;
 
     [Header("Map Selection")]
     public bool mapHasBeenSelected;
-    [HideInInspector]
+    //[HideInInspector]
     public Map selectedMap;
 
     [Header("Map Names")]
@@ -57,7 +58,7 @@ public class TrackCreator : MonoBehaviour
     public float trackPosInBeats;
     public float trackPosInBeatsGame;
     public float dspTrackTime;
-    public AudioSource audioSource;
+    //public AudioSource audioSource;
     public float previousNoteBeatTime;
     public float previousNoteBeatTime2;
     public float previousNoteBeatTime3;
@@ -134,9 +135,7 @@ public class TrackCreator : MonoBehaviour
         player = FindObjectOfType<Player>();
         gm = FindObjectOfType<Gamemode>();
         pm = FindObjectOfType<PathManager>();
-
-        // Load the audiosource atteched to this gameobject
-        audioSource = GetComponent<AudioSource>();
+        am = FindObjectOfType<AudioManager>();
     }
 
     private void Update()
@@ -250,10 +249,19 @@ public class TrackCreator : MonoBehaviour
         StartCoroutine("StartSong");
     }
 
-    // This is called after UpdateMpaSelectionUI is run
+    // This is called after UpdateMapSelectionUI is run
     IEnumerator StartSong()
     {
         yield return new WaitForSeconds(selectedMap.timeBeforeStart);
+
+        // Incase the audio Listener was paused, activate it now
+        AudioListener.pause = false;
+
+        // Allow the play to pause
+        gm.cantPause = false;
+
+        // Start the track timer?
+        dspTrackTime = (float)AudioSettings.dspTime;
 
         if (selectedMap.title == "Tutorial")
         {
@@ -261,24 +269,18 @@ public class TrackCreator : MonoBehaviour
 
             gm.ToggleGameUI(false);
 
-            audioSource.clip = selectedMap.track;
-            //audioSource.loop = true;
+            am.PlaySound(selectedMap.title);
         }
         else
         {
-            // assign the track in the audio source
-            audioSource.clip = selectedMap.track;
+            am.PlaySound(selectedMap.title);
 
             // Display all debug UI
             gm.ToggleGameUI(true);
             gm.UpdateUI();
         }
-        // Start the track timer?
-        dspTrackTime = (float)AudioSettings.dspTime;
 
         gm.StartGame();
-        audioSource.Play();
-
     }
 
     // This is called during StartSong if tutorial is on
@@ -689,14 +691,11 @@ public class TrackCreator : MonoBehaviour
         // Assign the correct text for the text
         gm.tutAreaText.text = gm.tutAreaInfo;
 
-        if (!gm.tutAreaText.gameObject.activeSelf)
-        {
-            // turn the tutorial text to visible
-            gm.tutAreaText.gameObject.SetActive(true);
+        // turn the tutorial text to visible
+        gm.tutAreaText.gameObject.SetActive(true);
 
-            // turn on the tutorial UI
-            gm.tutorialUI.SetActive(true);
-        }
+        // turn on the tutorial UI
+        gm.tutorialUI.SetActive(true);
     }
 
     // Called every update
@@ -718,7 +717,7 @@ public class TrackCreator : MonoBehaviour
             if (trackPosInBeatsGame > gm.nextStageThreshholdBeats[gm.tutorialStage - 1])
             {
                 increasedStage = false;
-                gm.PauseGame(false);
+                gm.PauseGame(true);
                 player.RepositionPlayer();
             }
         }
@@ -794,9 +793,19 @@ public class TrackCreator : MonoBehaviour
 
     void QueueNoteSpawns()
     {
-        if (!audioSource.isPlaying)
+        if (selectedMap)
         {
-            return;
+            foreach (AudioSource aSource in am.gameObject.GetComponents<AudioSource>())
+            {
+                //Debug.Log(aSource);
+                if (aSource.clip.name == selectedMap.title)
+                {
+                    if (!aSource.isPlaying)
+                    {
+                        return;
+                    }
+                }
+            }
         }
 
         // Keep track of the track's position in seconds from when it started
@@ -866,13 +875,15 @@ public class TrackCreator : MonoBehaviour
     }
 
     // Happens when the player presses the start button
-    public void loadTrack()
+    public void LoadTrack()
     {
-        
+        // Disable the ability to pause
+        gm.cantPause = true;
+
         gm.accuracy = selectedMap.averageBeatsBtwNotes;
 
         // disable all buttons in map selection screen
-        gm.ToggleMapSelectionButtons(false);
+        gm.mapSelectionUI.SetActive(false);
 
         gm.mapSelectText.gameObject.SetActive(false);
 
@@ -889,7 +900,14 @@ public class TrackCreator : MonoBehaviour
         {
             GetNote newGetNote = new GetNote(note);
         }
-        return;
+    }
+
+    // This is used because I can't link a button to call a coroutine
+    public IEnumerator LoadTrackCo()
+    {
+        yield return new WaitForSeconds(0f);
+
+        LoadTrack();
     }
 
     public void SetupTrack(int bpm)
