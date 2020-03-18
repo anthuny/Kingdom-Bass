@@ -101,6 +101,7 @@ public class Note : MonoBehaviour
 
         if (nextBombLane.Count > 0)
         {
+            // Spawn a bomb note if this note shares a beatWait with another
             for (int i = 0; i < nextBombLane.Count; i++)
             {
                 GameObject go = Instantiate(tc.noteVisual, tc.notesObj.transform.position, Quaternion.identity);
@@ -289,10 +290,15 @@ public class Note : MonoBehaviour
             hitMarker.GetComponent<Image>().color = gm.blastNoteC;
 
             // Turn the 'LookAtCam' script on so that the 'hitMarketCanvas' looks at the player
-            hitMarkerCanvas.GetComponent<LookAtCam>().enabled = true;
+            //hitMarkerCanvas.GetComponent<LookAtCam>().enabled = true;
 
             // Disable the spotlight
             spotLight.SetActive(false);
+
+            // Move electricity end to the ground of this note
+            Vector3 pos = Vector3.zero;
+            pos.y = 0;
+            ElectrictyEnd.localPosition = pos;
         }
     }
 
@@ -313,7 +319,7 @@ public class Note : MonoBehaviour
 
         if (noteType == "blast")
         {
-            UpdateZRotation();
+            //UpdateZRotation();
         }
 
         if (this.noteDir == "up" && this.noteType != "blast")

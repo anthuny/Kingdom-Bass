@@ -38,6 +38,51 @@ MonoBehaviour:
     m_Value: 24.3
     min: -100
     max: 100
+--- !u!114 &-199213197808332519
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f086a068d4c5889438831b3ae9afc11c, type: 3}
+  m_Name: Tonemapping
+  m_EditorClassIdentifier: 
+  active: 0
+  m_AdvancedMode: 0
+  mode:
+    m_OverrideState: 1
+    m_Value: 2
+  toeStrength:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+    max: 1
+  toeLength:
+    m_OverrideState: 0
+    m_Value: 0.5
+    min: 0
+    max: 1
+  shoulderStrength:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+    max: 1
+  shoulderLength:
+    m_OverrideState: 0
+    m_Value: 0.5
+    min: 0
+  shoulderAngle:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+    max: 1
+  gamma:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0.001
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,6 +102,7 @@ MonoBehaviour:
   - {fileID: 8594847029860749442}
   - {fileID: 8267903629015374301}
   - {fileID: -9117438610238346594}
+  - {fileID: -199213197808332519}
 --- !u!114 &3723393541488224587
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -212,16 +258,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f077503be6ae942a1e1245dbd53ea9, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 0
-  m_AdvancedMode: 0
+  active: 1
+  m_AdvancedMode: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.402
+    m_Value: 0.362
     min: 0
     max: 1
   scatter:
     m_OverrideState: 1
-    m_Value: 0.467
+    m_Value: 0.797
     min: 0
     max: 1
   tint:
@@ -234,20 +280,20 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: {fileID: 0}
   dirtIntensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
     min: 0
   highQualityFiltering:
     m_OverrideState: 0
     m_Value: 1
   resolution:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 2
   prefilter:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 1
   anamorphic:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
 --- !u!114 &8594847029860749442
 MonoBehaviour:
