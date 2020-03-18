@@ -1020,7 +1020,7 @@ public class Player : MonoBehaviour
         }
 
         gm.comboMulti = 1;
-        gm.UpdateUI();
+        gm.updateGameUI();
         //Debug.Break();
     }
 

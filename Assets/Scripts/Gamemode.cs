@@ -13,6 +13,10 @@ public class Gamemode : MonoBehaviour
     public float jetZ;
     public float jetY;
 
+    [Header("Main Menu")]
+    public GameObject mainMenuUI;
+    public GameObject exitPromptUI;
+
     [Header("Game Pause")]
     public bool gamePaused;
     public GameObject pausedUI;
@@ -38,8 +42,6 @@ public class Gamemode : MonoBehaviour
     public GameObject mapSelectionUI;
 
     [Header("Game UI")]
-    public Text[] gameUI;
-
     public float jetDistance;
 
     public float playerEvadeStr;
@@ -60,7 +62,6 @@ public class Gamemode : MonoBehaviour
     public Text accuracyText;
     public Text beatsText;
     public Text comboText;
-    public Text healthText;
     public Text movingLeftText;
     public Text movingRightText;
     public Text blastInputText;
@@ -217,6 +218,10 @@ public class Gamemode : MonoBehaviour
     public Color lane3Color;
 
     [Header("Health")]
+    public GameObject gameUI;
+    public float lerpSpeed;
+    //public Text healthText;
+    public Image healthBar;
     public float healthMax;
     public float regenPerfect;
     public float regenGreat;
@@ -228,10 +233,17 @@ public class Gamemode : MonoBehaviour
     public float audioSpeedDec;
     public float minPitchDec;
     public float minPitchVolDecStart;
-    private AudioSource activeTrack;
+    public GameObject gameOverUI;
+    [HideInInspector]
+    public AudioSource activeTrack;
+    private float regenPerfectOri;
+    private float regenGreatOri;
+    private float regenGoodOri;
+    private float regenMissOri;
+    private float regenBombOri;
     float t = 1;
     float y = 1;
-    public GameObject gameOverUI;
+
     //public Map retryingMap;
 
     public float health;
@@ -280,7 +292,7 @@ public class Gamemode : MonoBehaviour
         tc = FindObjectOfType<TrackCreator>();
         am = FindObjectOfType<AudioManager>();
 
-        UpdateUI();
+        updateGameUI();
 
         Application.targetFrameRate = targetFps;
 
@@ -294,16 +306,24 @@ public class Gamemode : MonoBehaviour
 
         health = healthMax;
 
-        ToggleGameUI(false);
-        StartGame();
+        mainMenuUI.SetActive(true);
+        exitPromptUI.SetActive(false);
 
-        //UnityEditor.EditorPrefs.SetBool("DeveloperMode", true);
+        regenPerfectOri = regenPerfect;
+        regenGreatOri = regenGreat;
+        regenGoodOri = regenGood;
+        regenMissOri = regenMiss;
+        regenBombOri = regenBomb;
+
+        
+        StartGame();
+        MainMenu();
     }
 
     public void StartGame()
     {
         totalAccuracy = 100;
-        totalAccuracyText.text = "Total Accuracy: " + totalAccuracy.ToString() + "%";
+        totalAccuracyText.text = totalAccuracy.ToString() + "%";
 
         lr.gameObject.SetActive(true);
         lr.SetPosition(0, electricityStart.transform.position);
@@ -313,7 +333,6 @@ public class Gamemode : MonoBehaviour
         pausedUI.SetActive(false);
         countdownText.gameObject.SetActive(false);
         countingDown = false;
-        //cantPause = true;
 
         mapSelectText.text = selectAMapText;
 
@@ -325,6 +344,12 @@ public class Gamemode : MonoBehaviour
 
         //pressKeyToContinueEnd.gameObject.SetActive(false);
         postMapStatsUI.SetActive(false);
+
+        regenPerfect = regenPerfectOri;
+        regenGreat = regenGreatOri;
+        regenGood = regenGreatOri;
+        regenMiss = regenMissOri;
+        regenBomb = regenBombOri;
 
         if (tc.selectedMap)
         {
@@ -351,6 +376,7 @@ public class Gamemode : MonoBehaviour
         TutorialUnpause();
         PlayerDeath();
         PauseInput();
+        UpdateHealthBar();
 
         jetZ = jetDistance + player.transform.position.z;
         jet.transform.position = new Vector3(0, jetY, jetZ);
@@ -359,7 +385,7 @@ public class Gamemode : MonoBehaviour
         if (score != oldScore)
         {
             //comboMulti += 1;
-            UpdateUI();
+            updateGameUI();
         }
 
         currentFps = 1.0f / Time.deltaTime;
@@ -558,7 +584,7 @@ public class Gamemode : MonoBehaviour
             }
         }
     }
-    public void UpdateUI()
+    public void updateGameUI()
     {
         if (score != oldScore && tc.notesSpawned > 0)
         {
@@ -567,21 +593,31 @@ public class Gamemode : MonoBehaviour
         oldScore = score;
         scoreIncreased = true;
 
+        /*
         accuracyText.text = "Perfect " + perfects.ToString() +
             "\nGreat " + greats.ToString() +
             "\nGood " + goods.ToString() +
             "\nMiss " + misses.ToString();
-        comboText.text = "Combo x " + comboMulti.ToString();
+        */
+
+        comboText.text = comboMulti.ToString();
+
+        scoreText.text = score.ToString();
+    }
+
+    void UpdateHealthBar()
+    {
         if (health >= 0)
         {
-            healthText.text = "Health " + health.ToString();
+            //healthText.text = "Health " + health.ToString();
+            //healthBar.fillAmount = health / 10;
+            healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, health / 10, Time.deltaTime * lerpSpeed);
         }
         else
         {
-            healthText.text = "Health 0";
+            //healthText.text = "Health 0";
+            healthBar.fillAmount = 0;
         }
-
-        scoreText.text = "Score " + score.ToString();
     }
 
     public void UpdateHealth(float amount)
@@ -590,7 +626,6 @@ public class Gamemode : MonoBehaviour
         {
             killingPlayer = true;
             health = 0f;
-            PlayerDeath();
             am.PlaySound("TrackDeath");
             return;
         }
@@ -602,7 +637,7 @@ public class Gamemode : MonoBehaviour
         else if (health != healthMax && !playerDead || amount != healthRegen && !playerDead)
         {
             health += amount;
-            UpdateUI();
+            updateGameUI();          
         }
     }
 
@@ -610,23 +645,12 @@ public class Gamemode : MonoBehaviour
     {
         if (killingPlayer)
         {
+            cantPause = true;
             playerDead = true;
 
             // If the pitch of the track has not yet reached it's minimum:
             if (t > minPitchDec)
             {
-                // Get access to the active track playing
-                foreach (AudioSource aSource in am.gameObject.GetComponents<AudioSource>())
-                {
-                    if (aSource.clip.name == tc.selectedMap.title)
-                    {
-                        if (aSource.isPlaying)
-                        {
-                            activeTrack = aSource;
-                        }
-                    }
-                }
-
                 // Decrease the pitch of the audio track over time
                 t -= Time.deltaTime * audioSpeedDec;
                 activeTrack.pitch = t;
@@ -661,7 +685,7 @@ public class Gamemode : MonoBehaviour
     void GameOver()
     {
         // Disable game UI
-        ToggleGameUI(false);
+        gameUI.SetActive(false);
 
         DestroyAllRemainingNotes();
 
@@ -693,11 +717,11 @@ public class Gamemode : MonoBehaviour
     void PostMapStatistics()
     {
         // Disable game UI
-        ToggleGameUI(false);
+        gameUI.SetActive(false);
 
         // Calculate the post map stat UI
-        endScoreText.text = "Score " + score.ToString();
-        endTotalAccuracyText.text = "Accuracy " + totalAccuracy.ToString() + "%";
+        endScoreText.text = score.ToString();
+        endTotalAccuracyText.text = totalAccuracy.ToString("F2") + "%";
         indivAccAmountText.text =  "Perfect " + perfects.ToString() +
             "\nGreat " + greats.ToString() +
             "\nGood " + goods.ToString() +
@@ -773,17 +797,67 @@ public class Gamemode : MonoBehaviour
         postMapUI.SetActive(true);
     }
 
-    // main menu button
-    public void SendToMapSelection()
+    // Happens when the player presses quit
+    public void ExitGamePrompt()
     {
+        mainMenuUI.SetActive(false);
+        exitPromptUI.SetActive(true);
+    }
+
+    // Happens when the player presses YES when asked are you sure you want to quit
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    // Happens when the player presses NO when asked are you sure you want to quit
+    public void CancelGamePrompt()
+    {
+        exitPromptUI.SetActive(false);
+        mainMenuUI.SetActive(true);
+    }
+
+    // map selection button
+    public void MapSelection()
+    {
+        if (mainMenuUI.activeSelf)
+        {
+            mainMenuUI.SetActive(false);
+        }
+
+        if (tutorialUI.activeSelf)
+        {
+            tutorialUI.SetActive(false);
+        }
+
         DestroyAllRemainingNotes();
         pausedUI.SetActive(false);
         gamePaused = false;
         cantPause = true;
         EndTrack(false);
     }
+
+    public void MainMenu()
+    {
+        if (mapSelectionUI.activeSelf)
+        {
+            mapSelectionUI.SetActive(false);
+        }
+
+        mainMenuUI.SetActive(true);
+
+        cantPause = true;
+        tc.selectedMap = null;
+        startBtn.SetActive(false);
+    }
     public void EndTrack(bool retry)
     {
+        // Reset the tutorial stage if it had already proceeded into the first stage
+        if (tutorialStage > 0)
+        {
+            tutorialStage = 0;
+        }
+
         gameOverUI.SetActive(false);
         postMapUI.SetActive(false);
 
@@ -797,11 +871,12 @@ public class Gamemode : MonoBehaviour
         tc.trackInProgress = false;
 
         // Disable game UI
-        ToggleGameUI(false);
+        gameUI.SetActive(false);
 
         t = 1;
         y = 1;
 
+        // Reset the track's values, and stop it  for the next map
         if (activeTrack)
         {
             activeTrack.pitch = 1;
@@ -868,14 +943,14 @@ public class Gamemode : MonoBehaviour
 
             tutorialUI.SetActive(false);
 
-            // If the player reached the end of the map
+            // If the player reached the end of the map or exited to map selection
             if (!playerDead && health <= 0)
             {
                 DestroyAllNotes(false);
             }
-            playerDead = false;
 
             mapSelectionUI.SetActive(true);
+            tc.selectedMap = null;
         }
         else
         {
@@ -885,6 +960,7 @@ public class Gamemode : MonoBehaviour
 
         playerScript.RepositionPlayer();
 
+        playerDead = false;
         health = healthMax;
     }
 
@@ -898,18 +974,18 @@ public class Gamemode : MonoBehaviour
         // Update the total accuracy.
         totalAccuracy = (curAccuracy / totalAccuracyMax) * 100;
 
-        // Display the total accuracy UI only in 2 decimal places
-        totalAccuracyText.text = "Total Accuracy: " + totalAccuracy.ToString("F2") + "%";
-        //Debug.Break();
-    }
-
-    public void ToggleGameUI(bool fate)
-    {
-        foreach (Text t in gameUI)
+        if (totalAccuracy != 100)
         {
-            t.gameObject.SetActive(fate);
+            // Display the total accuracy UI only in 2 decimal places
+            totalAccuracyText.text = totalAccuracy.ToString("F2") + "%";
+        }
+        else if (totalAccuracy >= 100)
+        {
+            // Display the total accuracy UI as 100% if it is, this is so 100% doesnt have 2 dp.
+            totalAccuracyText.text = "100%";
         }
     }
+
     void DestroyAllNotes(bool playerDied)
     {
         // Destroy all notes that are still alive if the playe ended the map
@@ -931,19 +1007,36 @@ public class Gamemode : MonoBehaviour
             }
         }
     }
-    
     void PauseInput()
     {
-        // Input to pause the game
-        if (Input.GetKeyDown(KeyCode.Escape) && !mapSelectionUI.activeSelf && !countingDown && !gamePaused && !tc.allNotes[tc.allNotes.Count - 1].GetComponent<Note>().behindPlayer && !cantPause)
+        if (!cantPause)
         {
-            PauseGame(false);
+            // Input to pause the game
+            if (Input.GetKeyDown(KeyCode.Escape) && !mapSelectionUI.activeSelf && !countingDown && !gamePaused && !tc.allNotes[tc.allNotes.Count - 1].GetComponent<Note>().behindPlayer)
+            {
+                PauseGame(false);
+            }
         }
+
         // Input to resume the game
         else if (Input.GetKeyDown(KeyCode.Escape) && gamePaused && !countingDown)
         {
             StartCoroutine(UnpauseGame());
         }
+
+        // If player presses escape in the main menu screen, send to exit game prompt
+        if (Input.GetKeyDown(KeyCode.Escape) && mainMenuUI.activeSelf)
+        {
+            ExitGamePrompt();
+        }
+
+        // If player presses escape in the map selection screen, send to main menu
+        if (Input.GetKeyDown(KeyCode.Escape) && mapSelectionUI.activeSelf)
+        {
+            MainMenu();
+        }
+
+
     }
     // If fate is true, the pause is for the end of a map
     // if fate is false, it's for the tutorial stage pauses

@@ -267,7 +267,8 @@ public class TrackCreator : MonoBehaviour
         {
             UpdateTutorialSlides();
 
-            gm.ToggleGameUI(false);
+            // Disable game UI
+            gm.gameUI.SetActive(false);
 
             am.PlaySound(selectedMap.title);
         }
@@ -275,12 +276,24 @@ public class TrackCreator : MonoBehaviour
         {
             am.PlaySound(selectedMap.title);
 
-            // Display all debug UI
-            gm.ToggleGameUI(true);
-            gm.UpdateUI();
+            // Display all game UI
+            gm.gameUI.SetActive(true);
+            gm.updateGameUI();
         }
 
         gm.StartGame();
+
+        // Get access to the active track playing
+        foreach (AudioSource aSource in am.gameObject.GetComponents<AudioSource>())
+        {
+            if (aSource.clip.name == selectedMap.title)
+            {
+                if (aSource.isPlaying)
+                {
+                    gm.activeTrack = aSource;
+                }
+            }
+        }
     }
 
     // This is called during StartSong if tutorial is on
@@ -695,7 +708,11 @@ public class TrackCreator : MonoBehaviour
         gm.tutAreaText.gameObject.SetActive(true);
 
         // turn on the tutorial UI
-        gm.tutorialUI.SetActive(true);
+        if (!gm.tutorialUI.activeSelf)
+        {
+            gm.tutorialUI.SetActive(true);
+        }
+
     }
 
     // Called every update
