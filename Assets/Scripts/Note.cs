@@ -249,6 +249,9 @@ public class Note : MonoBehaviour
 
                     // Disable the spotlight
                     spotLight.SetActive(false);
+
+                    // Disable the hit marker
+                    hitMarkerCanvas.SetActive(false);
                 }
                 break;        
 
