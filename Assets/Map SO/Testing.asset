@@ -17,7 +17,7 @@ MonoBehaviour:
   length: 2.38
   difficulty: 1
   subGenre: House
-  noteTimeTaken: 4
+  noteTimeTaken: 7
   timeBeforeStart: 1
   averageBeatsBtwNotes: 2
   healthDrain: 0

@@ -82,6 +82,10 @@ public class Note : MonoBehaviour
     [Header("Electricity")]
     public Transform ElectrictyEnd;
     public int doneElecrictyEffect;
+    public bool assignedElectricity;
+    public LineRenderer lr;
+    public GameObject lrObj;
+    private bool canDie;
 
     [Header("Bomb")]
     public GameObject bombObj;
@@ -320,11 +324,6 @@ public class Note : MonoBehaviour
 
         CheckBombHitPlayer();
 
-        if (noteType == "blast")
-        {
-            //UpdateZRotation();
-        }
-
         if (this.noteDir == "up" && this.noteType != "blast")
         {
             player.DoNoteEffectUp();
@@ -391,6 +390,7 @@ public class Note : MonoBehaviour
         if (curTime >= 1)
         {
             doneOnce2 = true;
+
             if (tc.curNoteCount < tc.noteLanes.Count)
             {
                 transform.position += -transform.forward * Time.deltaTime * gm.noteSpeed;
@@ -427,6 +427,15 @@ public class Note : MonoBehaviour
         if (doneOnce2 && !doneOnce3)
         {
             doneOnce3 = true;
+            gm.notesPassedPlayer++;
+
+            if (noteDir != "up")
+            {
+                gm.lrs.Remove(lr);
+                Destroy(lrObj);
+                player.electricNotes.RemoveAt(0);
+            }
+
             // Rounds the value to the nearest .25f
             // This is done because the previousNoteBeatTime will most likely always be slightly off when it should be.
             // This rounds it to when the beat should happen when the note hit the player
@@ -541,7 +550,6 @@ public class Note : MonoBehaviour
             gm.playerScript.furthestBehindNote = null;
         }
 
-        #region This only does something if the note is NOT a bomb
         // remove this note to the 'activeNotes' list
         player.activeNotes.Remove(this.gameObject.transform);
 
@@ -549,9 +557,7 @@ public class Note : MonoBehaviour
         player.notesInfront.Remove(this.gameObject.transform);
         tc.notes.Remove(this.gameObject);
 
-        // Destroy this note
         Destroy(this.gameObject);
-        #endregion
     }
 }
 

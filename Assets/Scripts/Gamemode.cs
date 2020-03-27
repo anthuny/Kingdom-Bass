@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Collections;
 
 public class Gamemode : MonoBehaviour
 {
@@ -8,10 +10,12 @@ public class Gamemode : MonoBehaviour
     private AudioManager am;
     public GameObject player;
     public Player playerScript;
-    [HideInInspector]
     public GameObject jet;
     public float jetZ;
     public float jetY;
+
+    [Header("Note Management")]
+    public int notesPassedPlayer = 0;
 
     [Header("Main Menu")]
     public GameObject mainMenuUI;
@@ -268,7 +272,9 @@ public class Gamemode : MonoBehaviour
     public int totalNotes;
 
     [Header("Electricity")]
-    public LineRenderer lr;
+    //public LineRenderer lr;
+    public List<LineRenderer> lrs = new List<LineRenderer>();
+    public GameObject lrPrefab;
     public Transform electricityStart;
     public ParticleSystemRenderer ElectrictyBallPS;
     public Color missedColour;
@@ -276,6 +282,9 @@ public class Gamemode : MonoBehaviour
     public Color stealthColor;
     public Gradient stealthGradient;
     public Gradient readyGradient;
+    public Gradient readyNextGradient;
+    public Gradient stealthNextGradient;
+    public Transform laserParent;
 
     [Header("Bombs")]
     public float bombHitRange;
@@ -288,7 +297,6 @@ public class Gamemode : MonoBehaviour
 
         player = FindObjectOfType<Player>().gameObject;
         playerScript = player.GetComponent<Player>();
-        jet = FindObjectOfType<Jet>().gameObject;
         tc = FindObjectOfType<TrackCreator>();
         am = FindObjectOfType<AudioManager>();
 
@@ -325,9 +333,9 @@ public class Gamemode : MonoBehaviour
         totalAccuracy = 100;
         totalAccuracyText.text = totalAccuracy.ToString() + "%";
 
-        lr.gameObject.SetActive(true);
-        lr.SetPosition(0, electricityStart.transform.position);
-        lr.gameObject.SetActive(false);
+        //lr.gameObject.SetActive(true);
+        //lr.SetPosition(0, electricityStart.transform.position);
+        //lr.gameObject.SetActive(false);
         gameOverUI.SetActive(false);
         postMapUI.SetActive(false);
         pausedUI.SetActive(false);
@@ -378,8 +386,11 @@ public class Gamemode : MonoBehaviour
         PauseInput();
         UpdateHealthBar();
 
-        jetZ = jetDistance + player.transform.position.z;
-        jet.transform.position = new Vector3(0, jetY, jetZ);
+        if (jet.activeSelf)
+        {
+            jetZ = jetDistance + player.transform.position.z;
+            jet.transform.position = new Vector3(0, jetY, jetZ);
+        }
 
         // If there is a change in score, Update the UI
         if (score != oldScore)
@@ -395,36 +406,73 @@ public class Gamemode : MonoBehaviour
         if (playerScript.nearestNote && !doneOnce)
         {
             doneOnce = true;
-            playerScript.newGoodMiss = goodMin / (playerScript.nearestNoteScript.beatWait / accuracy);
+            if (notesPassedPlayer > 2)
+            {
+                playerScript.newGoodMiss = goodMin / (playerScript.nearestNoteScript.beatWait / accuracy);
+            }
+            else
+            {
+                playerScript.newGoodMiss = .2f;
+            }
         }
     }
 
     void UpdateElectricity()
     {
-        // Update the elctricity's start location when the player moves
-        if (playerScript.oldPlayerPos != playerScript.playerPos)
+        // Ensure that there is electricity for every horizontal note
+        for (int i = 0; i < playerScript.electricNotes.Count; i++)
         {
-            playerScript.oldPlayerPos = playerScript.playerPos;
-
-            lr.SetPosition(0, electricityStart.transform.position);
-        }
-
-        // Make the end electricity's end point above the nearest note
-        if (playerScript.closestNoteInFrontScript)
-        {
-            // If there is a note infront of the player, continue
-            if (playerScript.notesInfront.Count > 0)
+            if (!playerScript.electricNotes[i].GetComponent<Note>().assignedElectricity && playerScript.electricNotes[0] != null)
             {
-                lr.SetPosition(1, playerScript.closestNoteInFrontScript.ElectrictyEnd.transform.position);
+                playerScript.electricNotes[i].GetComponent<Note>().assignedElectricity = true;
+                GameObject go = Instantiate(lrPrefab, Vector3.zero, Quaternion.identity);
+                go.transform.SetParent(laserParent);
+                go.transform.name = "Electricty Clone " + i;
+                playerScript.electricNotes[i].GetComponent<Note>().lr = go.GetComponent<LineRenderer>();
+                playerScript.electricNotes[i].GetComponent<Note>().lrObj = go;
+                lrs.Add(go.GetComponent<LineRenderer>());
             }
         }
 
-        // Set the colour of the laser ball to the ready colour when it should be
-        if (playerScript.isShielding && playerScript.notesInfront.Count < 1)
+        if (playerScript.electricNotes.Count >= 1)
         {
-            lr.colorGradient = readyGradient;
+            // Update the end position for each electricity
+            for (int i = lrs.Count - 1; i >= 0; i--)
+            {
+                lrs[i].SetPosition(1, playerScript.electricNotes[i].GetComponent<Note>().ElectrictyEnd.position);
+                lrs[i].SetPosition(0, electricityStart.position);
+            }   
+        }
 
-            ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
+        // Set the colour of the laser ball to the ready colour when it should be
+        if (playerScript.isShielding && playerScript.notesInfront.Count >= 1)
+        {
+            // Update the end position for each electricity
+            for (int i = lrs.Count - 1; i >= 0; i--)
+            {
+                if (i == 0)
+                {
+                    if (playerScript.closestNoteInFrontScript)
+                    {
+                        if (playerScript.closestNoteInFrontScript.noteDir == "up")
+                        {
+                            lrs[i].colorGradient = readyNextGradient;
+                            ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
+                        }
+                        else
+                        {
+                            lrs[i].colorGradient = readyGradient;
+                            ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
+                        }
+                    }
+                }
+                else
+                {
+                    lrs[i].colorGradient = readyNextGradient;
+                    ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
+                }
+            }
+
         }
 
         // Set the colour of the laser ball to the stealth colour when it should be
@@ -435,65 +483,39 @@ public class Gamemode : MonoBehaviour
                 playerScript.closestNoteInFrontScript.doneElecrictyEffect = 0;
             }
 
-            ElectrictyBallPS.material.SetColor("Color_CFB35B33", stealthColor * 15);
-
-            lr.colorGradient = stealthGradient;
-
-            if (playerScript.closestNoteInFrontScript)
+            for (int i = lrs.Count - 1; i >= 0; i--)
             {
-                if (!playerScript.closestNoteInFrontScript.missed)
+                if (i == 0)
                 {
-                    lr.startWidth = 1;
-                    lr.endWidth = 1;
+                    ElectrictyBallPS.material.SetColor("Color_CFB35B33", stealthColor * 15);
+                    lrs[i].colorGradient = stealthGradient;
+                }
+
+                else
+                {
+                    ElectrictyBallPS.material.SetColor("Color_CFB35B33", stealthColor * 15);
+                    lrs[i].colorGradient = stealthNextGradient;
                 }
             }
         }
 
-        // If there is no note infront of the player, disable the electricity
-        if (playerScript.notesInfront.Count < 1)
+        if (playerScript.closestNoteInFrontScript)
         {
-            lr.startWidth = 0;
-            lr.endWidth = 0;
-            lr.SetPosition(1, new Vector3(3, 0.81f, 70));
-            lr.gameObject.SetActive(false);
-            return;
-        }
-        // If there is a note infront of the player, enable the electricity
-        else
-        {
-            lr.gameObject.SetActive(true);
-        }
+            // If the player got a miss for the nearest note infront, set the colour of the laser ball to the missed colour
+            // And disable the electricity
+            if (playerScript.closestNoteInFrontScript.missed)
+            {
+                //playerScript.closestNoteInFrontScript.doneElecrictyEffect = 2;
+                ElectrictyBallPS.material.SetColor("Color_CFB35B33", missedColour * 15);
 
-        // If there is no note in front of the player, do not continue
-        if (!playerScript.closestNoteInFrontScript)
-        {
-            return;
+                for (int i = lrs.Count - 1; i >= 0; i--)
+                {
+                    lrs[i].startWidth = 0;
+                    lrs[i].endWidth = 0;
+                }
+            }
         }
 
-        // Set the colour of the laser ball to the ready colour when it should be
-        if (playerScript.closestNoteInFrontScript.doneElecrictyEffect == 0 && playerScript.isShielding)
-        {
-            playerScript.closestNoteInFrontScript.doneElecrictyEffect = 1;
-            lr.gameObject.SetActive(true);
-            lr.startWidth = 1;
-            lr.endWidth = 1;
-
-
-            ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
-
-            lr.colorGradient = readyGradient;
-        }
-
-        // If the player got a miss for the nearest note infront, set the colour of the laser ball to the missed colour
-        // And disable the electricity
-        else if (playerScript.closestNoteInFrontScript.missed && playerScript.closestNoteInFrontScript.doneElecrictyEffect == 1)
-        {
-            playerScript.closestNoteInFrontScript.doneElecrictyEffect = 2;
-            lr.startWidth = 0;
-            lr.endWidth = 0;
-
-            ElectrictyBallPS.material.SetColor("Color_CFB35B33", missedColour * 15);
-        }
     }
     void UpdateShield()
     {
@@ -711,6 +733,7 @@ public class Gamemode : MonoBehaviour
         playerScript.furthestBehindNote = null;
         playerScript.activeNotes.Clear();
         playerScript.notesInfront.Clear();
+        playerScript.electricNotes.Clear();
         // remove this note from the 'furthestbehindnote' variable
         playerScript.furthestBehindNote = null;
     }
@@ -888,6 +911,8 @@ public class Gamemode : MonoBehaviour
         tc.allNotes.Clear();
         tc.allNoteTypes.Clear();
         tc.beatWaitCountAccum.Clear();
+        playerScript.electricNotes.Clear();
+        notesPassedPlayer = 0;
 
         tc.noteLanes.Clear();
         tc.beatWaitCount.Clear();
