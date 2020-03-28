@@ -14,6 +14,17 @@ public class Gamemode : MonoBehaviour
     public float jetZ;
     public float jetY;
 
+    [Header("Slider")]
+    public LineRenderer slider;
+    public bool sliderAlive;
+    public bool doneOnce5;
+    public Note startingSliderNoteScript;
+    public GameObject oldNextSliderNote;
+    public GameObject nextSliderNote;
+    public bool sliderNextNote;
+
+    public List<GameObject> sliderNotes = new List<GameObject>();
+
     [Header("Note Management")]
     public int notesPassedPlayer = 0;
 
@@ -263,6 +274,7 @@ public class Gamemode : MonoBehaviour
     public Sprite blast;
     public Sprite blastAim;
     public Sprite bomb;
+    public LineRenderer sliderRef;
 
     [Header("UI Camera")]
     public GameObject UICam;

@@ -11,21 +11,21 @@
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
-        <Note_BeatWait>5</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>note</Note_Type>
+        <Note_Type>slider</Note_Type>
         <Note_Lane>3</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>5</Note_BeatWait>
       </Note>
       <Note>
-        <Note_Type>note</Note_Type>
-        <Note_Lane>3</Note_Lane>
-        <Note_ArrowD>left</Note_ArrowD>
+        <Note_Type>slider</Note_Type>
+        <Note_Lane>1</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
+        <Note_BeatWait>3</Note_BeatWait>
+      </Note>
+      <Note>
+        <Note_Type>slider</Note_Type>
+        <Note_Lane>5</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>5</Note_BeatWait>
       </Note>
       <Note>

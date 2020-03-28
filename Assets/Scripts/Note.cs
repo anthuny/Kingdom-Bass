@@ -93,6 +93,11 @@ public class Note : MonoBehaviour
     public List<int> nextBombLane = new List<int>();
     public bool clone;
 
+    [Header("Slider")]
+    private int indexInNotes;
+    public bool usedAsSlider;
+    private bool donceOnce5;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -138,6 +143,9 @@ public class Note : MonoBehaviour
                 go.transform.SetSiblingIndex(indexCount + 1);
             }
         }
+
+        // Find the index of this note in the notes list
+        indexInNotes = tc.notes.IndexOf(gameObject);
 
         if (!clone)
         {
@@ -230,6 +238,31 @@ public class Note : MonoBehaviour
                 break;
 
             case "up":
+                if (noteType == "slider")
+                {
+                    // Set the note visual to invisible
+                    noteObject.SetActive(false);
+
+                    // Disable the spotlight
+                    spotLight.SetActive(false);
+
+                    if (tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().noteType != "slider")
+                    {
+                        gm.slider = Instantiate(gm.sliderRef, transform.position, Quaternion.identity);
+                        gm.slider.gameObject.transform.rotation = Quaternion.Euler(90, 0, 0);
+                        gm.sliderAlive = true;
+
+                        gm.sliderNotes.Add(gameObject);
+                        //gm.startingSliderNoteScript = gm.currentSliderNote.GetComponent<Note>();
+                        break;
+                    }
+                    else
+                    {
+                        gm.sliderNotes.Add(gameObject);
+                        break;
+                    }
+                }
+
                 Sprite upArrow = gm.upArrow;
                     
                 transform.GetChild(1).GetComponentInChildren<Image>().sprite = upArrow;
@@ -309,12 +342,6 @@ public class Note : MonoBehaviour
         }
     }
 
-    void UpdateZRotation()
-    {
-        hitMarkerRot.z = 0;
-        hitMarker.GetComponent<RectTransform>().transform.rotation = Quaternion.Euler(hitMarkerRot);
-    }
-
     void Update()
     {
         if (!canMove || gm.tutPaused)
@@ -323,6 +350,7 @@ public class Note : MonoBehaviour
         }
 
         CheckBombHitPlayer();
+        UpdateSliderLocation();
 
         if (this.noteDir == "up" && this.noteType != "blast")
         {
@@ -380,13 +408,6 @@ public class Note : MonoBehaviour
             transform.position = pos;
         }
 
-        if (curTime > 0 && !doneOnce5)
-        {
-            doneOnce5 = true;
-            //Debug.Log("startTime Final " + startTime);
-            //Debug.Break();
-        }
-
         if (curTime >= 1)
         {
             doneOnce2 = true;
@@ -434,6 +455,11 @@ public class Note : MonoBehaviour
                 gm.lrs.Remove(lr);
                 Destroy(lrObj);
                 player.electricNotes.RemoveAt(0);
+            }
+
+            if (noteType == "slider")
+            {
+                gm.sliderNotes.Remove(gameObject);
             }
 
             // Rounds the value to the nearest .25f
@@ -500,6 +526,120 @@ public class Note : MonoBehaviour
 
             // Currently trying to make it so the player's accuracy is correct, even if there are bombs in the way
         }
+    }
+
+    void UpdateSliderLocation()
+    {
+        if (gm.sliderNotes.Count >= 1)
+        {
+            if (gm.sliderNotes[0].activeSelf)
+            {
+                List<Vector3> temp = new List<Vector3>();
+                Vector3[] posOfPoints;
+                
+                foreach (GameObject note in gm.sliderNotes)
+                {
+                    temp.Add(note.transform.position);
+                }
+
+                posOfPoints = temp.ToArray();
+
+                gm.slider.positionCount = posOfPoints.Length;
+                gm.slider.SetPositions(posOfPoints);
+
+                // future anthony - need to figure out how to make a line stay at the same position it reached the player, rather then instantly dissapearing. (Change the list of note gameobjects that are sliders to transforms, then replace the transform of the note that passes the player with it's position when it does that. pog?
+                /*
+                // Itterate through all slider notes
+                for (int i = 0; i < gm.sliderNotes.Count; i++)
+                {
+                    Debug.Log(i);
+                    if (i == 0)
+                    {
+                        if (gm.sliderNotes.Count >= 2)
+                        {
+                            if (!gm.sliderNotes[i + 1].activeSelf)
+                            {
+                                gm.slider.SetPosition(i, new Vector3(1.5f * (gm.nextSliderNote.GetComponent<Note>().laneNumber - 1), 0, 70));
+
+                            }
+                            else
+                            {
+
+                                gm.slider.SetPosition(i, gm.sliderNotes[i].transform.position);
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        // Set position i + 1 of the line to the next slider note i + 1 if it is active
+                        if (gm.sliderNotes[i].activeSelf)
+                        {
+                            gm.slider.SetPosition(i, gm.sliderNotes[i].transform.position);
+                            // If the note that is about to spawn is a slider note, set location 3
+                            if (gm.sliderNextNote)
+                            {
+                                gm.slider.SetPosition(i + 1, gm.sliderNotes[i + 1].transform.position);
+                            }
+                        }
+                        // Set position i + 1 of the line to the next slider note i + 1 if it is not active
+                        else
+                        {
+                            gm.slider.SetPosition(i, new Vector3(1.5f * (gm.nextSliderNote.GetComponent<Note>().laneNumber - 1), 0, 70));
+                        }
+                    }
+                }
+                */
+            }
+        }
+        /*
+        // enabled when the note spawns as a slider type note
+        if (gm.sliderAlive && curTime < 1)
+        {
+            if (gm.nextSliderNote)
+            {
+                if (gm.nextSliderNote.GetComponent<Note>().curTime >= 1)
+                {
+                    Destroy(gm.slider);
+                    return;
+                }
+            }
+            else if (!gm.currentSliderNote && !gm.nextSliderNote)
+            {
+                return;
+            }
+
+            //Debug.Log(transform.position + " " + name);
+            // set the slider to reach the next slider note if it's active
+            if (gm.nextSliderNote.activeSelf)
+            {
+                gm.slider.SetPosition(1, gm.nextSliderNote.transform.position);
+            }
+            // If the next slider note is not active, set the end position to the lane of what the next note is in
+            else
+            {
+                gm.slider.SetPosition(1, new Vector3(1.5f * (gm.nextSliderNote.GetComponent<Note>().laneNumber - 1), 0, 70));
+            }
+
+            if (!gm.currentSliderNote)
+            {
+                // On update, set position 0 of the slider to the postiion of this note
+                //gm.slider.SetPosition(0, player.transform.position);
+                return;
+            }
+
+            if (gm.currentSliderNote.GetComponent<Note>().curTime >= 1)
+            {
+                // On update, set position 0 of the slider to the postiion of this note
+                //gm.slider.SetPosition(0, player.transform.position);
+
+                gm.slider.SetPosition(1, gm.nextSliderNote.transform.position);
+            }
+
+            // On update, set position 0 of the slider to the postiion of this note
+            gm.slider.SetPosition(0, gm.currentSliderNote.transform.position);
+        }
+        */
     }
 
     void CheckBombHitPlayer()
