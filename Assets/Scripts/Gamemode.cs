@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Collections;
+using UnityEngine.InputSystem;
 
 public class Gamemode : MonoBehaviour
 {
@@ -15,15 +15,12 @@ public class Gamemode : MonoBehaviour
     public float jetY;
 
     [Header("Slider")]
-    public LineRenderer slider;
-    public bool sliderAlive;
-    public bool doneOnce5;
-    public Note startingSliderNoteScript;
-    public GameObject oldNextSliderNote;
-    public GameObject nextSliderNote;
-    public bool sliderNextNote;
+    public GameObject sliderTransformPar;
+    public GameObject sliderIntervalPar;
+    public GameObject sliderIntervalRef;
 
-    public List<GameObject> sliderNotes = new List<GameObject>();
+    public int sliderIntervalCount;
+    //[HideInInspector]
 
     [Header("Note Management")]
     public int notesPassedPlayer = 0;
@@ -232,6 +229,9 @@ public class Gamemode : MonoBehaviour
     public Color lane2Color;
     public Color lane3Color;
 
+    [Header("Player")]
+    public float shieldOffSpeed;
+
     [Header("Health")]
     public GameObject gameUI;
     public float lerpSpeed;
@@ -301,6 +301,50 @@ public class Gamemode : MonoBehaviour
     [Header("Bombs")]
     public float bombHitRange;
 
+    [Header("Controller")]
+    public float movthreshHold = 0;
+    [HideInInspector]
+    public bool controllerConnected;
+    [HideInInspector]
+    public Controller controls;
+    [HideInInspector]
+    public Vector2 move;
+    [HideInInspector]
+    public float shieldingVal;
+    [HideInInspector]
+    public float blastLVal, blastRVal;
+
+    //public Vector3 playerPos;
+
+    private void Awake()
+    {
+        controls = new Controller();
+
+        // Moving left / right with and without shield
+        controls.Gameplay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
+        controls.Gameplay.Move.canceled += ctx => move = Vector2.zero;
+
+        // Toggling Shield
+        controls.Gameplay.Shield.performed += ctx => shieldingVal = ctx.ReadValue<float>();
+        controls.Gameplay.Shield.canceled += ctx => shieldingVal = ctx.ReadValue<float>();
+
+        // Triggering blast
+        controls.Gameplay.BlastL.started += ctx => blastLVal = ctx.ReadValue<float>();
+        controls.Gameplay.BlastR.started += ctx => blastRVal = ctx.ReadValue<float>();
+        controls.Gameplay.BlastL.canceled += ctx => blastLVal = ctx.ReadValue<float>();
+        controls.Gameplay.BlastR.canceled += ctx => blastRVal = ctx.ReadValue<float>();
+    }
+
+    void OnEnable()
+    {
+        controls.Gameplay.Enable();
+    }
+
+    void OnDisable()
+    {
+        controls.Gameplay.Disable();
+    }
+
     void Start()
     {
         QualitySettings.vSyncCount = 0;
@@ -338,8 +382,33 @@ public class Gamemode : MonoBehaviour
         
         StartGame();
         MainMenu();
+        InvokeRepeating("FindControllers", 0, 2f);
     }
 
+    // Check if a controller is connected 
+    void FindControllers()
+    {
+        //Get Joystick Names
+        string[] temp = Input.GetJoystickNames();
+
+        //Check whether a controller is connected
+        if (temp.Length > 0)
+        {
+            //Iterate over every element
+            for (int i = 0; i < temp.Length; ++i)
+            {
+                if (!string.IsNullOrEmpty(temp[i]))
+                {
+                    controllerConnected = true;
+                }
+                else
+                {
+                    controllerConnected = false;
+                }
+            }
+        }
+    }
+    
     public void StartGame()
     {
         totalAccuracy = 100;
@@ -1136,6 +1205,5 @@ public class Gamemode : MonoBehaviour
                 tutUnPauseText.gameObject.SetActive(false);
             }
         }
-
     }
 }

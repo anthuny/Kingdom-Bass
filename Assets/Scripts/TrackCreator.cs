@@ -223,6 +223,9 @@ public class TrackCreator : MonoBehaviour
                 go.GetComponent<Note>().beatWaitCur = beatWaitCountAccum[beatWaitCountAccum.Count - 1] - beatWaitCount[0];
 
                 allNoteTypes.Add(noteType);
+
+                // move the note to the correct lane
+                go.transform.position = new Vector3(1.5f * (int.Parse(laneNumber) - 1), 0.02f, 70);
             }
         }
 

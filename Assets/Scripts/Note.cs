@@ -96,7 +96,11 @@ public class Note : MonoBehaviour
     [Header("Slider")]
     private int indexInNotes;
     public bool usedAsSlider;
-    private bool donceOnce5;
+    private float sliderInterval;
+    public List<Vector3> sliderintervals = new List<Vector3>();
+    private int indexOfSliderNoteSet;
+    public LineRenderer sliderLr;
+    private Slider sliderScript;
 
     // Start is called before the first frame update
     void Start()
@@ -246,21 +250,53 @@ public class Note : MonoBehaviour
                     // Disable the spotlight
                     spotLight.SetActive(false);
 
+                    // Disable the hit marker
+                    hitMarkerCanvas.SetActive(false);
+
                     if (tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().noteType != "slider")
                     {
-                        gm.slider = Instantiate(gm.sliderRef, transform.position, Quaternion.identity);
-                        gm.slider.gameObject.transform.rotation = Quaternion.Euler(90, 0, 0);
-                        gm.sliderAlive = true;
+                        sliderLr = Instantiate(gm.sliderRef, transform.position, Quaternion.identity);
+                        sliderScript = sliderLr.gameObject.GetComponent<Slider>();
+                        sliderLr.SetPosition(0, new Vector3(0, 0, 70));
+                        sliderLr.SetPosition(1, new Vector3(0, 0, 70));
 
-                        gm.sliderNotes.Add(gameObject);
-                        //gm.startingSliderNoteScript = gm.currentSliderNote.GetComponent<Note>();
-                        break;
+                        sliderLr.gameObject.transform.rotation = Quaternion.Euler(90, 0, 0);
+
+                        sliderScript.indexOfSliderNoteSet++;
+                        indexOfSliderNoteSet = (int)sliderScript.indexOfSliderNoteSet;
+                        CreateSliderIntervals();
                     }
                     else
                     {
-                        gm.sliderNotes.Add(gameObject);
-                        break;
+                        sliderLr = tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().sliderLr;
+                        sliderScript = tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().sliderScript;
+                        sliderScript.indexOfSliderNoteSet++;
+                        indexOfSliderNoteSet = (int)sliderScript.indexOfSliderNoteSet;
+                        CreateSliderIntervals();
                     }
+
+                    for (int i = 1; i < tc.notes.Count; i++)
+                    {
+                        if (tc.notes[indexInNotes + i].gameObject.GetComponent<Note>().noteType != "slider")
+                        {
+                            //Debug.Log(i);
+                            //gm.indexOfSliderNoteSet = 0;
+                            break;
+                        }
+
+                        if (tc.notes[indexInNotes + i].gameObject.GetComponent<Note>().noteType == "slider")
+                        {
+                            if (!sliderScript.setOfSliderNotes.Contains(gameObject.transform))
+                            {
+                                sliderScript.setOfSliderNotes.Add(gameObject.transform);
+                            }
+                            if (!sliderScript.setOfSliderNotes.Contains((tc.notes[indexInNotes + i].gameObject.transform)))
+                            {
+                                sliderScript.setOfSliderNotes.Add(tc.notes[indexInNotes + i].gameObject.transform);
+                            }
+                        }
+                    }
+                    break;
                 }
 
                 Sprite upArrow = gm.upArrow;
@@ -457,11 +493,6 @@ public class Note : MonoBehaviour
                 player.electricNotes.RemoveAt(0);
             }
 
-            if (noteType == "slider")
-            {
-                gm.sliderNotes.Remove(gameObject);
-            }
-
             // Rounds the value to the nearest .25f
             // This is done because the previousNoteBeatTime will most likely always be slightly off when it should be.
             // This rounds it to when the beat should happen when the note hit the player
@@ -523,123 +554,72 @@ public class Note : MonoBehaviour
             {
                 behindPlayer = true;
             }
-
-            // Currently trying to make it so the player's accuracy is correct, even if there are bombs in the way
         }
     }
 
     void UpdateSliderLocation()
     {
-        if (gm.sliderNotes.Count >= 1)
+        if (sliderLr)
         {
-            if (gm.sliderNotes[0].activeSelf)
+            if (sliderScript.setOfSliderNotes.Count >= 1)
             {
                 List<Vector3> temp = new List<Vector3>();
-                Vector3[] posOfPoints;
-                
-                foreach (GameObject note in gm.sliderNotes)
+
+                foreach (Transform note in sliderScript.setOfSliderNotes)
                 {
                     temp.Add(note.transform.position);
                 }
 
+                Vector3[] posOfPoints;
                 posOfPoints = temp.ToArray();
 
-                gm.slider.positionCount = posOfPoints.Length;
-                gm.slider.SetPositions(posOfPoints);
-
-                // future anthony - need to figure out how to make a line stay at the same position it reached the player, rather then instantly dissapearing. (Change the list of note gameobjects that are sliders to transforms, then replace the transform of the note that passes the player with it's position when it does that. pog?
-                /*
-                // Itterate through all slider notes
-                for (int i = 0; i < gm.sliderNotes.Count; i++)
-                {
-                    Debug.Log(i);
-                    if (i == 0)
-                    {
-                        if (gm.sliderNotes.Count >= 2)
-                        {
-                            if (!gm.sliderNotes[i + 1].activeSelf)
-                            {
-                                gm.slider.SetPosition(i, new Vector3(1.5f * (gm.nextSliderNote.GetComponent<Note>().laneNumber - 1), 0, 70));
-
-                            }
-                            else
-                            {
-
-                                gm.slider.SetPosition(i, gm.sliderNotes[i].transform.position);
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        // Set position i + 1 of the line to the next slider note i + 1 if it is active
-                        if (gm.sliderNotes[i].activeSelf)
-                        {
-                            gm.slider.SetPosition(i, gm.sliderNotes[i].transform.position);
-                            // If the note that is about to spawn is a slider note, set location 3
-                            if (gm.sliderNextNote)
-                            {
-                                gm.slider.SetPosition(i + 1, gm.sliderNotes[i + 1].transform.position);
-                            }
-                        }
-                        // Set position i + 1 of the line to the next slider note i + 1 if it is not active
-                        else
-                        {
-                            gm.slider.SetPosition(i, new Vector3(1.5f * (gm.nextSliderNote.GetComponent<Note>().laneNumber - 1), 0, 70));
-                        }
-                    }
-                }
-                */
+                sliderLr.positionCount = posOfPoints.Length;
+                sliderLr.SetPositions(posOfPoints);
             }
         }
-        /*
-        // enabled when the note spawns as a slider type note
-        if (gm.sliderAlive && curTime < 1)
+    }
+
+    void CreateSliderIntervals()
+    {
+        if (sliderLr.positionCount >= 2)
         {
-            if (gm.nextSliderNote)
+            for (int i = 0; i < gm.sliderIntervalCount; i++)
             {
-                if (gm.nextSliderNote.GetComponent<Note>().curTime >= 1)
+                //Debug.Log("i = " + i);
+                sliderInterval += (1f / (gm.sliderIntervalCount + 1));
+
+                if (indexOfSliderNoteSet >= sliderLr.positionCount)
                 {
-                    Destroy(gm.slider);
-                    return;
+                    break;
+                }
+
+                GameObject go = Instantiate(gm.sliderIntervalRef, transform.position, Quaternion.identity);
+                go.transform.SetParent(gm.sliderIntervalPar.transform);
+                SliderInterval goScript = go.GetComponent<SliderInterval>();
+                go.name = "SliderInterval " + sliderInterval;
+                goScript.gm = gm;
+                goScript.note = this;
+                goScript.player = player;
+                goScript.sliderInterval = sliderInterval;
+                //Debug.Log(indexOfSliderNoteSet + " indexofslidernoteset");
+                //Debug.Log(sliderInterval);
+
+                // Set the start location for the spawned transform
+                goScript.sliderStartCount = indexOfSliderNoteSet - 1;
+                // Set the end location for the spawned transform
+                goScript.sliderEndCount = indexOfSliderNoteSet;
+
+                if (sliderInterval > 1 - (1 / (gm.sliderIntervalCount + 1)))
+                {
+                    sliderInterval = 0;
+                    break;
                 }
             }
-            else if (!gm.currentSliderNote && !gm.nextSliderNote)
-            {
-                return;
-            }
-
-            //Debug.Log(transform.position + " " + name);
-            // set the slider to reach the next slider note if it's active
-            if (gm.nextSliderNote.activeSelf)
-            {
-                gm.slider.SetPosition(1, gm.nextSliderNote.transform.position);
-            }
-            // If the next slider note is not active, set the end position to the lane of what the next note is in
-            else
-            {
-                gm.slider.SetPosition(1, new Vector3(1.5f * (gm.nextSliderNote.GetComponent<Note>().laneNumber - 1), 0, 70));
-            }
-
-            if (!gm.currentSliderNote)
-            {
-                // On update, set position 0 of the slider to the postiion of this note
-                //gm.slider.SetPosition(0, player.transform.position);
-                return;
-            }
-
-            if (gm.currentSliderNote.GetComponent<Note>().curTime >= 1)
-            {
-                // On update, set position 0 of the slider to the postiion of this note
-                //gm.slider.SetPosition(0, player.transform.position);
-
-                gm.slider.SetPosition(1, gm.nextSliderNote.transform.position);
-            }
-
-            // On update, set position 0 of the slider to the postiion of this note
-            gm.slider.SetPosition(0, gm.currentSliderNote.transform.position);
         }
-        */
+
+        // Future Anthony - All functionality of the transform intervals is completed :) goodjob, you felt like a god last night...
+        // Need to make it so each transform interval between each line renderer position, checks for if the player is close enough...
+        // to it when it reaches the player's z position (world space), if it is close enough, still in slider, if not, not in slider.
     }
 
     void CheckBombHitPlayer()
@@ -651,7 +631,6 @@ public class Note : MonoBehaviour
             {
                 bombHitPlayer = true;
                 player.Missed(true);
-                //Debug.Break();
             }
         }
     }
@@ -683,11 +662,51 @@ public class Note : MonoBehaviour
     public IEnumerator DestroyNote()
     {
         yield return new WaitForSeconds(0.8f);
-
+            
         if (!clone)
         {
             // remove this note from the 'furthestbehindnote' variable
             gm.playerScript.furthestBehindNote = null;
+        }
+
+        // If this note is apart of a slider note
+        if (noteType == "slider")
+        {
+            int index = sliderScript.setOfSliderNotes.IndexOf(gameObject.transform);
+
+            // Spawn an EGO and set it's position to the same as this note when it reaches the player
+            GameObject go = new GameObject();
+            go.transform.SetParent(gm.sliderTransformPar.transform);
+            go.transform.position = gameObject.transform.position;
+
+            // Replace this note with the EGO to replace to transform...
+            // This is so the slider stays at a point a note cannot be in
+            sliderScript.setOfSliderNotes.Insert(index, go.transform);
+
+            // Remove the note from the list
+            sliderScript.setOfSliderNotes.Remove(gameObject.transform);
+
+            // If this is not the first note of the slider
+            if (index != 0)
+            {
+                // If the note before this note is not a slider
+                if (tc.notes[index - 1].GetComponent<Note>().noteType != "slider")
+                {
+                    // Destroy all temporary game objects in the scene that were used for their transform for the temp slider locations
+                    foreach (Transform child in gm.sliderTransformPar.transform)
+                    {
+                        GameObject.Destroy(child.gameObject);
+                    }
+
+
+                    // Clear the stet of slider notes list
+                    sliderScript.setOfSliderNotes.Clear();
+
+                    // Destroy the line visual of the slider
+                    Destroy(sliderLr.gameObject);
+                }
+            }
+
         }
 
         // remove this note to the 'activeNotes' list

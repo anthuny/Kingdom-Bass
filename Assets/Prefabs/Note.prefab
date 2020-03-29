@@ -434,7 +434,7 @@ BoxCollider:
   m_GameObject: {fileID: 4428141960108257961}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1.85, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
@@ -479,9 +479,13 @@ MonoBehaviour:
   noteNumber: 0
   ElectrictyEnd: {fileID: 6049311476939134177}
   doneElecrictyEffect: 0
+  assignedElectricity: 0
+  lr: {fileID: 0}
+  lrObj: {fileID: 0}
   bombObj: {fileID: 1764232432220033741}
   nextBombLane: 
   clone: 0
+  usedAsSlider: 0
 --- !u!1 &8797297969032764751
 GameObject:
   m_ObjectHideFlags: 0

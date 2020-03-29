@@ -17,7 +17,9 @@ public class Player : MonoBehaviour
     private float pathWidth;
 
     public bool movingRight;
+    public bool movingRightNoShield;
     public bool movingLeft;
+    public bool movingLeftNoShield;
     private bool holdingMovingRightInp;
     private bool holdingMovingLeftInp;
     public bool blastInput;
@@ -85,6 +87,12 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public Vector3 oldPlayerPos;
 
+    private bool movedLeft;
+    private bool movedRight;
+
+    private bool movingNoShield;
+    private bool attemptedBlast;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -119,11 +127,12 @@ public class Player : MonoBehaviour
             return;
         }
         Inputs();
-        StartCoroutine("Movement");
+        ControllerInputs();
+
+        StartCoroutine("KeyBoardMovement");
         FindNearestNote();
         UpdateShield();
         AssignMisses();
-        //SetNearestLaneNumber();
         UpdateNotesInFront();
         IncMaxAcc();
 
@@ -337,7 +346,7 @@ public class Player : MonoBehaviour
     void Inputs()
     {
         // Do not allow any player movements if the game is paused
-        if (gm.gamePaused)
+        if (gm.gamePaused || gm.controllerConnected)
         {
             return;
         }
@@ -370,9 +379,19 @@ public class Player : MonoBehaviour
         //      player is not in the most RIGHT lane
         //      blastInput is false
         //      player is shielding
-        if (Input.GetKeyUp(KeyCode.L) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber && !blastInput)
+        if (Input.GetKeyUp(KeyCode.L) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber && !blastInput && isShielding)
         {
             movingRight = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.L) && nearestLaneNumber != pm.maxPathNumber && !blastInput && !isShielding)
+        {
+            movingRightNoShield = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.L))
+        {
+            movingRightNoShield = false;
         }
 
         // If:
@@ -381,9 +400,19 @@ public class Player : MonoBehaviour
         //      player is not in the most LEFT lane
         //      blastInput is false
         //      player is shielding
-        if (Input.GetKeyUp(KeyCode.A) && !movingRight && !movingLeft && nearestLaneNumber != 1 && !blastInput)
+        if (Input.GetKeyUp(KeyCode.A) && !movingRight && !movingLeft && nearestLaneNumber != 1 && !blastInput && isShielding)
         {
             movingLeft = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.A) && nearestLaneNumber != 1 && !blastInput && !isShielding)
+        {
+            movingLeftNoShield = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            movingLeftNoShield = false;
         }
 
         // If both the input for moving left and right are held down
@@ -418,22 +447,103 @@ public class Player : MonoBehaviour
             isShielding = true;
         }
     }
-    public void SetNearestLaneNumber(bool forScore, GameObject nearestPath)
-    {
-        // If not moving, AND there is a nearest path to begin with
-        // Update the oldNearestLaneNumber and nearestLaneNumber accordingly
 
-        oldNearestLaneNumber = nearestLaneNumber;
-        nearestLaneNumber = nearestPath.GetComponent<Path>().laneNumber;
-        //Debug.Log("nearestLaneNumber " + nearestLaneNumber);
-        //Debug.Break();
-        if (forScore)
-        {
-            AssignFromAndToValuesNoteAndLaunch();
-        }
-    }
-    IEnumerator Movement()
+    void ControllerInputs()
     {
+        if (!gm.controllerConnected)
+        {
+            return;
+        }
+
+        // Stops strange drifting behaviour
+        Vector3 playerPos2 = transform.position;
+        playerPos2.z = 1;
+        transform.position = playerPos2;
+
+        if (gm.shieldingVal == 0)
+        {
+            isShielding = true;
+        }
+        else if (gm.shieldingVal == 1)
+        {
+            isShielding = false;
+        }
+
+        // Moving left / right with no shield
+        // If moving left
+        if (gm.move.x < 0 && !isShielding && transform.position.x > 0.3f)
+        {
+            playerPos.x -= gm.shieldOffSpeed * Mathf.Abs(gm.move.x) * Time.deltaTime;
+            transform.position = playerPos;
+
+            movingNoShield = true;
+
+            pm.FindNearestPath(false);
+        }
+        // If moving right
+        else if (gm.move.x > 0 && !isShielding && transform.position.x < 5.7f)
+        {
+            playerPos.x += gm.shieldOffSpeed * gm.move.x * Time.deltaTime;
+            transform.position = playerPos;
+
+            movingNoShield = true;
+
+            pm.FindNearestPath(false);
+        }
+
+        // Moving right with shield
+        if (gm.move.x > gm.movthreshHold && isShielding && !movedRight && transform.position.x < 5.7f)
+        {
+            movedRight = true;
+            movingRight = true;
+        }
+        // Moving left with shield
+        else if (gm.move.x < -gm.movthreshHold && isShielding && !movedLeft && transform.position.x > 0.3f)
+        {
+            movedLeft = true;
+            movingLeft = true;
+        }
+
+        // Blast maintenance
+        if (gm.blastLVal == 0 && gm.blastRVal == 0)
+        {
+            attemptedBlast = false;
+        }
+
+        // Blast
+        if (gm.blastLVal > 0 && gm.blastRVal > 0 && !attemptedBlast && isShielding)
+        {
+            attemptedBlast = true;
+            AssignFromAndToValuesBlast();
+        }
+
+
+        #region Resetting player position to middle of lane
+        // Reset player's postiion to middle of lane when shielding
+        if (isShielding && movingNoShield && gm.move.x == 0)
+        {
+            movingNoShield = false;
+
+            // Set player position to the middle of the nearest lane
+            playerPos.x = (nearestLaneNumber - 1) * 1.5f;
+            transform.position = playerPos;
+        }
+        
+        // Resetting shield move left / right values if not moving
+        if (gm.move.x == 0 && isShielding)
+        {
+            movedRight = false;
+            movedLeft = false;
+        }
+        #endregion
+    }
+    IEnumerator KeyBoardMovement()
+    {
+        if (gm.controllerConnected)
+        {
+            yield return 0;
+        }
+
         // Stops strange drifting behaviour
         Vector3 playerPos2 = transform.position;
         playerPos2.z = 1;
@@ -462,18 +572,21 @@ public class Player : MonoBehaviour
             pm.FindNearestPath(true);
         }
 
-        // Functionality of moving right without shield
-        else if (movingRight && !isShielding && tc.selectedMap.title != "Tutorial" || gm.tutorialStage >= 3 && movingRight && !isShielding)
+        // Functionality of moving right without shield   
+        else if (movingRightNoShield && !isShielding && tc.selectedMap.title != "Tutorial" && transform.position.x < 5.7f || gm.tutorialStage >= 3 && movingRight && !isShielding && transform.position.x < 5.7f) 
         {
             movingRight = false;
             movingLeft = false;
             validMovement = false;
 
-            playerPos.x = pathWidth * nearestLaneNumber;
+            playerPos.x += gm.shieldOffSpeed * Time.deltaTime;
             transform.position = playerPos;
 
-            pm.FindNearestPath(true);
+            movingNoShield = true;
+
+            pm.FindNearestPath(false);
         }
+        
         #endregion 
         #region Tutorial - Moving Right
         // Functionality of moving right with shield during first few stages of tutorial
@@ -495,7 +608,7 @@ public class Player : MonoBehaviour
 
             yield return new WaitForSeconds(gm.timeForMoveBack);
 
-            playerPos.x = 3;
+            //playerPos.x = 3;
             transform.position = playerPos;
 
             pm.FindNearestPath(false);
@@ -503,25 +616,24 @@ public class Player : MonoBehaviour
         }
 
         // Functionality of moving right WITHOUT shield during first few stages of tutorial
-        if (movingRight && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
+        if (movingRightNoShield && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
         {
             movingRight = false;
             movingLeft = false;
             validMovement = false;
 
-            playerPos.x = pathWidth * nearestLaneNumber;
+            playerPos.x += gm.shieldOffSpeed * Time.deltaTime;
             transform.position = playerPos;
 
             pm.FindNearestPath(true);
 
             yield return new WaitForSeconds(gm.timeForMoveBack);
 
-            playerPos.x = 3;
+            //playerPos.x = 3;
             transform.position = playerPos;
 
             pm.FindNearestPath(false);
-        }
-
+        }    
         #endregion
         #region Normal - Moving Left
         // Functionality of moving left with shield
@@ -538,18 +650,22 @@ public class Player : MonoBehaviour
             pm.FindNearestPath(true);
         }
 
+        
         // Functionality of moving left without shield
-        if (movingLeft && !isShielding && tc.selectedMap.title != "Tutorial" || gm.tutorialStage >= 3 && movingLeft && !isShielding)
+        if (movingLeftNoShield && !isShielding && tc.selectedMap.title != "Tutorial" && transform.position.x > 0.3f || gm.tutorialStage >= 3 && movingLeft && !isShielding && transform.position.x > 0.3f)
         {
             movingLeft = false;
             movingRight = false;
             validMovement = false;
 
-            playerPos.x = pathWidth * (nearestLaneNumber - 2);
+            playerPos.x -= gm.shieldOffSpeed * Time.deltaTime;
             transform.position = playerPos;
 
-            pm.FindNearestPath(true);
+            movingNoShield = true;
+
+            pm.FindNearestPath(false);
         }
+        
         #endregion
         #region Tutorial - Moving Left
         // Functionality of moving left with shield during first few stages of tutorial
@@ -570,13 +686,14 @@ public class Player : MonoBehaviour
 
             yield return new WaitForSeconds(gm.timeForMoveBack);
 
-            playerPos.x = 3;
+            //playerPos.x = 3;
             transform.position = playerPos;
 
             pm.FindNearestPath(false);
             //Debug.Log("called nearestlanenumberfunction");
         }
 
+        
         // Functionality of moving left without shield during first few stages of tutorial
         if (movingLeft && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
         {
@@ -584,19 +701,53 @@ public class Player : MonoBehaviour
             movingLeft = false;
             validMovement = false;
 
-            playerPos.x = pathWidth * (nearestLaneNumber - 2);
+            playerPos.x += gm.shieldOffSpeed * Time.deltaTime;
             transform.position = playerPos;
 
             pm.FindNearestPath(true);
 
             yield return new WaitForSeconds(gm.timeForMoveBack);
 
-            playerPos.x = 3;
+            //playerPos.x = 3;
             transform.position = playerPos;
 
             pm.FindNearestPath(false);
         }
+
         #endregion
+
+        #region Resetting player position to middle of lane
+        // Reset player's postiion to middle of lane when shielding
+        if (isShielding && movingNoShield && gm.move.x == 0)
+        {
+            movingNoShield = false;
+
+            // Set player position to the middle of the nearest lane
+            playerPos.x = (nearestLaneNumber - 1) * 1.5f;
+            transform.position = playerPos;
+        }
+
+        // Resetting shield move left / right values if not moving
+        if (gm.move.x == 0 && isShielding)
+        {
+            movedRight = false;
+            movedLeft = false;
+        }
+        #endregion
+    }
+    public void SetNearestLaneNumber(bool forScore, GameObject nearestPath)
+    {
+        // If not moving, AND there is a nearest path to begin with
+        // Update the oldNearestLaneNumber and nearestLaneNumber accordingly
+
+        oldNearestLaneNumber = nearestLaneNumber;
+        nearestLaneNumber = nearestPath.GetComponent<Path>().laneNumber;
+        //Debug.Log("nearestLaneNumber " + nearestLaneNumber);
+        //Debug.Break();
+        if (forScore)
+        {
+            AssignFromAndToValuesNoteAndLaunch();
+        }
     }
     void AssignFromAndToValuesBlast()
     {
@@ -688,7 +839,6 @@ public class Player : MonoBehaviour
         if (nearestNoteScript.hitAmount > 1 && !nearestNoteScript.missed && nearestNoteScript.noteType != "note" && nearestNoteScript.noteDir != "up")
         {
             Missed(false);
-            Debug.Log("4");
         }
 
         nearestNoteScript.hitAmount++;
@@ -711,7 +861,6 @@ public class Player : MonoBehaviour
         if (nearestNoteScript.noteType == "blast")
         {
             Missed(false);
-            Debug.Log("5");
         }
 
         // If an attempt on the up note was made, instantly miss the note
