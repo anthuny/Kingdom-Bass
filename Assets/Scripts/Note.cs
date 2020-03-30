@@ -279,26 +279,31 @@ public class Note : MonoBehaviour
                         CreateSliderIntervals();
                     }
 
-                    for (int i = 1; i < tc.notes.Count; i++)
+                    if (indexInNotes + 1 < tc.notes.Count)
                     {
-                        if (tc.notes[indexInNotes + i].gameObject.GetComponent<Note>().noteType != "slider")
+                        Debug.Log("indexInNotes " + indexInNotes);
+                        if (tc.notes[indexInNotes + 1].gameObject.GetComponent<Note>().noteType != "slider")
                         {
                             break;
                         }
 
-                        if (tc.notes[indexInNotes + i].gameObject.GetComponent<Note>().noteType == "slider")
+                        if (tc.notes[indexInNotes + 1].gameObject.GetComponent<Note>().noteType == "slider")
                         {
                             if (!sliderScript.setOfSliderNotes.Contains(gameObject.transform))
                             {
                                 sliderScript.setOfSliderNotes.Add(gameObject.transform);
                             }
-                            if (!sliderScript.setOfSliderNotes.Contains((tc.notes[indexInNotes + i].gameObject.transform)))
+                            if (!sliderScript.setOfSliderNotes.Contains((tc.notes[indexInNotes + 1].gameObject.transform)))
                             {
-                                sliderScript.setOfSliderNotes.Add(tc.notes[indexInNotes + i].gameObject.transform);
+                                sliderScript.setOfSliderNotes.Add(tc.notes[indexInNotes + 1].gameObject.transform);
                             }
                         }
+                        break;
                     }
-                    break;
+                    else
+                    {
+                        break;
+                    }
                 }
 
                 Sprite upArrow = gm.upArrow;
@@ -589,35 +594,44 @@ public class Note : MonoBehaviour
             {
                 sliderInterval += (1f / (gm.sliderIntervalCount + 1));
 
-                if (indexOfSliderNoteSet >= sliderLr.positionCount)
+                //Debug.Log(i);
+                //Debug.Log(sliderScript.indexOfSliderNoteSet + " indexofslidernoteset");
+                //Debug.Log(sliderLr.positionCount + " positionCount");
+
+                if (sliderScript.indexOfSliderNoteSet > sliderLr.positionCount + 1)
                 {
                     break;
                 }
-
-                // Create the interval GO
-                GameObject go = Instantiate(gm.sliderIntervalRef, transform.position, Quaternion.identity);
-                go.transform.SetParent(gm.sliderIntervalPar.transform);
-                SliderInterval goScript = go.GetComponent<SliderInterval>();
-                go.name = "SliderInterval " + sliderInterval;
-                goScript.gm = gm;
-                goScript.note = this;
-                goScript.player = player;
-                goScript.sliderInterval = sliderInterval;
-                goScript.slider = sliderScript;
-
-                sliderScript.allSliderIntervals.Add(go.transform);
-                sliderScript.sliderIntervalsInFront.Add(go.transform);
-
-                // Set the start location for the spawned transform
-                goScript.sliderStartCount = indexOfSliderNoteSet - 1;
-                // Set the end location for the spawned transform
-                goScript.sliderEndCount = indexOfSliderNoteSet;
-
-                if (sliderInterval > 1 - (1 / (gm.sliderIntervalCount + 1)))
+                else
                 {
-                    sliderInterval = 0;
-                    break;
+                    //Debug.Log(sliderScript.indexOfSliderNoteSet + " 2 indexofslidernoteset");
+                    //Debug.Log(sliderLr.positionCount + " 2 positionCount");
+                    // Create the interval GO
+                    GameObject go = Instantiate(gm.sliderIntervalRef, transform.position, Quaternion.identity);
+                    go.transform.SetParent(gm.sliderIntervalPar.transform);
+                    SliderInterval goScript = go.GetComponent<SliderInterval>();
+                    go.name = "SliderInterval " + sliderInterval;
+                    goScript.gm = gm;
+                    goScript.note = this;
+                    goScript.player = player;
+                    goScript.sliderInterval = sliderInterval;
+                    goScript.slider = sliderScript;
+
+                    sliderScript.allSliderIntervals.Add(go.transform);
+                    sliderScript.sliderIntervalsInFront.Add(go.transform);
+
+                    // Set the start location for the spawned transform
+                    goScript.sliderStartCount = sliderScript.indexOfSliderNoteSet - 2;
+                    // Set the end location for the spawned transform
+                    goScript.sliderEndCount = sliderScript.indexOfSliderNoteSet - 1;
+
+                    if (sliderInterval > 1 - (1 / (gm.sliderIntervalCount + 1)))
+                    {
+                        sliderInterval = 0;
+                        break;
+                    }
                 }
+
             }
         }
     }
@@ -670,7 +684,7 @@ public class Note : MonoBehaviour
         }
 
         // If this note is apart of a slider note
-        if (noteType == "slider")
+        if (noteType == "slider" && sliderLr)
         {
             int index = sliderScript.setOfSliderNotes.IndexOf(gameObject.transform);
 
@@ -685,26 +699,6 @@ public class Note : MonoBehaviour
 
             // Remove the note from the list
             sliderScript.setOfSliderNotes.Remove(gameObject.transform);
-
-            // If this is not the first note of the slider
-            if (index != 0)
-            {
-                // If the note before this note is not a slider
-                if (tc.notes[index - 1].GetComponent<Note>().noteType != "slider")
-                {
-                    // Destroy all temporary game objects in the scene that were used for their transform for the temp slider locations
-                    foreach (Transform child in gm.sliderTransformPar.transform)
-                    {
-                        GameObject.Destroy(child.gameObject);
-                    }
-
-                    // Clear the stet of slider notes list
-                    sliderScript.setOfSliderNotes.Clear();
-
-                    // Destroy the line visual of the slider
-                    //Destroy(sliderLr.gameObject);
-                }
-            }
         }
 
         // remove this note to the 'activeNotes' list

@@ -201,12 +201,12 @@ public class TrackCreator : MonoBehaviour
                 go.SetActive(false);
 
                 // Add the note to allNotes list | This is needed for the dynamic spawning times if using it.
-                if (noteType != "slider")
-                {
-                    noteLanes.Add(i);
-                    // add notes to the all notes list
-                    allNotes.Add(go);
-                }
+                //if (noteType != "slider")
+                //{
+                noteLanes.Add(i);
+                // add notes to the all notes list
+                allNotes.Add(go);
+                //}
 
                 if (noteType != "bomb")
                 {

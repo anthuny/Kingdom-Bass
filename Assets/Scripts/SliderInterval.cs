@@ -9,8 +9,8 @@ public class SliderInterval : MonoBehaviour
     public Note note;
     public Slider slider;
 
-    public int sliderStartCount;
-    public int sliderEndCount;
+    public float sliderStartCount;
+    public float sliderEndCount;
     public Vector3 sliderStartPos;
     public Vector3 sliderEndPos;
     public float sliderInterval;
@@ -26,8 +26,17 @@ public class SliderInterval : MonoBehaviour
         // relocate this object to the sliderInterval (t) between two set slider points
         if (note.sliderLr)
         {
-            sliderStartPos = note.sliderLr.GetPosition(sliderStartCount);
-            sliderEndPos = note.sliderLr.GetPosition(sliderEndCount);
+            sliderStartPos = note.sliderLr.GetPosition((int)sliderStartCount);
+            if (sliderEndCount < slider.gameObject.GetComponent<LineRenderer>().positionCount)
+            {
+                sliderEndPos = note.sliderLr.GetPosition((int)sliderEndCount);
+            }
+            else if (sliderEndCount == slider.gameObject.GetComponent<LineRenderer>().positionCount)
+            {
+                slider.allSliderIntervals.Remove(transform);
+                slider.sliderIntervalsInFront.Remove(transform);
+                Destroy(gameObject);
+            }
 
             Vector3 dist = Vector3.Lerp(sliderStartPos, sliderEndPos, sliderInterval);
 
@@ -55,10 +64,7 @@ public class SliderInterval : MonoBehaviour
                 player.Missed(false);
                 slider.missedOn = true;
                 //Debug.Log("too far from interval " + distFromPlayer);
-            }
-            else
-            {
-               //Debug.Log("in range " + distFromPlayer);
+                //Debug.Break();
             }
         }
 
@@ -77,6 +83,18 @@ public class SliderInterval : MonoBehaviour
             {
                 gm.sliders.Remove(slider.gameObject.transform);
                 Destroy(slider.gameObject);
+
+                // Destroy all temporary game objects in the scene that were used for their transform for the temp slider locations
+                foreach (Transform child in gm.sliderTransformPar.transform)
+                {
+                    if (child != transform)
+                    {
+                        GameObject.Destroy(child.gameObject);
+                    }
+                }
+
+                // Clear the stet of slider notes list
+                slider.setOfSliderNotes.Clear();
             }
         }
 
