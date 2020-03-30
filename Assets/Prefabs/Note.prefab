@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 32263dffbef965b428075f729c641a6b, type: 2}
+  m_Material: {fileID: 2100000, guid: ba6ecdd5cd1984f4e85c771060fdfb86, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -486,6 +486,8 @@ MonoBehaviour:
   nextBombLane: 
   clone: 0
   usedAsSlider: 0
+  sliderintervals: []
+  sliderLr: {fileID: 0}
 --- !u!1 &8797297969032764751
 GameObject:
   m_ObjectHideFlags: 0

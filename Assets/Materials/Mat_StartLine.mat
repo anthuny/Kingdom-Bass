@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MAT_BlastGlow
+  m_Name: Mat_StartLine
   m_Shader: {fileID: 4800000, guid: e064104788d94b349ab13141a30b5660, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -50,4 +50,4 @@ Material:
     - Color_1A5C2328: {r: 1, g: 1, b: 1, a: 1}
     - Color_BA8E88F0: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _TintColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TintColor: {r: 0.1689213, g: 0.19107592, b: 0.49056602, a: 1}

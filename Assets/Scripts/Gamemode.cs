@@ -18,9 +18,13 @@ public class Gamemode : MonoBehaviour
     public GameObject sliderTransformPar;
     public GameObject sliderIntervalPar;
     public GameObject sliderIntervalRef;
+    public bool checkForSliderIntervals;
+    public float maxDistInterval;
+    public Gradient notMissedGrad;
+    public Gradient missedGrad;
+    public List<Transform> sliders = new List<Transform>();
 
     public int sliderIntervalCount;
-    //[HideInInspector]
 
     [Header("Note Management")]
     public int notesPassedPlayer = 0;
@@ -243,6 +247,7 @@ public class Gamemode : MonoBehaviour
     public float regenGood;
     public float regenMiss;
     public float regenBomb;
+    public float regenSlider;
     public float healthRegen;
     public float healthRegenInterval;
     public float audioSpeedDec;
@@ -256,6 +261,7 @@ public class Gamemode : MonoBehaviour
     private float regenGoodOri;
     private float regenMissOri;
     private float regenBombOri;
+    private float regenSliderOri;
     float t = 1;
     float y = 1;
 
@@ -378,6 +384,7 @@ public class Gamemode : MonoBehaviour
         regenGoodOri = regenGood;
         regenMissOri = regenMiss;
         regenBombOri = regenBomb;
+        regenSliderOri = regenSlider;
 
         
         StartGame();
@@ -439,6 +446,7 @@ public class Gamemode : MonoBehaviour
         regenGood = regenGreatOri;
         regenMiss = regenMissOri;
         regenBomb = regenBombOri;
+        regenSlider = regenSliderOri;
 
         if (tc.selectedMap)
         {
@@ -448,6 +456,7 @@ public class Gamemode : MonoBehaviour
             regenPerfect *= tc.selectedMap.healthDrain;
             regenMiss *= tc.selectedMap.healthDrain;
             regenBomb *= tc.selectedMap.healthDrain;
+            regenSlider *= tc.selectedMap.healthDrain;
 
             // begin the loop for health regeneration
             InvokeRepeating("UpdateHealthRegen", 0, healthRegenInterval);

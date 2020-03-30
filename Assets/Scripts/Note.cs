@@ -151,7 +151,7 @@ public class Note : MonoBehaviour
         // Find the index of this note in the notes list
         indexInNotes = tc.notes.IndexOf(gameObject);
 
-        if (!clone)
+        if (!clone && noteType != "slider")
         {
             if (noteType != "bomb")
             {
@@ -256,7 +256,11 @@ public class Note : MonoBehaviour
                     if (tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().noteType != "slider")
                     {
                         sliderLr = Instantiate(gm.sliderRef, transform.position, Quaternion.identity);
+                        gm.sliders.Add(sliderLr.gameObject.transform);
+
                         sliderScript = sliderLr.gameObject.GetComponent<Slider>();
+                        sliderScript.gm = gm;
+                        sliderScript.tc = tc;
                         sliderLr.SetPosition(0, new Vector3(0, 0, 70));
                         sliderLr.SetPosition(1, new Vector3(0, 0, 70));
 
@@ -279,8 +283,6 @@ public class Note : MonoBehaviour
                     {
                         if (tc.notes[indexInNotes + i].gameObject.GetComponent<Note>().noteType != "slider")
                         {
-                            //Debug.Log(i);
-                            //gm.indexOfSliderNoteSet = 0;
                             break;
                         }
 
@@ -498,7 +500,7 @@ public class Note : MonoBehaviour
             // This rounds it to when the beat should happen when the note hit the player
             //Debug.Log("trackPosInBeatsGame " + tc.trackPosInBeatsGame);
 
-            if (noteType != "bomb")
+            if (noteType != "bomb" && noteType != "slider")
             {
                 // if previousNoteBeatTime3 hasn't been altered yet, change it to what the game things should be the first 'previousNoteBeatTime3'
                 if (tc.previousNoteBeatTime3 == 0)
@@ -527,7 +529,7 @@ public class Note : MonoBehaviour
                 for (int i = Mathf.RoundToInt(tc.newStartingInt); i < tc.allNotes.Count; i++)
                 {
                     //Debug.Log("i = " + i);
-                    if (tc.allNotes[i].GetComponent<Note>().noteType != "bomb" && i != tc.newStartingInt)
+                    if (tc.allNotes[i].GetComponent<Note>().noteType != "bomb" && tc.allNotes[i].GetComponent<Note>().noteType != "slider" && i != tc.newStartingInt)
                     {
                         //Debug.Log(i);
                         tc.oldNewStartingNoteAccum = tc.newStartingNoteAccum;
@@ -585,7 +587,6 @@ public class Note : MonoBehaviour
         {
             for (int i = 0; i < gm.sliderIntervalCount; i++)
             {
-                //Debug.Log("i = " + i);
                 sliderInterval += (1f / (gm.sliderIntervalCount + 1));
 
                 if (indexOfSliderNoteSet >= sliderLr.positionCount)
@@ -593,6 +594,7 @@ public class Note : MonoBehaviour
                     break;
                 }
 
+                // Create the interval GO
                 GameObject go = Instantiate(gm.sliderIntervalRef, transform.position, Quaternion.identity);
                 go.transform.SetParent(gm.sliderIntervalPar.transform);
                 SliderInterval goScript = go.GetComponent<SliderInterval>();
@@ -601,8 +603,10 @@ public class Note : MonoBehaviour
                 goScript.note = this;
                 goScript.player = player;
                 goScript.sliderInterval = sliderInterval;
-                //Debug.Log(indexOfSliderNoteSet + " indexofslidernoteset");
-                //Debug.Log(sliderInterval);
+                goScript.slider = sliderScript;
+
+                sliderScript.allSliderIntervals.Add(go.transform);
+                sliderScript.sliderIntervalsInFront.Add(go.transform);
 
                 // Set the start location for the spawned transform
                 goScript.sliderStartCount = indexOfSliderNoteSet - 1;
@@ -616,10 +620,6 @@ public class Note : MonoBehaviour
                 }
             }
         }
-
-        // Future Anthony - All functionality of the transform intervals is completed :) goodjob, you felt like a god last night...
-        // Need to make it so each transform interval between each line renderer position, checks for if the player is close enough...
-        // to it when it reaches the player's z position (world space), if it is close enough, still in slider, if not, not in slider.
     }
 
     void CheckBombHitPlayer()
@@ -698,15 +698,13 @@ public class Note : MonoBehaviour
                         GameObject.Destroy(child.gameObject);
                     }
 
-
                     // Clear the stet of slider notes list
                     sliderScript.setOfSliderNotes.Clear();
 
                     // Destroy the line visual of the slider
-                    Destroy(sliderLr.gameObject);
+                    //Destroy(sliderLr.gameObject);
                 }
             }
-
         }
 
         // remove this note to the 'activeNotes' list

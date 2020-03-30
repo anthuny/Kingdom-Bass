@@ -63,6 +63,7 @@ public class Player : MonoBehaviour
     public Transform nearestAnyNote;
     // the nearest NON bomb note
     public Transform nearestNote;
+    public Transform nearestSlider;
     public GameObject furthestBehindNote;
 
     public Material shieldMat;
@@ -77,6 +78,7 @@ public class Player : MonoBehaviour
 
     public Note nearestAnyNoteScript;
     public Note nearestNoteScript;
+    public Slider nearestSliderScript;
 
     public Text accuracyUI;
 
@@ -135,6 +137,7 @@ public class Player : MonoBehaviour
         AssignMisses();
         UpdateNotesInFront();
         IncMaxAcc();
+        CheckMissForSlider();
 
         missCurrentPointInBeats = tc.trackPosInBeatsGame;
 
@@ -170,10 +173,10 @@ public class Player : MonoBehaviour
             //Debug.Log("nearestNoteScript.canGetNote " + nearestNoteScript.canGetNote);
             //Debug.Log("nearestNoteScript.noteType " + nearestNoteScript.noteType);
             //Debug.Log("missPointFrom " + missPointFrom);
+            //Debug.Log("newGoodMiss " + newGoodMiss);
             //Debug.Log("newGood " + newGood + 0.05);
-            if (missPointFrom > newGoodMiss && nearestNoteScript.canGetNote)
+            if (missPointFrom > newGoodMiss && nearestNoteScript.canGetNote && nearestNoteScript.noteType != "slider")
             {
-                //Debug.Log("c");
                 if (nearestNote.transform.position.z < transform.position.z)
                 {
                     Missed(false);
@@ -184,26 +187,47 @@ public class Player : MonoBehaviour
 
     void IncMaxAcc()
     {
+        // If there is no nearest note, do not continue
         if (!nearestNote)
         {
             return;
         }
 
+        // If at least two notes have passed the player
         if (gm.notesPassedPlayer > 2)
         {
+            // Set the new miss?
             newGoodMiss = gm.goodMin / (nearestNoteScript.beatWait / gm.accuracy);
         }
         else
         {
+            // Set a new miss?
             newGoodMiss = .2f;
         }
 
-        if (1 - missPointFrom < newGoodMiss + 0.05f && nearestNote.transform.position.z > transform.position.z && !nearestNoteScript.noteCalculatedAcc && nearestNoteScript.noteType != "bomb")
+        if (1 - missPointFrom < newGoodMiss + 0.05f && nearestNote.transform.position.z > transform.position.z && !nearestNoteScript.noteCalculatedAcc && nearestNoteScript.noteType != "bomb" && nearestNoteScript.noteType != "slider")
         {
             nearestNoteScript.noteCalculatedAcc = true;
 
             // For every note, increase the max accuaracy by 3. (3 is the value perfect gives)
             gm.totalAccuracyMax += 3;
+            //Debug.Log(nearestNote);
+            //Debug.Log("2");
+        }
+
+        if (nearestSliderScript)
+        {
+            if (nearestSliderScript.sliderIntervalsInFront.Count <= 1)
+            {
+                if (!nearestSliderScript.noteCalculatedAcc && nearestNote.transform.position.z > transform.position.z && nearestNoteScript.noteType == "slider")
+                {
+                    nearestSliderScript.noteCalculatedAcc = true;
+
+                    // For every note, increase the max accuaracy by 3. (3 is the value perfect gives)
+                    gm.totalAccuracyMax += 3;
+                    //Debug.Log("a");
+                }
+            }
         }
     }
 
@@ -294,7 +318,33 @@ public class Player : MonoBehaviour
         {
             nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
         }
+
+        float minDist3 = Mathf.Infinity;
+        if (gm.sliders.Count > 1)
+        {
+            foreach (Transform t in gm.sliders)
+            {
+                float dist3 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
+                                new Vector3(transform.position.x, transform.position.y, transform.position.z));
+
+                if (minDist3 > dist3)
+                {
+                    nearestSlider = t;
+                    minDist3 = dist3;
+                }
+            }
+        }
+        else if (gm.sliders.Count == 1)
+        {
+            nearestSlider = gm.sliders[0];
+        }
+
+        if (nearestSlider)
+        {
+            nearestSliderScript = nearestSlider.GetComponent<Slider>();
+        }
     }
+
     public void UpdateNotesInFront()
     {
         // If the track is not in progress
@@ -309,7 +359,7 @@ public class Player : MonoBehaviour
         if (activeNotes[activeNotes.Count - 1].gameObject.transform.position.z > transform.position.z)
         {
             // Add to the notesInFront list only add the note if it's NOT already in the list
-            if (!notesInfront.Contains(activeNotes[activeNotes.Count - 1].gameObject.transform) && 
+            if (!notesInfront.Contains(activeNotes[activeNotes.Count - 1].gameObject.transform) &&
                 activeNotes[activeNotes.Count - 1].gameObject.GetComponent<Note>().noteType != "bomb")
             {
                 notesInfront.Add(activeNotes[activeNotes.Count - 1].gameObject.transform);
@@ -528,7 +578,7 @@ public class Player : MonoBehaviour
             playerPos.x = (nearestLaneNumber - 1) * 1.5f;
             transform.position = playerPos;
         }
-        
+
         // Resetting shield move left / right values if not moving
         if (gm.move.x == 0 && isShielding)
         {
@@ -573,7 +623,7 @@ public class Player : MonoBehaviour
         }
 
         // Functionality of moving right without shield   
-        else if (movingRightNoShield && !isShielding && tc.selectedMap.title != "Tutorial" && transform.position.x < 5.7f || gm.tutorialStage >= 3 && movingRight && !isShielding && transform.position.x < 5.7f) 
+        else if (movingRightNoShield && !isShielding && tc.selectedMap.title != "Tutorial" && transform.position.x < 5.7f || gm.tutorialStage >= 3 && movingRight && !isShielding && transform.position.x < 5.7f)
         {
             movingRight = false;
             movingLeft = false;
@@ -586,8 +636,8 @@ public class Player : MonoBehaviour
 
             pm.FindNearestPath(false);
         }
-        
-        #endregion 
+
+        #endregion
         #region Tutorial - Moving Right
         // Functionality of moving right with shield during first few stages of tutorial
         if (movingRight && isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
@@ -633,7 +683,7 @@ public class Player : MonoBehaviour
             transform.position = playerPos;
 
             pm.FindNearestPath(false);
-        }    
+        }
         #endregion
         #region Normal - Moving Left
         // Functionality of moving left with shield
@@ -650,7 +700,7 @@ public class Player : MonoBehaviour
             pm.FindNearestPath(true);
         }
 
-        
+
         // Functionality of moving left without shield
         if (movingLeftNoShield && !isShielding && tc.selectedMap.title != "Tutorial" && transform.position.x > 0.3f || gm.tutorialStage >= 3 && movingLeft && !isShielding && transform.position.x > 0.3f)
         {
@@ -665,7 +715,7 @@ public class Player : MonoBehaviour
 
             pm.FindNearestPath(false);
         }
-        
+
         #endregion
         #region Tutorial - Moving Left
         // Functionality of moving left with shield during first few stages of tutorial
@@ -693,7 +743,7 @@ public class Player : MonoBehaviour
             //Debug.Log("called nearestlanenumberfunction");
         }
 
-        
+
         // Functionality of moving left without shield during first few stages of tutorial
         if (movingLeft && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
         {
@@ -780,7 +830,7 @@ public class Player : MonoBehaviour
     }
     private void CheckForBlastEffect()
     {
-        if (!nearestNote && nearestNoteScript.noteType == "note" && nearestNoteScript.noteDir == "up")
+        if (!nearestNote && nearestNoteScript.noteType == "note" && nearestNoteScript.noteDir == "up" || nearestNoteScript.noteType == "slider")
         {
             return;
         }
@@ -963,6 +1013,7 @@ public class Player : MonoBehaviour
 
                 // Give 'perfect' score
                 HitPerfect();
+                //Debug.Log("a");
 
                 // Increase the hit amounts of the up note by 1
                 nearestNoteScript.hitAmount++;
@@ -975,7 +1026,7 @@ public class Player : MonoBehaviour
     private void CheckHitAccuracy()
     {
         // If the nearest note has already given score once, stop.
-        if (nearestNoteScript.hitAmount > 1)
+        if (nearestNoteScript.hitAmount > 1 || nearestNoteScript.noteType == "slider")
         {
             return;
         }
@@ -1021,7 +1072,7 @@ public class Player : MonoBehaviour
             }
             else if (pointFrom >= newGood && pointFrom <= .5f)
             {
-                //Debug.Log(newGood);
+                Debug.Log(newGood);
                 Missed(false);
                 //Debug.Log("10");
             }
@@ -1084,7 +1135,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void HitPerfect()
+    public void HitPerfect()
     {
         // Check if the player needs to move for hitting a launch note
         MoveForLaunch();
@@ -1159,6 +1210,21 @@ public class Player : MonoBehaviour
         validMovement = false;
         //Debug.Break();
     }
+
+    void CheckMissForSlider()
+    {
+        if (nearestNote)
+        {
+            if (nearestNoteScript.noteType == "slider")
+            {
+                gm.checkForSliderIntervals = true;
+            }
+            else
+            {
+                gm.checkForSliderIntervals = false;
+            }
+        }
+    }
     public void Missed(bool hitByBomb)
     {
         if (nearestNote == null)
@@ -1167,7 +1233,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (!hitByBomb)
+        if (!hitByBomb && nearestNoteScript.noteType != "slider")
         {
             nearestNoteScript.canGetNote = false;
             nearestNoteScript.missed = true;
@@ -1193,8 +1259,51 @@ public class Player : MonoBehaviour
 
             // Began the cooldown till the acuracy ui text vanishes
             StartCoroutine("DiminishAccuracyUI");
+            gm.comboMulti = 1;
+            gm.updateGameUI();
+            return;
 
         }
+
+        if (!hitByBomb && nearestNoteScript.noteType == "slider")
+        {
+            // Increase the max accuracy if the note got missed
+            if (!nearestSliderScript.noteCalculatedAcc)
+            {
+                nearestSliderScript.noteCalculatedAcc = true;
+                gm.totalAccuracyMax += 3;
+                //Debug.Log("6");
+            }
+
+            if (!nearestSliderScript.missed)
+            {
+                nearestSliderScript.noteCalculatedAcc = true;
+                nearestSliderScript.Missed();
+                gm.UpdateHealth(gm.regenSlider);
+                gm.scoreIncreased = true;
+
+
+                //Debug.Log("5");
+
+                gm.misses++;
+
+                gm.score += gm.missScore;
+
+                //Update player accuracy UI
+                accuracyUI.text = gm.missScoreName;
+
+                // Update total accuracy UI
+                gm.UpdateTotalAccuracy();
+
+                // Began the cooldown till the acuracy ui text vanishes
+                StartCoroutine("DiminishAccuracyUI");
+                gm.comboMulti = 1;
+                gm.updateGameUI();
+                return;
+            }
+            return;
+        }
+
         else
         {
             gm.UpdateHealth(gm.regenBomb);
@@ -1202,7 +1311,6 @@ public class Player : MonoBehaviour
 
         gm.comboMulti = 1;
         gm.updateGameUI();
-        //Debug.Break();
     }
 
     void MakeNoteInvisible()
