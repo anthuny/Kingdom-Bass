@@ -101,6 +101,11 @@ public class Note : MonoBehaviour
     private int indexOfSliderNoteSet;
     public LineRenderer sliderLr;
     private Slider sliderScript;
+    private float distFromPlayer;
+    private bool doneOnce6;
+    public bool isEndOfSlider;
+    public bool isStartOfSlider;
+    public GameObject sliderEdge;
 
     // Start is called before the first frame update
     void Start()
@@ -162,6 +167,10 @@ public class Note : MonoBehaviour
             noteNumber = gm.totalNotes;
         }
 
+        if (noteType == "slider")
+        {
+            sliderEdge.SetActive(true);
+        }
         //Determine the direction of the arrow on the note
         switch (noteDir)
         {
@@ -253,8 +262,11 @@ public class Note : MonoBehaviour
                     // Disable the hit marker
                     hitMarkerCanvas.SetActive(false);
 
-                    if (tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().noteType != "slider")
+                    // If the note before this note is not a slider OR the end of a slider, continue
+                    if (tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().noteType != "slider" || tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().noteDir == "down")
                     {
+                        isStartOfSlider = true;
+
                         sliderLr = Instantiate(gm.sliderRef, transform.position, Quaternion.identity);
                         gm.sliders.Add(sliderLr.gameObject.transform);
 
@@ -281,7 +293,6 @@ public class Note : MonoBehaviour
 
                     if (indexInNotes + 1 < tc.notes.Count)
                     {
-                        Debug.Log("indexInNotes " + indexInNotes);
                         if (tc.notes[indexInNotes + 1].gameObject.GetComponent<Note>().noteType != "slider")
                         {
                             break;
@@ -333,7 +344,29 @@ public class Note : MonoBehaviour
                     // Disable the hit marker
                     hitMarkerCanvas.SetActive(false);
                 }
-                break;        
+                break;
+
+            case "down":
+                {
+                    // Set the note visual to invisible
+                    noteObject.SetActive(false);
+
+                    // Disable the spotlight
+                    spotLight.SetActive(false);
+
+                    // Disable the hit marker
+                    hitMarkerCanvas.SetActive(false);
+
+                    sliderLr = tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().sliderLr;
+                    sliderScript = tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().sliderScript;
+
+                    sliderScript.indexOfSliderNoteSet++;
+                    indexOfSliderNoteSet = (int)sliderScript.indexOfSliderNoteSet;
+                    CreateSliderIntervals();
+
+                    isEndOfSlider = true;
+                }
+                break;
 
             default:
                 Debug.Log(this.gameObject.name + " does not have proper arrow direction");
@@ -390,6 +423,16 @@ public class Note : MonoBehaviour
         if (!canMove || gm.tutPaused)
         {
             return;
+        }
+
+        if (noteType == "slider")
+        {
+            if (transform.position.z <= player.transform.position.z && !player.nearestSliderScript.missedOn && !doneOnce6)
+            {
+                //Debug.Log("a");
+                doneOnce6 = true;
+                CheckIfSliderMiss();
+            }
         }
 
         CheckBombHitPlayer();
@@ -493,7 +536,7 @@ public class Note : MonoBehaviour
             doneOnce3 = true;
             gm.notesPassedPlayer++;
 
-            if (noteDir != "up")
+            if (noteDir != "up" && noteDir != "down")
             {
                 gm.lrs.Remove(lr);
                 Destroy(lrObj);
@@ -564,6 +607,17 @@ public class Note : MonoBehaviour
         }
     }
 
+    void CheckIfSliderMiss()
+    {
+        distFromPlayer = Mathf.Abs(transform.position.x - player.transform.position.x);
+        if (distFromPlayer > gm.maxDistInterval * 1.5/* && player.nearestSliderScript.setOfSliderNotes[0] != transform*/ || player.isShielding /*&& player.nearestSliderScript.setOfSliderNotes[0] != transform*/)
+        {
+            player.Missed(false);
+            player.nearestSliderScript.missedOn = true;
+            Debug.Log("too far from note " + distFromPlayer + " " + gameObject.name);
+            //Debug.Break();
+        }       
+    }
     void UpdateSliderLocation()
     {
         if (sliderLr)
@@ -574,7 +628,10 @@ public class Note : MonoBehaviour
 
                 foreach (Transform note in sliderScript.setOfSliderNotes)
                 {
-                    temp.Add(note.transform.position);
+                    if (note)
+                    {
+                        temp.Add(note.transform.position);
+                    }
                 }
 
                 Vector3[] posOfPoints;

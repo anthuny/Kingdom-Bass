@@ -23,6 +23,7 @@ public class Gamemode : MonoBehaviour
     public Gradient notMissedGrad;
     public Gradient missedGrad;
     public List<Transform> sliders = new List<Transform>();
+    public Color sliderEdgeColorMiss;
 
     public int sliderIntervalCount;
 
@@ -314,11 +315,12 @@ public class Gamemode : MonoBehaviour
     [HideInInspector]
     public Controller controls;
     [HideInInspector]
-    public Vector2 move;
+    public Vector2 move, noShieldMove;
     [HideInInspector]
     public float shieldingVal;
     [HideInInspector]
     public float blastLVal, blastRVal;
+    public float maxSpeed, lowSpeed;
 
     //public Vector3 playerPos;
 
@@ -326,9 +328,13 @@ public class Gamemode : MonoBehaviour
     {
         controls = new Controller();
 
-        // Moving left / right with and without shield
+        // Moving left / right with shield
         controls.Gameplay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Gameplay.Move.canceled += ctx => move = Vector2.zero;
+
+        // Moving left / right without shield
+        controls.Gameplay.Move.performed += ctx => noShieldMove = ctx.ReadValue<Vector2>();
+        controls.Gameplay.Move.canceled += ctx => noShieldMove = Vector2.zero;
 
         // Toggling Shield
         controls.Gameplay.Shield.performed += ctx => shieldingVal = ctx.ReadValue<float>();

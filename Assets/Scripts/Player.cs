@@ -95,6 +95,8 @@ public class Player : MonoBehaviour
     private bool movingNoShield;
     private bool attemptedBlast;
 
+    public Transform nearestSliderStartEnd;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -300,17 +302,29 @@ public class Player : MonoBehaviour
             nearestAnyNoteScript = nearestAnyNote.gameObject.GetComponent<Note>();
         }
 
+
         float minDist2 = Mathf.Infinity;
-        // Detect the nearest note's position
+        float minDist4 = Mathf.Infinity;
+
+        // Detect the nearest non note position
         foreach (Transform t in activeNotes)
         {
             float dist2 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
+                            new Vector3(transform.position.x, transform.position.y, transform.position.z));
+
+            float dist4 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
                             new Vector3(transform.position.x, transform.position.y, transform.position.z));
 
             if (minDist2 > dist2 && t.GetComponent<Note>().noteType != "bomb")
             {
                 nearestNote = t;
                 minDist2 = dist2;
+            }
+
+            if (minDist4 > dist4 && t.GetComponent<Note>().isEndOfSlider || t.GetComponent<Note>().isStartOfSlider && minDist4 > dist4)
+            {
+                nearestSliderStartEnd = t;
+                minDist4 = dist4;
             }
         }
 
@@ -367,7 +381,9 @@ public class Player : MonoBehaviour
 
             // Add to the electricNotes list only add the note if it's NOT already in the list
             if (!electricNotes.Contains(activeNotes[activeNotes.Count - 1].gameObject) &&
-                activeNotes[activeNotes.Count - 1].gameObject.GetComponent<Note>().noteType != "bomb" && activeNotes[activeNotes.Count - 1].gameObject.GetComponent<Note>().noteDir != "up")
+                activeNotes[activeNotes.Count - 1].gameObject.GetComponent<Note>().noteType != "bomb"
+                && activeNotes[activeNotes.Count - 1].gameObject.GetComponent<Note>().noteDir != "up"
+                && activeNotes[activeNotes.Count - 1].gameObject.GetComponent<Note>().noteDir != "down")
             {
                 electricNotes.Add(activeNotes[activeNotes.Count - 1].gameObject);
             }
@@ -498,6 +514,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    void ControllerInputsPost()
+    {
+        transform.position = playerPos;
+
+        movingNoShield = true;
+
+        pm.FindNearestPath(false);
+    }
     void ControllerInputs()
     {
         if (!gm.controllerConnected)
@@ -519,27 +543,43 @@ public class Player : MonoBehaviour
             isShielding = false;
         }
 
+        #region Moving Horizontally with no shield
+        #region Moving slowest speed
         // Moving left / right with no shield
         // If moving left
-        if (gm.move.x < 0 && !isShielding && transform.position.x > 0.3f)
+        if (gm.noShieldMove.x < 0 && gm.noShieldMove.x > -.95f && !isShielding && transform.position.x > 0.3f)
         {
-            playerPos.x -= gm.shieldOffSpeed * Mathf.Abs(gm.move.x) * Time.deltaTime;
-            transform.position = playerPos;
-
-            movingNoShield = true;
-
-            pm.FindNearestPath(false);
+            playerPos.x -= gm.shieldOffSpeed * gm.lowSpeed * Time.deltaTime;
+            //Debug.Log(gm.noShieldMove.x);
+            ControllerInputsPost();
         }
         // If moving right
-        else if (gm.move.x > 0 && !isShielding && transform.position.x < 5.7f)
+        else if (gm.noShieldMove.x > 0 && gm.noShieldMove.x < .95f && !isShielding && transform.position.x < 5.7f)
         {
-            playerPos.x += gm.shieldOffSpeed * gm.move.x * Time.deltaTime;
-            transform.position = playerPos;
-
-            movingNoShield = true;
-
-            pm.FindNearestPath(false);
+            playerPos.x += gm.shieldOffSpeed * gm.lowSpeed * Time.deltaTime;
+            //Debug.Log(gm.noShieldMove.x);
+            ControllerInputsPost();
         }
+        #endregion
+        #region Moving fastest speed
+        // Moving left / right with no shield
+
+        // If moving left
+        if (gm.noShieldMove.x < -.95f && !isShielding && transform.position.x > 0.3f)
+        {
+            playerPos.x -= gm.shieldOffSpeed * gm.maxSpeed * Time.deltaTime;
+            //Debug.Log(gm.noShieldMove.x);
+            ControllerInputsPost();
+        }
+        // If moving right
+        else if (gm.noShieldMove.x > .95f && !isShielding && transform.position.x < 5.7f)
+        {
+            playerPos.x += gm.shieldOffSpeed * gm.maxSpeed * Time.deltaTime;
+            //Debug.Log(gm.noShieldMove.x);
+            ControllerInputsPost();
+        }
+        #endregion
+        #endregion
 
         // Moving right with shield
         if (gm.move.x > gm.movthreshHold && isShielding && !movedRight && transform.position.x < 5.7f)
@@ -1232,7 +1272,6 @@ public class Player : MonoBehaviour
             Debug.Log("?");
             return;
         }
-
         if (!hitByBomb && nearestNoteScript.noteType != "slider")
         {
             nearestNoteScript.canGetNote = false;
@@ -1262,7 +1301,6 @@ public class Player : MonoBehaviour
             gm.comboMulti = 1;
             gm.updateGameUI();
             return;
-
         }
 
         if (!hitByBomb && nearestNoteScript.noteType == "slider")
@@ -1272,18 +1310,40 @@ public class Player : MonoBehaviour
             {
                 nearestSliderScript.noteCalculatedAcc = true;
                 gm.totalAccuracyMax += 3;
-                //Debug.Log("6");
             }
 
-            if (!nearestSliderScript.missed)
+            if (nearestSliderStartEnd)
+            {
+                if (!nearestSliderStartEnd.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missed)
+                {
+                    nearestSliderScript.noteCalculatedAcc = true;
+                    nearestSliderStartEnd.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().Missed();
+                    gm.UpdateHealth(gm.regenSlider);
+                    gm.scoreIncreased = true;
+
+                    gm.misses++;
+
+                    gm.score += gm.missScore;
+
+                    //Update player accuracy UI
+                    accuracyUI.text = gm.missScoreName;
+
+                    // Update total accuracy UI
+                    gm.UpdateTotalAccuracy();
+
+                    // Began the cooldown till the acuracy ui text vanishes
+                    StartCoroutine("DiminishAccuracyUI");
+                    gm.comboMulti = 1;
+                    gm.updateGameUI();
+                    return;
+                }
+            }
+            else if (nearestNote)
             {
                 nearestSliderScript.noteCalculatedAcc = true;
                 nearestSliderScript.Missed();
                 gm.UpdateHealth(gm.regenSlider);
                 gm.scoreIncreased = true;
-
-
-                //Debug.Log("5");
 
                 gm.misses++;
 
@@ -1301,6 +1361,7 @@ public class Player : MonoBehaviour
                 gm.updateGameUI();
                 return;
             }
+
             return;
         }
 

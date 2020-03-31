@@ -26,6 +26,13 @@ public class SliderInterval : MonoBehaviour
         // relocate this object to the sliderInterval (t) between two set slider points
         if (note.sliderLr)
         {
+            // reason - strange error was happening.
+            if ((int)sliderStartCount > slider.gameObject.GetComponent<LineRenderer>().positionCount - 1)
+            {
+                StartCoroutine("CheckIfPassedPlayer");
+                return;
+            }
+
             sliderStartPos = note.sliderLr.GetPosition((int)sliderStartCount);
             if (sliderEndCount < slider.gameObject.GetComponent<LineRenderer>().positionCount)
             {
@@ -55,15 +62,15 @@ public class SliderInterval : MonoBehaviour
 
         posWhenPassedPlayer = transform.position;
 
-        distFromPlayer = Vector3.Distance(posWhenPassedPlayer, player.transform.position);
+        distFromPlayer = Mathf.Abs(posWhenPassedPlayer.x - player.transform.position.x);
 
         if (!slider.missedOn)
         {
-            if (distFromPlayer > gm.maxDistInterval || player.isShielding)
+            if (distFromPlayer > gm.maxDistInterval * 2 || player.isShielding)
             { 
                 player.Missed(false);
                 slider.missedOn = true;
-                //Debug.Log("too far from interval " + distFromPlayer);
+                Debug.Log("too far from interval " + distFromPlayer + " " + gameObject.name);
                 //Debug.Break();
             }
         }
