@@ -15,6 +15,8 @@ public class Slider : MonoBehaviour
     public bool noteCalculatedAcc;
     public Gradient nonMissedGrad;
     public Gradient missedGrad;
+    public bool hasAtLeastTwo;
+    bool doneOnce;
 
     private void Start()
     {
@@ -33,8 +35,14 @@ public class Slider : MonoBehaviour
         // Change the colour of the slider edge for the entire slider to the miss colour
         foreach (Transform t in setOfSliderNotes)
         {
-            t.gameObject.GetComponent<Note>().sliderEdge.GetComponent<Renderer>().material.SetColor("_UnlitColor", gm.sliderEdgeColorMiss);
-            Debug.Log(t.gameObject.GetComponent<Note>().sliderEdge.GetComponent<Renderer>().material.color);
+            if (!t.gameObject.GetComponent<Note>())
+            {
+                t.GetChild(0).GetComponent<Renderer>().material.SetColor("_UnlitColor", gm.sliderEdgeColorMiss);
+            }
+            else
+            {
+                t.gameObject.GetComponent<Note>().sliderEdge.GetComponent<Renderer>().material.SetColor("_UnlitColor", gm.sliderEdgeColorMiss);
+            }
         }
     }
 }

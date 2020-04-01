@@ -24,6 +24,8 @@ public class Gamemode : MonoBehaviour
     public Gradient missedGrad;
     public List<Transform> sliders = new List<Transform>();
     public Color sliderEdgeColorMiss;
+    public float sliderOffset;
+    public int sliderIntervalCountGo;
 
     public int sliderIntervalCount;
 

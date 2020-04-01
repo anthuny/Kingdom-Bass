@@ -101,11 +101,13 @@ public class Note : MonoBehaviour
     private int indexOfSliderNoteSet;
     public LineRenderer sliderLr;
     private Slider sliderScript;
-    private float distFromPlayer;
+
     private bool doneOnce6;
     public bool isEndOfSlider;
     public bool isStartOfSlider;
     public GameObject sliderEdge;
+    public GameObject sliderPredict;
+    SliderInterval2 sliderPredictScript; 
 
     // Start is called before the first frame update
     void Start()
@@ -171,6 +173,7 @@ public class Note : MonoBehaviour
         {
             sliderEdge.SetActive(true);
         }
+
         //Determine the direction of the arrow on the note
         switch (noteDir)
         {
@@ -260,7 +263,7 @@ public class Note : MonoBehaviour
                     spotLight.SetActive(false);
 
                     // Disable the hit marker
-                    hitMarkerCanvas.SetActive(false);
+                    hitMarkerCanvas.SetActive(false);                
 
                     // If the note before this note is not a slider OR the end of a slider, continue
                     if (tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().noteType != "slider" || tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().noteDir == "down")
@@ -290,6 +293,17 @@ public class Note : MonoBehaviour
                         indexOfSliderNoteSet = (int)sliderScript.indexOfSliderNoteSet;
                         CreateSliderIntervals();
                     }
+
+                    // Insantiate predict transform
+                    GameObject go = Instantiate(sliderPredict, transform.position, Quaternion.identity);
+                    sliderPredictScript = go.GetComponent<SliderInterval2>();
+
+                    sliderPredictScript.player = player;
+                    sliderPredictScript.gm = gm;
+                    sliderPredictScript.slider = sliderScript;
+                    sliderPredictScript.parent = transform;
+                    go.transform.SetParent(gameObject.transform);
+                    go.transform.localPosition = new Vector3(0, 0, -gm.sliderOffset);
 
                     if (indexInNotes + 1 < tc.notes.Count)
                     {
@@ -418,21 +432,21 @@ public class Note : MonoBehaviour
         }
     }
 
+    void CheckIfMissedSlider()
+    {
+        if (player.nearestLaneNumber != laneNumber && !player.nearestSliderStartEnd.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missed)
+        {
+            player.Missed(false);
+            player.nearestSliderStartEnd.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missedOn = true;
+            player.nearestSliderStartEnd.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().Missed();
+        }
+    }
+
     void Update()
     {
         if (!canMove || gm.tutPaused)
         {
             return;
-        }
-
-        if (noteType == "slider")
-        {
-            if (transform.position.z <= player.transform.position.z && !player.nearestSliderScript.missedOn && !doneOnce6)
-            {
-                //Debug.Log("a");
-                doneOnce6 = true;
-                CheckIfSliderMiss();
-            }
         }
 
         CheckBombHitPlayer();
@@ -536,6 +550,8 @@ public class Note : MonoBehaviour
             doneOnce3 = true;
             gm.notesPassedPlayer++;
 
+            //CheckIfMissedSlider();
+
             if (noteDir != "up" && noteDir != "down")
             {
                 gm.lrs.Remove(lr);
@@ -607,17 +623,6 @@ public class Note : MonoBehaviour
         }
     }
 
-    void CheckIfSliderMiss()
-    {
-        distFromPlayer = Mathf.Abs(transform.position.x - player.transform.position.x);
-        if (distFromPlayer > gm.maxDistInterval * 1.5/* && player.nearestSliderScript.setOfSliderNotes[0] != transform*/ || player.isShielding /*&& player.nearestSliderScript.setOfSliderNotes[0] != transform*/)
-        {
-            player.Missed(false);
-            player.nearestSliderScript.missedOn = true;
-            Debug.Log("too far from note " + distFromPlayer + " " + gameObject.name);
-            //Debug.Break();
-        }       
-    }
     void UpdateSliderLocation()
     {
         if (sliderLr)
@@ -661,13 +666,16 @@ public class Note : MonoBehaviour
                 }
                 else
                 {
-                    //Debug.Log(sliderScript.indexOfSliderNoteSet + " 2 indexofslidernoteset");
-                    //Debug.Log(sliderLr.positionCount + " 2 positionCount");
                     // Create the interval GO
+                    gm.sliderIntervalCountGo++;
+
                     GameObject go = Instantiate(gm.sliderIntervalRef, transform.position, Quaternion.identity);
                     go.transform.SetParent(gm.sliderIntervalPar.transform);
+                    go.transform.localPosition = new Vector3(0, 0, -gm.sliderOffset);
+
                     SliderInterval goScript = go.GetComponent<SliderInterval>();
-                    go.name = "SliderInterval " + sliderInterval;
+
+                    go.name = "SliderInterval " + sliderInterval.ToString("F2") + " " + gm.sliderIntervalCountGo;
                     goScript.gm = gm;
                     goScript.note = this;
                     goScript.player = player;
@@ -750,12 +758,19 @@ public class Note : MonoBehaviour
             go.transform.SetParent(gm.sliderTransformPar.transform);
             go.transform.position = gameObject.transform.position;
 
-            // Replace this note with the EGO to replace to transform...
-            // This is so the slider stays at a point a note cannot be in
-            sliderScript.setOfSliderNotes.Insert(index, go.transform);
+            //Instantiate a new slider edge for the fake note so that it can change color when the player fails the slider
+            GameObject seGO = Instantiate(sliderEdge, transform.position, Quaternion.identity);
+            seGO.transform.SetParent(go.transform);
 
-            // Remove the note from the list
-            sliderScript.setOfSliderNotes.Remove(gameObject.transform);
+            if (sliderScript.setOfSliderNotes.Contains(gameObject.transform))
+            {
+                // Replace this note with the EGO to replace to transform...
+                // This is so the slider stays at a point a note cannot be in 
+                sliderScript.setOfSliderNotes.Insert(index, go.transform);
+
+                // Remove the note from the list
+                sliderScript.setOfSliderNotes.Remove(gameObject.transform);
+            }
         }
 
         // remove this note to the 'activeNotes' list
