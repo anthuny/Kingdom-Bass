@@ -89,7 +89,7 @@ public class Note : MonoBehaviour
 
     [Header("Bomb")]
     public GameObject bombObj;
-    private bool bombHitPlayer;
+    public bool bombHitPlayer;
     public List<int> nextBombLane = new List<int>();
     public bool clone;
 
@@ -167,11 +167,6 @@ public class Note : MonoBehaviour
 
             gm.totalNotes++;
             noteNumber = gm.totalNotes;
-        }
-
-        if (noteType == "slider")
-        {
-            sliderEdge.SetActive(true);
         }
 
         //Determine the direction of the arrow on the note
@@ -357,6 +352,21 @@ public class Note : MonoBehaviour
 
                     // Disable the hit marker
                     hitMarkerCanvas.SetActive(false);
+
+                    // Insantiate predict transform
+                    GameObject go = Instantiate(sliderPredict, transform.position, Quaternion.identity);
+                    sliderPredictScript = go.GetComponent<SliderInterval2>();
+
+                    sliderPredictScript.fromBomb = true;
+                    sliderPredictScript.note = gameObject;
+                    sliderPredictScript.player = player;
+                    sliderPredictScript.gm = gm;
+                    sliderPredictScript.slider = sliderScript;
+                    sliderPredictScript.parent = transform;
+
+                    go.transform.SetParent(gameObject.transform);
+                    go.transform.localPosition = new Vector3(0, 0, -gm.sliderOffset);
+                    
                 }
                 break;
 
@@ -430,8 +440,25 @@ public class Note : MonoBehaviour
             pos.y = 0;
             ElectrictyEnd.localPosition = pos;
         }
+
+        // Enable slider edge if this note is a slider...
+        // Change size depending if this is the start/end of a slider
+        if (noteType == "slider")
+        {
+            sliderEdge.SetActive(true);
+            if (isStartOfSlider || isEndOfSlider)
+            {
+                sliderEdge.transform.localScale = new Vector3(2.4f, .035f, 2.4f);
+            }
+            else
+            {
+                sliderEdge.transform.localScale = new Vector3(1.7f, .035f, 1.7f);
+            }
+        }
     }
 
+    // Not currently being used
+    // Purpose - Was used to check if the player was close enough to notes specifically for sliders
     void CheckIfMissedSlider()
     {
         if (player.nearestLaneNumber != laneNumber && !player.nearestSliderStartEnd.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missed)
@@ -449,7 +476,6 @@ public class Note : MonoBehaviour
             return;
         }
 
-        CheckBombHitPlayer();
         UpdateSliderLocation();
 
         if (this.noteDir == "up" && this.noteType != "blast")
@@ -549,8 +575,6 @@ public class Note : MonoBehaviour
         {
             doneOnce3 = true;
             gm.notesPassedPlayer++;
-
-            //CheckIfMissedSlider();
 
             if (noteDir != "up" && noteDir != "down")
             {
@@ -697,19 +721,6 @@ public class Note : MonoBehaviour
                     }
                 }
 
-            }
-        }
-    }
-
-    void CheckBombHitPlayer()
-    {
-        if (noteType == "bomb" && !bombHitPlayer)
-        {
-            float dist = Mathf.Abs(this.gameObject.transform.position.z - player.transform.position.z);
-            if (dist <= gm.bombHitRange && laneNumber == player.nearestLaneNumber)
-            {
-                bombHitPlayer = true;
-                player.Missed(true);
             }
         }
     }

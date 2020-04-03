@@ -8,34 +8,56 @@ public class SliderInterval2 : MonoBehaviour
     public Player player;
     public Gamemode gm;
     public Slider slider;
+
     private bool doneOnce;
     bool doneOnce2;
     public Transform parent;
     public float sliderStartCount;
+    // For bomb
+    public GameObject note;
+    private Note noteScript;
+    public bool fromBomb;
 
+    private void FixedUpdate()
+    {
+        if (fromBomb)
+        {
+            // If the nearest bomb reaches the player...
+            if (parent.position.z - 2.5f <= player.gameObject.transform.position.z && !doneOnce)
+            {
+                doneOnce = true;
 
+                noteScript = note.GetComponent<Note>();
+                CheckIfPlayerHit();
+            }
+        }
+    }
     void Update()
     {
-        // If this note reaches the player...
-        if (parent.position.z - gm.sliderOffset <= player.gameObject.transform.position.z && !doneOnce)
-        {
-            doneOnce = true;
-            CheckIfPlayerHit();
-        }
 
-        // reason - strange error was happening.
-        if (!slider)
+        if (!fromBomb)
         {
-            slider.sliderIntervalsInFront.Remove(parent);
-            slider.allSliderIntervals.Remove(parent);
-            Destroy(parent.gameObject);
-        }
-        else if ((int)sliderStartCount == slider.gameObject.GetComponent<LineRenderer>().positionCount - 1)
-        {
-            //Debug.Log("end " + parent.name);
-            slider.sliderIntervalsInFront.Remove(parent);
-            slider.allSliderIntervals.Remove(parent);
-            Destroy(parent.gameObject);
+            // If this note reaches the player...
+            if (parent.position.z - gm.sliderOffset <= player.gameObject.transform.position.z && !doneOnce)
+            {
+                doneOnce = true;
+                CheckIfPlayerHit();
+            }
+
+            // reason - strange error was happening.
+            if (!slider)
+            {
+                slider.sliderIntervalsInFront.Remove(parent);
+                slider.allSliderIntervals.Remove(parent);
+                Destroy(parent.gameObject);
+            }
+            else if ((int)sliderStartCount == slider.gameObject.GetComponent<LineRenderer>().positionCount - 1)
+            {
+                //Debug.Log("end " + parent.name);
+                slider.sliderIntervalsInFront.Remove(parent);
+                slider.allSliderIntervals.Remove(parent);
+                Destroy(parent.gameObject);
+            }
         }
     }
 
@@ -43,33 +65,46 @@ public class SliderInterval2 : MonoBehaviour
     {
         distFromPlayer = Mathf.Abs(parent.position.x - player.transform.position.x);
 
-        // If the player is not close enough to this interval
-        if (distFromPlayer > gm.maxDistInterval && !slider.missedOn && !doneOnce2 || player.isShielding && !slider.missedOn && !doneOnce2)
+        if (fromBomb)
         {
-            doneOnce2 = true;
-            player.Missed(false);
-            slider.missedOn = true;
-            slider.Missed();
-
-            if (player.isShielding)
-            {
-                Debug.Log("not shielding when you should be");
+            if (noteScript.laneNumber == player.nearestLaneNumber)
+            {              
+                noteScript.bombHitPlayer = true;
+                player.Missed(true);
             }
-            else
+        }
+        else
+        {
+            // If the player is not close enough to this interval
+            if (distFromPlayer > gm.maxDistInterval && !slider.missedOn && !doneOnce2 || player.isShielding && !slider.missedOn && !doneOnce2)
             {
-                Debug.Log("too far from interval " + distFromPlayer + " " + parent.name);
-                //Debug.Break();
+                doneOnce2 = true;
+                player.Missed(false);
+                slider.missedOn = true;
+                slider.Missed();
+
+                if (player.isShielding)
+                {
+                    Debug.Log("not shielding when you should be");
+                }
+                else
+                {
+                    Debug.Log("too far from interval " + distFromPlayer + " " + parent.name);
+                    //Debug.Break();
+                }
+
+                Destroy();
+                return;
             }
 
+            else if (gm.maxDistInterval > distFromPlayer && !player.isShielding && !slider.missedOn && !doneOnce2 && slider.sliderIntervalsInFront.Count == 1)
+            {
+                player.HitPerfect();
+                //Debug.Log("hit perfect");
+            }
             Destroy();
-            return;
         }
-        
-        else if (gm.maxDistInterval > distFromPlayer && !player.isShielding && !slider.missedOn && !doneOnce2 && slider.sliderIntervalsInFront.Count == 1)
-        {
-            player.HitPerfect();
-        }
-        Destroy();
+ 
     }
 
 

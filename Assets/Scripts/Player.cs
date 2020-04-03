@@ -123,6 +123,11 @@ public class Player : MonoBehaviour
         pm.FindNearestPath(false);
     }
 
+    void UpdateNearestSlider()
+    {
+
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -133,6 +138,7 @@ public class Player : MonoBehaviour
         Inputs();
         ControllerInputs();
 
+        UpdateNearestSlider();
         StartCoroutine("KeyBoardMovement");
         FindNearestNote();
         UpdateShield();
@@ -324,6 +330,7 @@ public class Player : MonoBehaviour
             if (minDist4 > dist4 && t.GetComponent<Note>().isEndOfSlider || t.GetComponent<Note>().isStartOfSlider && minDist4 > dist4)
             {
                 nearestSliderStartEnd = t;
+                nearestSliderScript = t.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>();
                 minDist4 = dist4;
             }
         }
@@ -351,11 +358,6 @@ public class Player : MonoBehaviour
         else if (gm.sliders.Count == 1)
         {
             nearestSlider = gm.sliders[0];
-        }
-
-        if (nearestSlider)
-        {
-            nearestSliderScript = nearestSlider.GetComponent<Slider>();
         }
     }
 
@@ -545,16 +547,17 @@ public class Player : MonoBehaviour
 
         #region Moving Horizontally with no shield
         #region Moving slowest speed
+
         // Moving left / right with no shield
         // If moving left
-        if (gm.noShieldMove.x < 0 && gm.noShieldMove.x > -.95f && !isShielding && transform.position.x > 0.3f)
+        if (gm.noShieldMove.x < 0 && gm.noShieldMove.x > -.9f && !isShielding && transform.position.x > 0.3f)
         {
             playerPos.x -= gm.shieldOffSpeed * gm.lowSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
             ControllerInputsPost();
         }
         // If moving right
-        else if (gm.noShieldMove.x > 0 && gm.noShieldMove.x < .95f && !isShielding && transform.position.x < 5.7f)
+        else if (gm.noShieldMove.x > 0 && gm.noShieldMove.x < .9f && !isShielding && transform.position.x < 5.7f)
         {
             playerPos.x += gm.shieldOffSpeed * gm.lowSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
@@ -565,14 +568,14 @@ public class Player : MonoBehaviour
         // Moving left / right with no shield
 
         // If moving left
-        if (gm.noShieldMove.x < -.95f && !isShielding && transform.position.x > 0.3f)
+        if (gm.noShieldMove.x < -.9f && !isShielding && transform.position.x > 0)
         {
             playerPos.x -= gm.shieldOffSpeed * gm.maxSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
             ControllerInputsPost();
         }
         // If moving right
-        else if (gm.noShieldMove.x > .95f && !isShielding && transform.position.x < 5.7f)
+        else if (gm.noShieldMove.x > .9f && !isShielding && transform.position.x < 5.7f)
         {
             playerPos.x += gm.shieldOffSpeed * gm.maxSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
@@ -931,8 +934,6 @@ public class Player : MonoBehaviour
             Missed(false);
         }
 
-        nearestNoteScript.hitAmount++;
-
         // If the player has already got score for the nearest note, do not allow the note give score.
         if (!nearestNoteScript.canGetNote)
         {
@@ -940,24 +941,14 @@ public class Player : MonoBehaviour
         }
 
         // If the nearest note is an up arrow, ignore it. 
-        if (nearestNoteScript.noteDir == "up" && nearestNoteScript.noteType == "note")
+        if (nearestNoteScript.noteDir == "up")
         {
             return;
         }
 
         nearestNoteScript.canGetNote = false;
 
-        // If an attempt on the up note was made, instantly miss the note
-        if (nearestNoteScript.noteType == "blast")
-        {
-            Missed(false);
-        }
-
-        // If an attempt on the up note was made, instantly miss the note
-        if (nearestNoteScript.noteDir == "up" && nearestNoteScript.noteType != "blast")
-        {
-            //Missed(false);
-        }
+        nearestNoteScript.hitAmount++;
 
         // In the case of a note with a left arrow
         if (nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast")
@@ -1267,11 +1258,12 @@ public class Player : MonoBehaviour
     }
     public void Missed(bool hitByBomb)
     {
-        if (nearestNote == null)
+        if (nearestAnyNote == null)
         {
             Debug.Log("?");
             return;
         }
+
         if (!hitByBomb && nearestNoteScript.noteType != "slider")
         {
             nearestNoteScript.canGetNote = false;

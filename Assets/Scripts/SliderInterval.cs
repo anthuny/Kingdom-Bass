@@ -34,6 +34,7 @@ public class SliderInterval : MonoBehaviour
         sliderPredictScript.gm = gm;
         sliderPredictScript.parent = gameObject.transform;
         sliderPredictScript.sliderStartCount = sliderStartCount;
+        sliderPredictScript.note = note.gameObject;
     }
 
     // Update is called once per frame

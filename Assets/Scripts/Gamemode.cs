@@ -339,7 +339,7 @@ public class Gamemode : MonoBehaviour
         controls.Gameplay.Move.canceled += ctx => noShieldMove = Vector2.zero;
 
         // Toggling Shield
-        controls.Gameplay.Shield.performed += ctx => shieldingVal = ctx.ReadValue<float>();
+        controls.Gameplay.Shield.started += ctx => shieldingVal = ctx.ReadValue<float>();
         controls.Gameplay.Shield.canceled += ctx => shieldingVal = ctx.ReadValue<float>();
 
         // Triggering blast

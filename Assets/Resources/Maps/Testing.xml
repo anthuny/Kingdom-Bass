@@ -10,1097 +10,17 @@
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+            <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
+        <Note_BeatWait>3</Note_BeatWait>
       </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+                  <Note>
+        <Note_Type>blast</Note_Type>
+        <Note_Lane>3</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
+        <Note_BeatWait>3</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
@@ -1123,24 +43,6 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1150,7 +52,7 @@
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
-      <Note>
+       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1179,8 +81,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1188,14 +89,8 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1213,19 +108,18 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
+        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1236,7 +130,7 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1245,8 +139,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1275,8 +168,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1284,14 +176,8 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1309,19 +195,18 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
+        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1332,7 +217,7 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1341,8 +226,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1371,8 +255,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1380,14 +263,8 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1405,19 +282,18 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
+        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1428,7 +304,7 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1437,8 +313,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1467,8 +342,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1476,14 +350,8 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1501,19 +369,18 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
+        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1524,7 +391,7 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1533,8 +400,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1563,8 +429,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1572,14 +437,8 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1597,24 +456,17 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
+        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1626,7 +478,7 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1635,8 +487,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1665,8 +516,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1674,14 +524,8 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1699,19 +543,18 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
+        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1722,7 +565,7 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1731,8 +574,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1761,8 +603,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1770,14 +611,8 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1795,19 +630,18 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
+        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1818,7 +652,7 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1827,8 +661,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1857,8 +690,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1866,14 +698,8 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1891,19 +717,18 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
+        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -1914,7 +739,7 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1923,8 +748,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1953,8 +777,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -1962,19 +785,13 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -1987,19 +804,18 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
+        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -2010,7 +826,7 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -2019,8 +835,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -2049,8 +864,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
@@ -2058,14 +872,8 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
-        <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
-        <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -2083,19 +891,18 @@
       <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>up</Note_ArrowD>
+        <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>4</Note_Lane>
+        <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>5</Note_Lane>
-        <Note_ArrowD>down</Note_ArrowD>
+        <Note_Lane>4</Note_Lane>
+        <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
       <Note>
@@ -2106,7 +913,7 @@
       </Note>
       <Note>
         <Note_Type>slider</Note_Type>
-        <Note_Lane>1</Note_Lane>
+        <Note_Lane>4</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
       </Note>
@@ -2115,8 +922,7 @@
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>down</Note_ArrowD>
         <Note_BeatWait>1</Note_BeatWait>
-      </Note>
-      <Note>
+      </Note>      <Note>
         <Note_Type>slider</Note_Type>
         <Note_Lane>5</Note_Lane>
         <Note_ArrowD>up</Note_ArrowD>
