@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     private PathManager pm;
     private TrackCreator tc;
     private CameraBehaviour cm;
+    private AudioManager am;
+    public Animator animator;
 
     private float pathWidth;
 
@@ -96,7 +98,6 @@ public class Player : MonoBehaviour
     private bool attemptedBlast;
 
     public Transform nearestSliderStartEnd;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -105,6 +106,7 @@ public class Player : MonoBehaviour
         pm = FindObjectOfType<PathManager>();
         tc = FindObjectOfType<TrackCreator>();
         cm = Camera.main.GetComponent<CameraBehaviour>();
+        am = FindObjectOfType<AudioManager>();
 
         rend = GetComponentInChildren<Renderer>();
         playerWidth = rend.bounds.size.z;
@@ -123,11 +125,6 @@ public class Player : MonoBehaviour
         pm.FindNearestPath(false);
     }
 
-    void UpdateNearestSlider()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -137,8 +134,6 @@ public class Player : MonoBehaviour
         }
         Inputs();
         ControllerInputs();
-
-        UpdateNearestSlider();
         StartCoroutine("KeyBoardMovement");
         FindNearestNote();
         UpdateShield();
@@ -329,9 +324,12 @@ public class Player : MonoBehaviour
 
             if (minDist4 > dist4 && t.GetComponent<Note>().isEndOfSlider || t.GetComponent<Note>().isStartOfSlider && minDist4 > dist4)
             {
-                nearestSliderStartEnd = t;
-                nearestSliderScript = t.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>();
-                minDist4 = dist4;
+                if (t.gameObject.GetComponent<Note>().sliderLr)
+                {
+                    nearestSliderStartEnd = t;
+                    nearestSliderScript = t.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>();
+                    minDist4 = dist4;
+                }
             }
         }
 
@@ -524,6 +522,12 @@ public class Player : MonoBehaviour
 
         pm.FindNearestPath(false);
     }
+
+    void MoveShieldSFX()
+    {
+        am.PlaySound("MoveShield");
+    }
+
     void ControllerInputs()
     {
         if (!gm.controllerConnected)
@@ -554,6 +558,7 @@ public class Player : MonoBehaviour
         {
             playerPos.x -= gm.shieldOffSpeed * gm.lowSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
+            animator.SetTrigger("isMovingLeftNSSlow");
             ControllerInputsPost();
         }
         // If moving right
@@ -561,6 +566,7 @@ public class Player : MonoBehaviour
         {
             playerPos.x += gm.shieldOffSpeed * gm.lowSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
+            animator.SetTrigger("isMovingRightNSSlow");
             ControllerInputsPost();
         }
         #endregion
@@ -572,6 +578,7 @@ public class Player : MonoBehaviour
         {
             playerPos.x -= gm.shieldOffSpeed * gm.maxSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
+            animator.SetTrigger("isMovingLeftNSFast");
             ControllerInputsPost();
         }
         // If moving right
@@ -579,23 +586,43 @@ public class Player : MonoBehaviour
         {
             playerPos.x += gm.shieldOffSpeed * gm.maxSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
+            animator.SetTrigger("isMovingRightNSFast");
             ControllerInputsPost();
         }
         #endregion
         #endregion
-
+        #region Moving Horizontally with shield
         // Moving right with shield
         if (gm.move.x > gm.movthreshHold && isShielding && !movedRight && transform.position.x < 5.7f)
         {
             movedRight = true;
             movingRight = true;
+
+            animator.SetBool("isIdle", false);
+            animator.SetTrigger("isMovingRight");
+            MoveShieldSFX();
         }
         // Moving left with shield
         else if (gm.move.x < -gm.movthreshHold && isShielding && !movedLeft && transform.position.x > 0.3f)
         {
             movedLeft = true;
             movingLeft = true;
+
+            animator.SetBool("isIdle", false);
+            animator.SetTrigger("isMovingLeft");
+            MoveShieldSFX();
         }
+        #endregion
+
+        if (gm.move.x == 0)
+        {
+            animator.SetBool("isIdle", true);
+        }
+        else
+        {
+            animator.SetBool("isIdle", false);  
+        }
+
 
         // Blast maintenance
         if (gm.blastLVal == 0 && gm.blastRVal == 0)
@@ -634,7 +661,7 @@ public class Player : MonoBehaviour
     {
         if (gm.controllerConnected)
         {
-            yield return 0;
+            yield break;
         }
 
         // Stops strange drifting behaviour
@@ -648,7 +675,7 @@ public class Player : MonoBehaviour
         // There must be one for this code to work. 
         if (!pm.nearestPath)
         {
-            yield return 0;
+            yield break;
         }
 
         #region Normal - Moving Right
@@ -663,6 +690,8 @@ public class Player : MonoBehaviour
             transform.position = playerPos;
 
             pm.FindNearestPath(true);
+
+            MoveShieldSFX();
         }
 
         // Functionality of moving right without shield   
@@ -741,6 +770,8 @@ public class Player : MonoBehaviour
             transform.position = playerPos;
 
             pm.FindNearestPath(true);
+
+            MoveShieldSFX();
         }
 
 
@@ -1262,6 +1293,11 @@ public class Player : MonoBehaviour
         {
             Debug.Log("?");
             return;
+        }
+
+        if (gm.comboMulti >= 2)
+        {
+            animator.SetTrigger("ComboReset");
         }
 
         if (!hitByBomb && nearestNoteScript.noteType != "slider")

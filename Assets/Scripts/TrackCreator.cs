@@ -3,6 +3,7 @@ using System.Xml;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+
 public class TrackCreator : MonoBehaviour
 {
     private Gamemode gm;
@@ -212,6 +213,7 @@ public class TrackCreator : MonoBehaviour
                 {
                     // Add the note to the notes non-bomb note list
                     notes.Add(go);
+                    gm.notesLeftInfront++;
                 }
 
                 // Add the beatWait wait for each note to beatWaitcount list
@@ -237,7 +239,6 @@ public class TrackCreator : MonoBehaviour
             UpdateMapSelectionUI();
 
             player.oldNearestLaneNumber = player.nearestLaneNumber;
-            //Debug.Log("?");
         }
     }
 

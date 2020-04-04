@@ -164,7 +164,10 @@ public class Note : MonoBehaviour
             {
                 tc.notesSpawned++;
             }
+        }
 
+        if (noteType != "bomb")
+        {
             gm.totalNotes++;
             noteNumber = gm.totalNotes;
         }
@@ -576,6 +579,11 @@ public class Note : MonoBehaviour
             doneOnce3 = true;
             gm.notesPassedPlayer++;
 
+            if (noteType != "bomb")
+            {
+                gm.notesLeftInfront--;
+            }
+
             if (noteDir != "up" && noteDir != "down")
             {
                 gm.lrs.Remove(lr);
@@ -735,8 +743,8 @@ public class Note : MonoBehaviour
 
         tc.trackPosIntervalsList2.RemoveAt(0);
 
-        // If this is the last note of the track, end differently
-        if (noteNumber == tc.noteLanes.Count)
+        // If this is the last note of the track, queue the post statistics screen
+        if (gm.notesLeftInfront <= 0)
         {
             gm.EndTrackNote();
         }

@@ -1,8 +1,8 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class Gamemode : MonoBehaviour
 {
@@ -13,6 +13,8 @@ public class Gamemode : MonoBehaviour
     public GameObject jet;
     public float jetZ;
     public float jetY;
+    public GameObject eventSystem;
+    private EventSystem es;
 
     [Header("Slider")]
     public GameObject sliderTransformPar;
@@ -55,6 +57,14 @@ public class Gamemode : MonoBehaviour
 
     [Header("Menu")]
     public bool tutPaused;
+
+    [Header("Buttons")]
+    public Button playBtn;
+    public Button yesBtn;
+    public Button retryBtn;
+    public Button map1Btn;
+    public Button menuBtn;
+    public Button continueBtn;
 
     [Header("Map Buttons")]
     public Button[] mapButtons;
@@ -291,6 +301,7 @@ public class Gamemode : MonoBehaviour
     [Header("Notes")]
     public float distPercArrowLock;
     public int totalNotes;
+    public int notesLeftInfront;
 
     [Header("Electricity")]
     //public LineRenderer lr;
@@ -347,6 +358,9 @@ public class Gamemode : MonoBehaviour
         controls.Gameplay.BlastR.started += ctx => blastRVal = ctx.ReadValue<float>();
         controls.Gameplay.BlastL.canceled += ctx => blastLVal = ctx.ReadValue<float>();
         controls.Gameplay.BlastR.canceled += ctx => blastRVal = ctx.ReadValue<float>();
+
+
+        es = eventSystem.gameObject.GetComponent<EventSystem>();
     }
 
     void OnEnable()
@@ -811,9 +825,27 @@ public class Gamemode : MonoBehaviour
 
         gameOverUI.SetActive(true);
 
+        StartCoroutine("GameOverContr");
+
         AudioListener.pause = true;
     }
 
+    IEnumerator GameOverContr()
+    {
+        // Have the controller select a button
+        yield return null; // Wait 1 frame for UI to recalculate.
+        if (es.currentSelectedGameObject != null)
+        {
+            var previous = es.currentSelectedGameObject.GetComponent<Selectable>();
+            if (previous != null)
+            {
+                previous.OnDeselect(null);
+                es.SetSelectedGameObject(null);
+            }
+        }
+        es.SetSelectedGameObject(retryBtn.gameObject);
+        retryBtn.OnSelect(null);
+    }
     // Replay button
     public void Replay()
     {
@@ -916,13 +948,51 @@ public class Gamemode : MonoBehaviour
 
         // Enable post map buttons to see
         postMapUI.SetActive(true);
+
+        StartCoroutine("EndingMapContr");
+    }
+
+    IEnumerator EndingMapContr()
+    {
+        // Have the controller select a button
+        yield return null; // Wait 1 frame for UI to recalculate.
+        if (es.currentSelectedGameObject != null)
+        {
+            var previous = es.currentSelectedGameObject.GetComponent<Selectable>();
+            if (previous != null)
+            {
+                previous.OnDeselect(null);
+                es.SetSelectedGameObject(null);
+            }
+        }
+        es.SetSelectedGameObject(menuBtn.gameObject);
+        menuBtn.OnSelect(null);
     }
 
     // Happens when the player presses quit
-    public void ExitGamePrompt()
+    void ExitGamePrompt()
     {
         mainMenuUI.SetActive(false);
         exitPromptUI.SetActive(true);
+
+        StartCoroutine("ExitGamePromptContr");
+    }
+
+    IEnumerator ExitGamePromptContr()
+    {
+        // Have the controller select a button
+        yield return null; // Wait 1 frame for UI to recalculate.
+        if (es.currentSelectedGameObject != null)
+        {
+            var previous = es.currentSelectedGameObject.GetComponent<Selectable>();
+            if (previous != null)
+            {
+                previous.OnDeselect(null);
+                es.SetSelectedGameObject(null);
+            }
+        }
+        es.SetSelectedGameObject(yesBtn.gameObject);
+        yesBtn.OnSelect(null);
     }
 
     // Happens when the player presses YES when asked are you sure you want to quit
@@ -938,9 +1008,19 @@ public class Gamemode : MonoBehaviour
         mainMenuUI.SetActive(true);
     }
 
+    public void PlayBtn()
+    {
+        mapSelectionUI.SetActive(true);
+    }
+
     // map selection button
     public void MapSelection()
     {
+        if (mapSelectionUI.activeSelf)
+        {
+            mapSelectionUI.SetActive(false);
+        }
+
         if (mainMenuUI.activeSelf)
         {
             mainMenuUI.SetActive(false);
@@ -951,6 +1031,8 @@ public class Gamemode : MonoBehaviour
             tutorialUI.SetActive(false);
         }
 
+        StartCoroutine("MapSelectionContr");
+
         DestroyAllRemainingNotes();
         pausedUI.SetActive(false);
         gamePaused = false;
@@ -958,6 +1040,22 @@ public class Gamemode : MonoBehaviour
         EndTrack(false);
     }
 
+    IEnumerator MapSelectionContr()
+    {
+        // Have the controller select a button
+        yield return null; // Wait 1 frame for UI to recalculate.
+        if (es.currentSelectedGameObject != null)
+        {
+            var previous = es.currentSelectedGameObject.GetComponent<Selectable>();
+            if (previous != null)
+            {
+                previous.OnDeselect(null);
+                es.SetSelectedGameObject(null);
+            }
+        }
+        es.SetSelectedGameObject(map1Btn.gameObject);
+        map1Btn.OnSelect(null);
+    }
     public void MainMenu()
     {
         if (mapSelectionUI.activeSelf)
@@ -967,10 +1065,30 @@ public class Gamemode : MonoBehaviour
 
         mainMenuUI.SetActive(true);
 
+        StartCoroutine("MainMenuContr");
+
         cantPause = true;
         tc.selectedMap = null;
         startBtn.SetActive(false);
     }
+
+    IEnumerator MainMenuContr()
+    {
+        // Have the controller select a button
+        yield return null; // Wait 1 frame for UI to recalculate.
+        if (es.currentSelectedGameObject != null)
+        {
+            var previous = es.currentSelectedGameObject.GetComponent<Selectable>();
+            if (previous != null)
+            {
+                previous.OnDeselect(null);
+                es.SetSelectedGameObject(null);
+            }
+        }
+        es.SetSelectedGameObject(playBtn.gameObject);
+        playBtn.OnSelect(null);
+    }
+
     public void EndTrack(bool retry)
     {
         // Reset the tutorial stage if it had already proceeded into the first stage
@@ -1073,6 +1191,7 @@ public class Gamemode : MonoBehaviour
             }
 
             mapSelectionUI.SetActive(true);
+
             tc.selectedMap = null;
         }
         else
@@ -1177,7 +1296,25 @@ public class Gamemode : MonoBehaviour
             gamePaused = true;
             cantPause = true;
             pausedUI.SetActive(true);
+            StartCoroutine("PauseGameControllerSelection");
         }
+    }
+
+    IEnumerator PauseGameControllerSelection()
+    {
+        // Have the controller select a button
+        yield return null; // Wait 1 frame for UI to recalculate.
+        if (es.currentSelectedGameObject != null)
+        {
+            var previous = es.currentSelectedGameObject.GetComponent<Selectable>();
+            if (previous != null)
+            {
+                previous.OnDeselect(null);
+                es.SetSelectedGameObject(null);
+            }
+        }
+        es.SetSelectedGameObject(continueBtn.gameObject);
+        continueBtn.OnSelect(null);
     }
 
     // This exists so the continue button in the pause menu can be linked to this
@@ -1185,6 +1322,7 @@ public class Gamemode : MonoBehaviour
     {
         StartCoroutine(UnpauseGame());
     }
+
     public IEnumerator UnpauseGame()
     {
         countingDown = true;
