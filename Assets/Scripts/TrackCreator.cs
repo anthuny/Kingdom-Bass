@@ -131,6 +131,8 @@ public class TrackCreator : MonoBehaviour
 
     public Path path;
 
+    public bool loadingTrack;
+
     void Start()
     {
         player = FindObjectOfType<Player>();
@@ -224,7 +226,7 @@ public class TrackCreator : MonoBehaviour
                 beatWaitCountAccum.Add(beatWaitAccum);
                     
                 // Set this note's beatWaitCur to equal the beatWaitAccum when it spawns
-                go.GetComponent<Note>().beatWaitCur = beatWaitCountAccum[beatWaitCountAccum.Count - 1] - beatWaitCount[0];
+                //go.GetComponent<Note>().beatWaitCur = beatWaitCountAccum[beatWaitCountAccum.Count - 1] - beatWaitCount[0];
 
                 allNoteTypes.Add(noteType);
 
@@ -900,29 +902,37 @@ public class TrackCreator : MonoBehaviour
     // Happens when the player presses the start button
     public void LoadTrack()
     {
-        // Disable the ability to pause
-        gm.cantPause = true;
-
-        gm.accuracy = selectedMap.averageBeatsBtwNotes;
-
-        // disable all buttons in map selection screen
-        gm.mapSelectionUI.SetActive(false);
-
-        gm.mapSelectText.gameObject.SetActive(false);
-
-        // Assign map values (BPM)
-        SetupTrack(selectedMap.bpm);
-
-        mapLD = new XmlDocument();
-
-        mapLD.LoadXml(selectedMap.mapXML.text);
-
-        XmlNodeList notes = mapLD.SelectNodes("/Levels/Level/Notes/Note");
-
-        foreach (XmlNode note in notes)
+        // Used to ensure the button is pressed once.
+        if (!loadingTrack)
         {
-            GetNote newGetNote = new GetNote(note);
+            loadingTrack = true;
+
+            gm.activeScene = "Game";
+            // Disable the ability to pause
+            gm.cantPause = true;
+
+            gm.accuracy = selectedMap.averageBeatsBtwNotes;
+
+            // disable all buttons in map selection screen
+            gm.mapSelectionUI.SetActive(false);
+
+            gm.mapSelectText.gameObject.SetActive(false);
+
+            // Assign map values (BPM)
+            SetupTrack(selectedMap.bpm);
+
+            mapLD = new XmlDocument();
+
+            mapLD.LoadXml(selectedMap.mapXML.text);
+
+            XmlNodeList notes = mapLD.SelectNodes("/Levels/Level/Notes/Note");
+
+            foreach (XmlNode note in notes)
+            {
+                GetNote newGetNote = new GetNote(note);
+            }
         }
+
     }
 
     // This is used because I can't link a button to call a coroutine

@@ -107,7 +107,12 @@ public class Note : MonoBehaviour
     public bool isStartOfSlider;
     public GameObject sliderEdge;
     public GameObject sliderPredict;
-    SliderInterval2 sliderPredictScript; 
+    SliderInterval2 sliderPredictScript;
+
+    public GameObject notePredict;
+    SliderInterval2 notePredictScript;
+
+    //public bool hasBeenAccCalculated;
 
     // Start is called before the first frame update
     void Start()
@@ -118,6 +123,27 @@ public class Note : MonoBehaviour
         player = FindObjectOfType<Player>();
         noteRend = meshRendererRef.GetComponent<Renderer>();
         noteWidth = noteRend.bounds.size.z;
+
+        if (!clone && noteType != "slider")
+        {
+            if (noteType != "bomb")
+            {
+                tc.notesSpawned++;
+            }
+        }
+
+        if (noteType != "bomb")
+        {
+            gm.totalNotes++;
+            noteNumber = gm.totalNotes;
+        }
+
+        if (tc.notesSpawned == 1)
+        {
+            tc.nextNoteInBeats = tc.selectedMap.noteTimeTaken + beatWait;
+        }
+
+        beatWaitCur = tc.beatWaitCountAccum[gm.totalNotes - 1];
 
         if (nextBombLane.Count > 0)
         {
@@ -157,20 +183,6 @@ public class Note : MonoBehaviour
 
         // Find the index of this note in the notes list
         indexInNotes = tc.notes.IndexOf(gameObject);
-
-        if (!clone && noteType != "slider")
-        {
-            if (noteType != "bomb")
-            {
-                tc.notesSpawned++;
-            }
-        }
-
-        if (noteType != "bomb")
-        {
-            gm.totalNotes++;
-            noteNumber = gm.totalNotes;
-        }
 
         //Determine the direction of the arrow on the note
         switch (noteDir)
@@ -458,6 +470,21 @@ public class Note : MonoBehaviour
                 sliderEdge.transform.localScale = new Vector3(1.7f, .035f, 1.7f);
             }
         }
+
+        if (noteType != "Slider" && noteType != "bomb")
+        {
+            // Insantiate predict transform
+            GameObject go = Instantiate(notePredict, transform.position, Quaternion.identity);
+            notePredictScript = notePredict.GetComponent<SliderInterval2>();
+
+            notePredictScript.player = player;
+            notePredictScript.gm = gm;
+            notePredictScript.parent = transform;
+            notePredictScript.fromNote = true;
+
+            go.transform.SetParent(transform);
+            go.transform.localPosition = new Vector3(0, 0, -gm.sliderOffset);
+        }
     }
 
     // Not currently being used
@@ -472,7 +499,24 @@ public class Note : MonoBehaviour
         }
     }
 
-    void Update()
+    void CheckToPlayHitSound()
+    {
+        if (noteType != "bomb" && noteType != "blast" && !missed)
+        {
+            if (noteType == "slider" && !player.nearestSliderStartEnd.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missed)
+            {
+                gm.am.PlaySound("NoteHit");
+                return;
+            }
+            else if (noteType != "slider")
+            {
+                gm.am.PlaySound("NoteHit");
+                return;
+            }
+        }
+    }
+
+    void FixedUpdate()
     {
         if (!canMove || gm.tutPaused)
         {
@@ -561,7 +605,7 @@ public class Note : MonoBehaviour
             player.notesInfront.Remove(this.gameObject.transform);
 
             //tc.notes.Remove(this.gameObject);
-            
+
             if (player.closestNoteInFront == this.gameObject)
             {
                 player.closestNoteInFront = null;
@@ -571,7 +615,7 @@ public class Note : MonoBehaviour
             {
                 player.closestNoteInFrontScript = null;
             }
-            
+
         }
 
         if (doneOnce2 && !doneOnce3)
@@ -579,9 +623,15 @@ public class Note : MonoBehaviour
             doneOnce3 = true;
             gm.notesPassedPlayer++;
 
+            CheckToPlayHitSound();
+
+            //Debug.Log(177 - gm.notesLeftInfront);
+
             if (noteType != "bomb")
             {
                 gm.notesLeftInfront--;
+
+                tc.previousNoteBeatTime3 = tc.nextNoteInBeats;
             }
 
             if (noteDir != "up" && noteDir != "down")
@@ -589,55 +639,6 @@ public class Note : MonoBehaviour
                 gm.lrs.Remove(lr);
                 Destroy(lrObj);
                 player.electricNotes.RemoveAt(0);
-            }
-
-            // Rounds the value to the nearest .25f
-            // This is done because the previousNoteBeatTime will most likely always be slightly off when it should be.
-            // This rounds it to when the beat should happen when the note hit the player
-            //Debug.Log("trackPosInBeatsGame " + tc.trackPosInBeatsGame);
-
-            if (noteType != "bomb" && noteType != "slider")
-            {
-                // if previousNoteBeatTime3 hasn't been altered yet, change it to what the game things should be the first 'previousNoteBeatTime3'
-                if (tc.previousNoteBeatTime3 == 0)
-                {
-                    //Debug.Log("before tc.trackPosInBeatsGame" + tc.trackPosInBeatsGame);
-                    tc.previousNoteBeatTime = Mathf.Round(tc.trackPosInBeatsGame * 1) / 1;
-
-                    tc.previousNoteBeatTime3 = tc.previousNoteBeatTime;
-                    //Debug.Log("after tc.trackPosInBeatsGame" + tc.trackPosInBeatsGame);
-
-                }
-                // if it is not the first time previousNoteBeatTime3 has been altered. Make it equal what nextNoteInbeats is before nextNotInbeats is updated for the next note
-                else
-                {
-                    tc.previousNoteBeatTime = tc.nextNoteInBeats;
-                    tc.previousNoteBeatTime3 = tc.nextNoteInBeats;
-                }
-
-                //Debug.Break();
-
-                player.CalculateMissPointFrom();
-
-                tc.searchingNotes = false;
-
-
-                for (int i = Mathf.RoundToInt(tc.newStartingInt); i < tc.allNotes.Count; i++)
-                {
-                    //Debug.Log("i = " + i);
-                    if (tc.allNotes[i].GetComponent<Note>().noteType != "bomb" && tc.allNotes[i].GetComponent<Note>().noteType != "slider" && i != tc.newStartingInt)
-                    {
-                        //Debug.Log(i);
-                        tc.oldNewStartingNoteAccum = tc.newStartingNoteAccum;
-                        tc.newStartingNoteAccum = tc.allNotes[i].GetComponent<Note>().beatWaitCur;
-                        //Debug.Log("tc.newStartingNoteAccum" + tc.newStartingNoteAccum);
-                        tc.newStartingInt = i;
-
-                        break;
-                    }
-                }
-
-                player.CalculateMissPointFrom2();
             }
 
             if (!clone)

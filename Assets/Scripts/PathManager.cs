@@ -16,7 +16,6 @@ public class PathManager : MonoBehaviour
 
     [HideInInspector]
     public GameObject initialPath;
-    [HideInInspector]
     public GameObject nearestPath;
     private GameObject oldNearestPath;
     private GameObject segmentHolder;

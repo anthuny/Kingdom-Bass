@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class Gamemode : MonoBehaviour
 {
     private TrackCreator tc;
-    private AudioManager am;
+    public AudioManager am;
     public GameObject player;
     public Player playerScript;
     public GameObject jet;
@@ -15,6 +15,9 @@ public class Gamemode : MonoBehaviour
     public float jetY;
     public GameObject eventSystem;
     private EventSystem es;
+
+    [Header("Scene Manager")]
+    public string activeScene;
 
     [Header("Slider")]
     public GameObject sliderTransformPar;
@@ -179,18 +182,6 @@ public class Gamemode : MonoBehaviour
     [Tooltip("The higher this value, the faster the increase in player sight for the path will be at the start of the game")]
     public float pathViewDistIncSpeed = .2f;
 
-    [Range(0, 1)]
-    [Header("The MINIMUM point of how accurate the note must be hit for a PERFECT. 0 - 1")]
-    public float perfectMin;
-    [Range(0, 1)]
-    [Header("The MINIMUM point of how accurate the note must be hit for a GREAT. 0 - 1")]
-    public float greatMin;
-    [Range(0, 1)]
-    [Header("The MINIMUM point of how accurate the note must be hit for a GOOD. 0 - 1")]
-    public float goodMin;
-    //recomend change from checking distance between notes to a set of colliders on the player and check that way as to free up processing from constantly checking distance of notes
-    //probably not that big of a drain for most PCs to notice but need to optimise where we can for slower ones
-
     [HideInInspector]
     public float greatMax, goodMax, missMax;
 
@@ -202,6 +193,10 @@ public class Gamemode : MonoBehaviour
     public int goodScore;
     public int badScore;
     public int missScore;
+
+    public float perfectMin;
+    public float greatMin;
+    public float goodMin;
 
     //[HideInInspector]
     public float totalAccuracy;
@@ -323,7 +318,6 @@ public class Gamemode : MonoBehaviour
 
     [Header("Controller")]
     public float movthreshHold = 0;
-    [HideInInspector]
     public bool controllerConnected;
     [HideInInspector]
     public Controller controls;
@@ -334,6 +328,8 @@ public class Gamemode : MonoBehaviour
     [HideInInspector]
     public float blastLVal, blastRVal;
     public float maxSpeed, lowSpeed;
+    public bool firstStart;
+    public GameObject lastSelectedBtn;
 
     //public Vector3 playerPos;
 
@@ -388,14 +384,6 @@ public class Gamemode : MonoBehaviour
 
         Application.targetFrameRate = targetFps;
 
-        greatMax = perfectMin + 0.01f;
-        goodMax = greatMax + 0.01f;
-        missMax = goodMax + 0.01f;
-
-        perfectMin = 1 - perfectMin;
-        greatMin = 1 - greatMin;
-        goodMin = 1 - goodMin;
-
         health = healthMax;
 
         mainMenuUI.SetActive(true);
@@ -410,7 +398,6 @@ public class Gamemode : MonoBehaviour
 
         
         StartGame();
-        MainMenu();
         InvokeRepeating("FindControllers", 0, 2f);
     }
 
@@ -435,6 +422,12 @@ public class Gamemode : MonoBehaviour
                     controllerConnected = false;
                 }
             }
+        }
+
+        if (!firstStart)
+        {
+            firstStart = true;
+            MainMenu();
         }
     }
     
@@ -489,6 +482,85 @@ public class Gamemode : MonoBehaviour
     {
         UpdateHealth(healthRegen);
     }
+
+    void SceneManager()
+    {
+        if (activeScene == "MapSelection")
+        {
+            if (Input.GetKeyDown("joystick button 2"))
+            {
+                MainMenu();
+            }
+            return;
+        }
+
+        else if (activeScene == "MainMenu")
+        {
+            if (Input.GetKeyDown("joystick button 2"))
+            {
+                ExitGamePrompt();
+            }
+            return;
+        }
+
+        else if (activeScene == "ExitGamePrompt")
+        {
+            if (Input.GetKeyDown("joystick button 2"))
+            {
+                MainMenu();
+            }
+            return;
+        }
+    }
+
+    void CheckForNoUISelection()
+    {
+        if (controllerConnected)
+        {
+            if (EventSystem.current.currentSelectedGameObject == null)
+            {
+                EventSystem.current.SetSelectedGameObject(lastSelectedBtn.gameObject);
+            }
+            else
+            {
+                lastSelectedBtn = EventSystem.current.currentSelectedGameObject;
+            }
+
+            if (activeScene == "MainMenu" && lastSelectedBtn == null)
+            {
+                lastSelectedBtn = playBtn.gameObject;
+            }
+
+            else if (activeScene == "MapSelection" && lastSelectedBtn == null)
+            {
+                lastSelectedBtn = map1Btn.gameObject;
+            }
+
+            else if (activeScene == "ExitGamePrompt" && lastSelectedBtn == null)
+            {
+                lastSelectedBtn = yesBtn.gameObject;
+            }
+
+            else if (activeScene == "PostMap" && lastSelectedBtn == null)
+            {
+                lastSelectedBtn = menuBtn.gameObject;
+            }
+
+            else if (activeScene == "PostMap" && lastSelectedBtn == null)
+            {
+                lastSelectedBtn = menuBtn.gameObject;
+            }
+
+            else if (activeScene == "Paused" && lastSelectedBtn == null)
+            {
+                lastSelectedBtn = continueBtn.gameObject;
+            }
+        }
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+    }
     void Update()
     {
         UpdateShield();
@@ -497,6 +569,8 @@ public class Gamemode : MonoBehaviour
         PlayerDeath();
         PauseInput();
         UpdateHealthBar();
+        SceneManager();
+        CheckForNoUISelection();
 
         if (jet.activeSelf)
         {
@@ -514,19 +588,6 @@ public class Gamemode : MonoBehaviour
         currentFps = 1.0f / Time.deltaTime;
 
         fpsCounterText.text = Mathf.FloorToInt(currentFps).ToString();
-
-        if (playerScript.nearestNote && !doneOnce)
-        {
-            doneOnce = true;
-            if (notesPassedPlayer > 2)
-            {
-                playerScript.newGoodMiss = goodMin / (playerScript.nearestNoteScript.beatWait / accuracy);
-            }
-            else
-            {
-                playerScript.newGoodMiss = .2f;
-            }
-        }
     }
 
     void UpdateElectricity()
@@ -825,7 +886,10 @@ public class Gamemode : MonoBehaviour
 
         gameOverUI.SetActive(true);
 
-        StartCoroutine("GameOverContr");
+        if (controllerConnected)
+        {
+            StartCoroutine("GameOverContr");
+        }
 
         AudioListener.pause = true;
     }
@@ -949,7 +1013,12 @@ public class Gamemode : MonoBehaviour
         // Enable post map buttons to see
         postMapUI.SetActive(true);
 
-        StartCoroutine("EndingMapContr");
+        activeScene = "PostMap";
+
+        if (controllerConnected)
+        {
+            StartCoroutine("EndingMapContr");
+        }
     }
 
     IEnumerator EndingMapContr()
@@ -975,7 +1044,12 @@ public class Gamemode : MonoBehaviour
         mainMenuUI.SetActive(false);
         exitPromptUI.SetActive(true);
 
-        StartCoroutine("ExitGamePromptContr");
+        if (controllerConnected)
+        {
+            StartCoroutine("ExitGamePromptContr");
+        }
+
+        activeScene = "ExitGamePrompt";
     }
 
     IEnumerator ExitGamePromptContr()
@@ -1006,11 +1080,23 @@ public class Gamemode : MonoBehaviour
     {
         exitPromptUI.SetActive(false);
         mainMenuUI.SetActive(true);
+
+        if (controllerConnected)
+        {
+            StartCoroutine("MainMenuContr");
+        }
     }
 
     public void PlayBtn()
     {
         mapSelectionUI.SetActive(true);
+
+        if (controllerConnected)
+        {
+            StartCoroutine("MapSelectionContr");
+        }
+
+        activeScene = "MapSelection";
     }
 
     // map selection button
@@ -1031,7 +1117,12 @@ public class Gamemode : MonoBehaviour
             tutorialUI.SetActive(false);
         }
 
-        StartCoroutine("MapSelectionContr");
+        if (controllerConnected)
+        {
+            StartCoroutine("MapSelectionContr");
+        }
+
+        activeScene = "MapSelection";
 
         DestroyAllRemainingNotes();
         pausedUI.SetActive(false);
@@ -1063,9 +1154,24 @@ public class Gamemode : MonoBehaviour
             mapSelectionUI.SetActive(false);
         }
 
+        if (exitPromptUI.activeSelf)
+        {
+            exitPromptUI.SetActive(false);
+        }
+
+        if (mapSelectionUI.activeSelf)
+        {
+            mapSelectionUI.SetActive(false);
+        }
+
         mainMenuUI.SetActive(true);
 
-        StartCoroutine("MainMenuContr");
+        if (controllerConnected)
+        {
+            StartCoroutine("MainMenuContr");
+        }
+
+        activeScene = "MainMenu";
 
         cantPause = true;
         tc.selectedMap = null;
@@ -1123,6 +1229,7 @@ public class Gamemode : MonoBehaviour
             activeTrack.Stop();
         }
 
+        tc.loadingTrack = false;
         tc.notesSpawned = 0;
         tc.allNotes.Clear();
         tc.allNoteTypes.Clear();
@@ -1192,6 +1299,13 @@ public class Gamemode : MonoBehaviour
 
             mapSelectionUI.SetActive(true);
 
+            if (controllerConnected)
+            {
+                StartCoroutine("MapSelectionContr");
+            }
+
+            activeScene = "MapSelection";
+
             tc.selectedMap = null;
         }
         else
@@ -1254,14 +1368,14 @@ public class Gamemode : MonoBehaviour
         if (!cantPause)
         {
             // Input to pause the game
-            if (Input.GetKeyDown(KeyCode.Escape) && !mapSelectionUI.activeSelf && !countingDown && !gamePaused && !tc.allNotes[tc.allNotes.Count - 1].GetComponent<Note>().behindPlayer)
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown("joystick button 9") && !mapSelectionUI.activeSelf && !countingDown && !gamePaused && !tc.allNotes[tc.allNotes.Count - 1].GetComponent<Note>().behindPlayer)
             {
                 PauseGame(false);
             }
         }
 
         // Input to resume the game
-        else if (Input.GetKeyDown(KeyCode.Escape) && gamePaused && !countingDown)
+        else if (Input.GetKeyDown(KeyCode.Escape) || (Input.GetKeyDown("joystick button 2")) && gamePaused && !countingDown)
         {
             StartCoroutine(UnpauseGame());
         }
@@ -1286,6 +1400,8 @@ public class Gamemode : MonoBehaviour
     {
         AudioListener.pause = true;
 
+        activeScene = "Paused";
+
         if (tutPause)
         {
             tutUnPauseText.gameObject.SetActive(true);
@@ -1296,7 +1412,11 @@ public class Gamemode : MonoBehaviour
             gamePaused = true;
             cantPause = true;
             pausedUI.SetActive(true);
-            StartCoroutine("PauseGameControllerSelection");
+
+            if (controllerConnected)
+            {
+                StartCoroutine("PauseGameControllerSelection");
+            }
         }
     }
 
@@ -1346,6 +1466,8 @@ public class Gamemode : MonoBehaviour
         countingDown = false;
         cantPause = false;
         AudioListener.pause = false;
+
+        activeScene = "Game";
     }
 
     public void TutorialUnpause()

@@ -17,6 +17,7 @@ public class SliderInterval2 : MonoBehaviour
     public GameObject note;
     private Note noteScript;
     public bool fromBomb;
+    public bool fromNote;
 
     private void FixedUpdate()
     {
@@ -34,8 +35,7 @@ public class SliderInterval2 : MonoBehaviour
     }
     void Update()
     {
-
-        if (!fromBomb)
+        if (!fromBomb && !fromNote)
         {
             // If this note reaches the player...
             if (parent.position.z - gm.sliderOffset <= player.gameObject.transform.position.z && !doneOnce)
@@ -85,11 +85,11 @@ public class SliderInterval2 : MonoBehaviour
 
                 if (player.isShielding)
                 {
-                    Debug.Log("not shielding when you should be");
+                    //Debug.Log("not shielding when you should be");
                 }
                 else
                 {
-                    Debug.Log("too far from interval " + distFromPlayer + " " + parent.name);
+                    //Debug.Log("too far from interval " + distFromPlayer + " " + parent.name);
                     //Debug.Break();
                 }
 

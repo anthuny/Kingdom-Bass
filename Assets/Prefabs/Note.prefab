@@ -484,6 +484,7 @@ MonoBehaviour:
   lr: {fileID: 0}
   lrObj: {fileID: 0}
   bombObj: {fileID: 1764232432220033741}
+  bombHitPlayer: 0
   nextBombLane: 
   clone: 0
   usedAsSlider: 0
@@ -493,6 +494,8 @@ MonoBehaviour:
   isStartOfSlider: 0
   sliderEdge: {fileID: 8252779649027652543}
   sliderPredict: {fileID: 295481199899510916, guid: fa1e2e2f8b127224592e2da2975632d4,
+    type: 3}
+  notePredict: {fileID: 295481199899510916, guid: cb58bcd9a89c4614ba8208031682d6cc,
     type: 3}
 --- !u!1 &8252779649027652543
 GameObject:
