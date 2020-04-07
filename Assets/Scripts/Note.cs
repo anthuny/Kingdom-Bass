@@ -85,7 +85,7 @@ public class Note : MonoBehaviour
     public bool assignedElectricity;
     public LineRenderer lr;
     public GameObject lrObj;
-    private bool canDie;
+    public bool electricityHasTurnedOff;
 
     [Header("Bomb")]
     public GameObject bombObj;
@@ -138,12 +138,12 @@ public class Note : MonoBehaviour
             noteNumber = gm.totalNotes;
         }
 
+        gm.totalAllNotes++;
+
         if (tc.notesSpawned == 1)
         {
             tc.nextNoteInBeats = tc.selectedMap.noteTimeTaken + beatWait;
         }
-
-        beatWaitCur = tc.beatWaitCountAccum[gm.totalNotes - 1];
 
         if (nextBombLane.Count > 0)
         {
@@ -312,6 +312,8 @@ public class Note : MonoBehaviour
                     sliderPredictScript.gm = gm;
                     sliderPredictScript.slider = sliderScript;
                     sliderPredictScript.parent = transform;
+                    sliderPredictScript.noteScript = this;
+
                     go.transform.SetParent(gameObject.transform);
                     go.transform.localPosition = new Vector3(0, 0, -gm.sliderOffset);
 
@@ -470,21 +472,6 @@ public class Note : MonoBehaviour
                 sliderEdge.transform.localScale = new Vector3(1.7f, .035f, 1.7f);
             }
         }
-
-        if (noteType != "Slider" && noteType != "bomb")
-        {
-            // Insantiate predict transform
-            GameObject go = Instantiate(notePredict, transform.position, Quaternion.identity);
-            notePredictScript = notePredict.GetComponent<SliderInterval2>();
-
-            notePredictScript.player = player;
-            notePredictScript.gm = gm;
-            notePredictScript.parent = transform;
-            notePredictScript.fromNote = true;
-
-            go.transform.SetParent(transform);
-            go.transform.localPosition = new Vector3(0, 0, -gm.sliderOffset);
-        }
     }
 
     // Not currently being used
@@ -493,7 +480,7 @@ public class Note : MonoBehaviour
     {
         if (player.nearestLaneNumber != laneNumber && !player.nearestSliderStartEnd.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missed)
         {
-            player.Missed(false);
+            player.Missed(false, this, gameObject.name);
             player.nearestSliderStartEnd.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missedOn = true;
             player.nearestSliderStartEnd.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().Missed();
         }
@@ -525,9 +512,9 @@ public class Note : MonoBehaviour
 
         UpdateSliderLocation();
 
-        if (this.noteDir == "up" && this.noteType != "blast")
+        if (noteDir == "up" && noteType != "bomb")
         {
-            player.DoNoteEffectUp();
+            player.DoNoteEffectUp(this);
         }
 
         // Happens once when canMove is triggered true
@@ -547,18 +534,14 @@ public class Note : MonoBehaviour
                 //Debug.Log("startTime in seconds rounded " + startTime);
                 //Debug.Break();
                 // Add this note to the active notes array
+                //player.activeNotes.Add(this.gameObject.transform);
                 player.activeNotes.Add(this.gameObject.transform);
             }
             else
             {
                 doneOnce = true;
                 startTime = tc.trackPos;
-
-                //Debug.Break();
-                // Add this note to the active notes array
-                player.activeNotes.Add(this.gameObject.transform);
             }
-
         }
 
         // Calculate the percantage of completion of the note on the lane - not currently used
@@ -765,7 +748,7 @@ public class Note : MonoBehaviour
         if (!clone)
         {
             // remove this note from the 'furthestbehindnote' variable
-            gm.playerScript.furthestBehindNote = null;
+            gm.playerScript.closestBehindNote = null;
         }
 
         // If this note is apart of a slider note
@@ -793,8 +776,12 @@ public class Note : MonoBehaviour
             }
         }
 
-        // remove this note to the 'activeNotes' list
-        player.activeNotes.Remove(this.gameObject.transform);
+        if (noteType != "bomb")
+        {
+            // remove this note to the 'activeNotes' list
+            player.activeNotes.Remove(this.gameObject.transform);
+        }
+
 
         // remove this note from the 'noteBehind' list
         player.notesInfront.Remove(this.gameObject.transform);

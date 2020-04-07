@@ -11,13 +11,14 @@ public class SliderInterval2 : MonoBehaviour
 
     private bool doneOnce;
     bool doneOnce2;
+    private bool doneOnce3;
+
     public Transform parent;
     public float sliderStartCount;
     // For bomb
     public GameObject note;
-    private Note noteScript;
+    public Note noteScript;
     public bool fromBomb;
-    public bool fromNote;
 
     private void FixedUpdate()
     {
@@ -27,7 +28,6 @@ public class SliderInterval2 : MonoBehaviour
             if (parent.position.z - 2.5f <= player.gameObject.transform.position.z && !doneOnce)
             {
                 doneOnce = true;
-
                 noteScript = note.GetComponent<Note>();
                 CheckIfPlayerHit();
             }
@@ -35,7 +35,7 @@ public class SliderInterval2 : MonoBehaviour
     }
     void Update()
     {
-        if (!fromBomb && !fromNote)
+        if (!fromBomb)
         {
             // If this note reaches the player...
             if (parent.position.z - gm.sliderOffset <= player.gameObject.transform.position.z && !doneOnce)
@@ -70,7 +70,7 @@ public class SliderInterval2 : MonoBehaviour
             if (noteScript.laneNumber == player.nearestLaneNumber)
             {              
                 noteScript.bombHitPlayer = true;
-                player.Missed(true);
+                player.Missed(true, noteScript, gameObject.name);
             }
         }
         else
@@ -79,7 +79,7 @@ public class SliderInterval2 : MonoBehaviour
             if (distFromPlayer > gm.maxDistInterval && !slider.missedOn && !doneOnce2 || player.isShielding && !slider.missedOn && !doneOnce2)
             {
                 doneOnce2 = true;
-                player.Missed(false);
+                player.Missed(false, noteScript, gameObject.name);
                 slider.missedOn = true;
                 slider.Missed();
 

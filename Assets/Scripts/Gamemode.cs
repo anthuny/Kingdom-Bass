@@ -100,6 +100,7 @@ public class Gamemode : MonoBehaviour
     public Text aboutToBlastText;
 
     public Text pressKeyToContinueEnd;
+    public GameObject screenCanvas;
 
     [Header("Map Selection")]
     public Text mapSelectText;
@@ -182,10 +183,6 @@ public class Gamemode : MonoBehaviour
     [Tooltip("The higher this value, the faster the increase in player sight for the path will be at the start of the game")]
     public float pathViewDistIncSpeed = .2f;
 
-    [HideInInspector]
-    public float greatMax, goodMax, missMax;
-
-    [HideInInspector]
     public int perfects, greats, goods, misses;
 
     [Header("Accuracy")]
@@ -296,6 +293,7 @@ public class Gamemode : MonoBehaviour
     [Header("Notes")]
     public float distPercArrowLock;
     public int totalNotes;
+    public int totalAllNotes;
     public int notesLeftInfront;
 
     [Header("Electricity")]
@@ -312,6 +310,9 @@ public class Gamemode : MonoBehaviour
     public Gradient readyNextGradient;
     public Gradient stealthNextGradient;
     public Transform laserParent;
+    public bool electricityHasTurnedOff;
+    public bool noNotesInFront;
+    public bool doneOnce2;
 
     [Header("Bombs")]
     public float bombHitRange;
@@ -330,6 +331,14 @@ public class Gamemode : MonoBehaviour
     public float maxSpeed, lowSpeed;
     public bool firstStart;
     public GameObject lastSelectedBtn;
+
+    [Header("Controller Connected UI")]
+    public GameObject controllerConnectedGo;
+    public GameObject controllerConnectedBG;
+    public Sprite controllerConnectedImage;
+    public Sprite controllerDisconnectedImage;
+
+    public GameObject cursor;
 
     //public Vector3 playerPos;
 
@@ -362,11 +371,17 @@ public class Gamemode : MonoBehaviour
     void OnEnable()
     {
         controls.Gameplay.Enable();
+        //Debug.Log("yes");
+        //Cursor.visible = false;
+        //screenCanvas.GetComponent<GraphicRaycaster>().enabled = false;
     }
 
     void OnDisable()
     {
         controls.Gameplay.Disable();
+        //Debug.Log("yes");
+        //Cursor.visible = true;
+        //screenCanvas.GetComponent<GraphicRaycaster>().enabled = true;
     }
 
     void Start()
@@ -401,27 +416,24 @@ public class Gamemode : MonoBehaviour
         InvokeRepeating("FindControllers", 0, 2f);
     }
 
+
     // Check if a controller is connected 
     void FindControllers()
     {
         //Get Joystick Names
         string[] temp = Input.GetJoystickNames();
+        //Debug.Log(temp[1]);
 
-        //Check whether a controller is connected
+
         if (temp.Length > 0)
         {
-            //Iterate over every element
-            for (int i = 0; i < temp.Length; ++i)
-            {
-                if (!string.IsNullOrEmpty(temp[i]))
-                {
-                    controllerConnected = true;
-                }
-                else
-                {
-                    controllerConnected = false;
-                }
-            }
+            controllerConnected = true;
+            cursor.GetComponent<Image>().color = Color.red;
+        }
+        else
+        {
+            controllerConnected = false;
+            cursor.GetComponent<Image>().color = Color.green;
         }
 
         if (!firstStart)
@@ -480,7 +492,10 @@ public class Gamemode : MonoBehaviour
 
     void UpdateHealthRegen()
     {
-        UpdateHealth(healthRegen);
+        if (!gamePaused)
+        {
+            UpdateHealth(healthRegen);
+        }
     }
 
     void SceneManager()
@@ -620,20 +635,16 @@ public class Gamemode : MonoBehaviour
         // Set the colour of the laser ball to the ready colour when it should be
         if (playerScript.isShielding && playerScript.notesInfront.Count >= 1)
         {
-            // Update the end position for each electricity
             for (int i = lrs.Count - 1; i >= 0; i--)
             {
                 if (i == 0)
                 {
-                    if (playerScript.closestNoteInFrontScript)
+                    if (playerScript.closestElectricNoteInFrontScript)
                     {
-                        if (playerScript.closestNoteInFrontScript.noteDir == "up")
+                        if (playerScript.closestElectricNoteInFrontScript.noteDir != "up" && playerScript.closestElectricNoteInFrontScript.noteDir != "down" && !playerScript.closestElectricNoteInFrontScript.missed)
                         {
-                            lrs[i].colorGradient = readyNextGradient;
-                            ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
-                        }
-                        else
-                        {
+                            //Debug.Log("4");
+                            //playerScript.closestNoteInFrontScript.electricityHasTurnedOff = true;
                             lrs[i].colorGradient = readyGradient;
                             ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
                         }
@@ -642,7 +653,7 @@ public class Gamemode : MonoBehaviour
                 else
                 {
                     lrs[i].colorGradient = readyNextGradient;
-                    ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
+                    //ElectrictyBallPS.material.SetColor("Color_CFB35B33", readyColour * 15);
                 }
             }
 
@@ -674,20 +685,40 @@ public class Gamemode : MonoBehaviour
 
         if (playerScript.closestNoteInFrontScript)
         {
-            // If the player got a miss for the nearest note infront, set the colour of the laser ball to the missed colour
-            // And disable the electricity
-            if (playerScript.closestNoteInFrontScript.missed)
+            if (playerScript.closestNoteInFrontScript.noteDir != "up" && playerScript.closestNoteInFrontScript.noteDir != "down")
             {
-                //playerScript.closestNoteInFrontScript.doneElecrictyEffect = 2;
-                ElectrictyBallPS.material.SetColor("Color_CFB35B33", missedColour * 15);
-
-                for (int i = lrs.Count - 1; i >= 0; i--)
+                // If the player got a miss for the nearest note infront, set the colour of the laser ball to the missed colour
+                // And disable the electricity
+                if (playerScript.closestNoteInFrontScript.missed)// && playerScript.closestNoteInFrontScript.electricityHasTurnedOff)
                 {
-                    lrs[i].startWidth = 0;
-                    lrs[i].endWidth = 0;
+                    //Debug.Log("3");
+                    playerScript.closestNoteInFrontScript.electricityHasTurnedOff = true;
+                    electricityHasTurnedOff = true;
+                    //playerScript.closestNoteInFrontScript.doneElecrictyEffect = 2;
+                    ElectrictyBallPS.material.SetColor("Color_CFB35B33", missedColour * 15);
+
+                    lrs[0].startWidth = 0;
+                    lrs[0].endWidth = 0;
+                }
+
+                // Trigger SFX for electricty re-activating
+                if (!playerScript.closestNoteInFrontScript.missed && electricityHasTurnedOff)
+                {
+                    //Debug.Log("1");
+                    electricityHasTurnedOff = false;
+                    am.PlaySound("PowerOn");
+                }
+
+                if (!playerScript.notesInfront[0].GetComponent<Note>().electricityHasTurnedOff && !doneOnce2)
+                {
+                    //Debug.Log("2");
+                    playerScript.notesInfront[0].GetComponent<Note>().electricityHasTurnedOff = true;
+                    am.PlaySound("PowerOn");
                 }
             }
+
         }
+
 
     }
     void UpdateShield()
@@ -787,14 +818,6 @@ public class Gamemode : MonoBehaviour
         }
         oldScore = score;
         scoreIncreased = true;
-
-        /*
-        accuracyText.text = "Perfect " + perfects.ToString() +
-            "\nGreat " + greats.ToString() +
-            "\nGood " + goods.ToString() +
-            "\nMiss " + misses.ToString();
-        */
-
         comboText.text = comboMulti.ToString();
 
         scoreText.text = score.ToString();
@@ -879,8 +902,12 @@ public class Gamemode : MonoBehaviour
     // Happens when player dies
     void GameOver()
     {
+        activeScene = "GameOver";
+
         // Disable game UI
         gameUI.SetActive(false);
+
+        lrs.Clear();
 
         DestroyAllRemainingNotes();
 
@@ -922,14 +949,24 @@ public class Gamemode : MonoBehaviour
     // This function only happens when the game needs to restart from either DYING or RESTARTING or GOING TO MAP SELECTION
     void DestroyAllRemainingNotes()
     {
+        // For every line renderer for electricity still alive, destroy it
+        for (int i = 0; i < tc.notesObj.transform.childCount; i++)
+        {
+            if (tc.notesObj.transform.GetChild(i).GetComponent<Note>().lrObj)
+            {
+                Destroy(tc.notesObj.transform.GetChild(i).GetComponent<Note>().lrObj);
+            }
+        }
+
         DestroyAllNotes(true);
+
         tc.notes.Clear();
-        playerScript.furthestBehindNote = null;
+        playerScript.closestBehindNote = null;
         playerScript.activeNotes.Clear();
         playerScript.notesInfront.Clear();
         playerScript.electricNotes.Clear();
         // remove this note from the 'furthestbehindnote' variable
-        playerScript.furthestBehindNote = null;
+        playerScript.closestBehindNote = null;
     }
     void PostMapStatistics()
     {
@@ -1039,7 +1076,7 @@ public class Gamemode : MonoBehaviour
     }
 
     // Happens when the player presses quit
-    void ExitGamePrompt()
+    public void ExitGamePrompt()
     {
         mainMenuUI.SetActive(false);
         exitPromptUI.SetActive(true);
@@ -1236,6 +1273,7 @@ public class Gamemode : MonoBehaviour
         tc.beatWaitCountAccum.Clear();
         playerScript.electricNotes.Clear();
         notesPassedPlayer = 0;
+        lrs.Clear();
 
         tc.noteLanes.Clear();
         tc.beatWaitCount.Clear();
@@ -1271,6 +1309,9 @@ public class Gamemode : MonoBehaviour
         totalAccuracyText.text = 0.ToString() + "%";
         comboMulti = 1;
         comboText.text = "1";
+
+        doneOnce2 = false;
+        noNotesInFront = false;
 
         playerScript.activeNotes.Clear();
         playerScript.notesInfront.Clear();
@@ -1344,7 +1385,7 @@ public class Gamemode : MonoBehaviour
 
     void DestroyAllNotes(bool playerDied)
     {
-        // Destroy all notes that are still alive if the playe ended the map
+        // Destroy all notes that are still alive if the player ended the map
         if (!playerDied)
         {
             for (int i = 0; i < tc.notesObj.transform.childCount; i++)
@@ -1365,30 +1406,37 @@ public class Gamemode : MonoBehaviour
     }
     void PauseInput()
     {
-        if (!cantPause)
+        if (activeScene == "Game")
         {
-            // Input to pause the game
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown("joystick button 9") && !mapSelectionUI.activeSelf && !countingDown && !gamePaused && !tc.allNotes[tc.allNotes.Count - 1].GetComponent<Note>().behindPlayer)
+            if (!cantPause)
             {
-                PauseGame(false);
+                // Input to pause the game
+                if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown("joystick button 9") && !mapSelectionUI.activeSelf && !countingDown && !gamePaused && !tc.allNotes[tc.allNotes.Count - 1].GetComponent<Note>().behindPlayer)
+                {
+                    //Debug.Log("1");
+                    PauseGame(false);
+                }
             }
-        }
 
-        // Input to resume the game
-        else if (Input.GetKeyDown(KeyCode.Escape) || (Input.GetKeyDown("joystick button 2")) && gamePaused && !countingDown)
-        {
-            StartCoroutine(UnpauseGame());
+            // Input to resume the game
+            else if (Input.GetKeyDown(KeyCode.Escape) || (Input.GetKeyDown("joystick button 2")) && gamePaused && !countingDown)
+            {
+                //Debug.Log("2");
+                StartCoroutine(UnpauseGame());
+            }
         }
 
         // If player presses escape in the main menu screen, send to exit game prompt
         if (Input.GetKeyDown(KeyCode.Escape) && mainMenuUI.activeSelf)
         {
+            //Debug.Log("3");
             ExitGamePrompt();
         }
 
         // If player presses escape in the map selection screen, send to main menu
         if (Input.GetKeyDown(KeyCode.Escape) && mapSelectionUI.activeSelf)
         {
+            //Debug.Log("4");
             MainMenu();
         }
 

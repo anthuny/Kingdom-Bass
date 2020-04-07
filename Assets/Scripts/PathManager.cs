@@ -268,7 +268,7 @@ public class PathManager : MonoBehaviour
                 nearestPath = hit.collider.gameObject;
                 //Debug.Log("assigned nearestlane number");
                 //Debug.Break();
-                player.SetNearestLaneNumber(forScore, nearestPath);
+                player.SetNearestLaneNumber(forScore, false, nearestPath);
 
             }
         }

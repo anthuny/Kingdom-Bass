@@ -224,7 +224,9 @@ public class TrackCreator : MonoBehaviour
 
                 // Add the beatwaitcount to a list that accumilates for each element
                 beatWaitCountAccum.Add(beatWaitAccum);
-                    
+
+                noteScript.beatWaitCur = beatWaitCountAccum[beatWaitCountAccum.Count - 1];
+
                 // Set this note's beatWaitCur to equal the beatWaitAccum when it spawns
                 //go.GetComponent<Note>().beatWaitCur = beatWaitCountAccum[beatWaitCountAccum.Count - 1] - beatWaitCount[0];
 

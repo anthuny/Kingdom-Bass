@@ -59,6 +59,8 @@ public class Player : MonoBehaviour
     public List<GameObject> electricNotes = new List<GameObject>();
     public GameObject OldClosestNoteInFront;
     public GameObject closestNoteInFront;
+    public GameObject closestElectricNoteInFront;
+    public Note closestElectricNoteInFrontScript;
     public Note closestNoteInFrontScript;
 
     // the nearest note of any type
@@ -66,7 +68,8 @@ public class Player : MonoBehaviour
     // the nearest NON bomb note
     public Transform nearestNote;
     public Transform nearestSlider;
-    public GameObject furthestBehindNote;
+    public GameObject closestBehindNote;
+    public Note closestBehindNoteScript;
 
     public Material shieldMat;
     private Color shieldColor;
@@ -80,6 +83,8 @@ public class Player : MonoBehaviour
 
     public Note nearestAnyNoteScript;
     public Note nearestNoteScript;
+    public Note nearestNoteGameScript;
+    public Transform nearestNoteGame;
     public Slider nearestSliderScript;
 
     public Text accuracyUI;
@@ -130,12 +135,13 @@ public class Player : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void Update() 
     {
         if (gm.tutPaused)
         {
             return;
         }
+
         Inputs();
         ControllerInputs();
         StartCoroutine("KeyBoardMovement");
@@ -147,28 +153,24 @@ public class Player : MonoBehaviour
         CheckMissForSlider();
 
         missCurrentPointInBeats = tc.trackPosInBeatsGame;
-
-        if (notesInfront.Count > 0)
-        {
-            closestNoteInFront = notesInfront[0].gameObject;
-        }
     }
+
     // Assigns misses if the note is too far behind the player to get score from
     void AssignMisses()
     {
-        if (nearestAnyNote)
+        if (closestBehindNote)
         {
-            nearestAnyNoteScript = nearestAnyNote.gameObject.GetComponent<Note>();
-
             CalculateMissPointFrom();
 
-            if (missCurrentPointInBeats > (nearestNoteScript.beatWaitCur + tc.selectedMap.noteTimeTaken) + gm.goodMin && nearestNoteScript.hitAmount < 1 && !nearestNoteScript.missed && nearestNoteScript.noteType != "slider" && nearestNoteScript.noteType != "bomb")
+            if (missCurrentPointInBeats > (closestBehindNoteScript.beatWaitCur + tc.selectedMap.noteTimeTaken) + gm.goodMin 
+                && closestBehindNoteScript.hitAmount < 1 && !closestBehindNoteScript.missed && closestBehindNoteScript.noteType != "slider" && closestBehindNoteScript.noteType != "bomb")
             {
                 //Debug.Log(nearestNote.transform.position.z);
-                if (nearestNote.transform.position.z < transform.position.z)
+                if (closestBehindNote.transform.position.z < transform.position.z)
                 {
-                    Debug.Log("3");
-                    Missed(false);
+                    //Debug.Log("1");
+                    //nearestNoteGameScript.missed = true;
+                    Missed(false, closestBehindNoteScript, gameObject.name);
                     //Debug.Break();
                 }
             }
@@ -178,18 +180,18 @@ public class Player : MonoBehaviour
     void IncMaxAcc()
     {
         // If there is no nearest note, do not continue
-        if (!nearestNote)
+        if (!nearestNoteGame)
         {
             return;
         }
 
-        if (1 - missPointFrom < newGoodMiss + 0.05f && nearestNote.transform.position.z > transform.position.z && !nearestNoteScript.noteCalculatedAcc && nearestNoteScript.noteType != "bomb" && nearestNoteScript.noteType != "slider")
+        if (nearestNoteGame.transform.position.z > transform.position.z && !nearestNoteGameScript.noteCalculatedAcc && nearestNoteGameScript.noteType != "bomb" && nearestNoteGameScript.noteType != "slider")
         {
-            nearestNoteScript.noteCalculatedAcc = true;
+            nearestNoteGameScript.noteCalculatedAcc = true;
 
             // For every note, increase the max accuaracy by 3. (3 is the value perfect gives)
             gm.totalAccuracyMax += 3;
-            //Debug.Log(nearestNote);
+            //Debug.Log(nearestNoteGame);
             //Debug.Log("2");
         }
 
@@ -197,7 +199,7 @@ public class Player : MonoBehaviour
         {
             if (nearestSliderScript.sliderIntervalsInFront.Count <= 1)
             {
-                if (!nearestSliderScript.noteCalculatedAcc && nearestNote.transform.position.z > transform.position.z && nearestNoteScript.noteType == "slider")
+                if (!nearestSliderScript.noteCalculatedAcc && nearestNoteGame.transform.position.z > transform.position.z && nearestNoteGameScript.noteType == "slider")
                 {
                     nearestSliderScript.noteCalculatedAcc = true;
 
@@ -216,21 +218,29 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (tc.nextIndex3 <= tc.noteLanes.Count)
+        if (tc.nextIndex3 < tc.noteLanes.Count)
         {
             if (notesInfront.Count > 0)
             {
                 tc.nextNoteInBeats = tc.selectedMap.noteTimeTaken + notesInfront[0].GetComponent<Note>().beatWaitCur;
-
-                // i think this is for the last note of the map
-                if (nearestNoteScript.noteNumber == tc.noteLanes.Count && nearestNoteScript.behindPlayer)
-                {
-                    tc.nextNoteInBeats = tc.previousNoteBeatTime3 + 2;
-                }
-
-                missPointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats, tc.previousNoteBeatTime3, missCurrentPointInBeats)));
-                //Debug.Log("missPointFrom " + missPointFrom + " nextNoteInbeats " + tc.nextNoteInBeats + " previousnoteBeatTime3 " + (tc.previousNoteBeatTime3) + " missCurrentPointInBeats " + missCurrentPointInBeats);
             }
+            else
+            {
+                tc.nextNoteInBeats = tc.beatWaitCountAccum[gm.totalAllNotes - 5];
+                //float valueTemp = tc.beatWaitCountAccum.IndexOf(gm.totalAllNotes - 5);
+                //Debug.Log(valueTemp);
+                //Debug.Log("index " + temp);
+                //Debug.Log("value " + tc.beatWaitCountAccum[temp(int)]);
+            }
+
+            // i think this is for the last note of the map
+            if (nearestNoteScript.noteNumber == tc.noteLanes.Count && nearestNoteScript.behindPlayer)
+            {
+                tc.nextNoteInBeats = tc.previousNoteBeatTime3 + 2;
+            }
+
+            missPointFrom = 1 - ((Mathf.InverseLerp(tc.nextNoteInBeats, tc.previousNoteBeatTime3, missCurrentPointInBeats)));
+            //Debug.Log("missPointFrom " + missPointFrom + " nextNoteInbeats " + tc.nextNoteInBeats + " previousnoteBeatTime3 " + (tc.previousNoteBeatTime3) + " missCurrentPointInBeats " + missCurrentPointInBeats);
         }
     }
 
@@ -253,6 +263,27 @@ public class Player : MonoBehaviour
     }
     void FindNearestNote()
     {
+        if (gm.activeScene != "Game")
+        {
+            return;
+        }
+
+        if (notesInfront.Count > 0)
+        {
+            closestNoteInFront = notesInfront[0].gameObject;
+        }
+
+        for (int i = 0; i < notesInfront.Count - 1; i++)
+        {
+            //closestElectricNoteInFront
+            if (notesInfront[i].GetComponent<Note>().noteDir == "left" || notesInfront[i].GetComponent<Note>().noteDir == "right")
+            {
+                closestElectricNoteInFront = notesInfront[i].gameObject;
+                closestElectricNoteInFrontScript = closestElectricNoteInFront.GetComponent<Note>();
+                break;
+            }
+        }
+
         float minDist = Mathf.Infinity;
 
         // Detect the nearest note's position
@@ -306,6 +337,25 @@ public class Player : MonoBehaviour
         if (nearestNote)
         {
             nearestNoteScript = nearestNote.gameObject.GetComponent<Note>();
+
+            if (missCurrentPointInBeats > (nearestNoteScript.beatWaitCur + tc.selectedMap.noteTimeTaken) + gm.goodMin)
+            {
+                if (notesInfront.Count > 0)
+                {
+                    nearestNoteGameScript = notesInfront[0].GetComponent<Note>();
+                    nearestNoteGame = nearestNoteGameScript.gameObject.transform;
+
+                }
+                else
+                {
+                    nearestNoteGameScript = null;
+                }
+            }
+            else
+            {
+                nearestNoteGameScript = nearestNoteScript;
+                nearestNoteGame = nearestNote;
+            }
         }
 
         float minDist3 = Mathf.Infinity;
@@ -338,6 +388,17 @@ public class Player : MonoBehaviour
             return;
         }
 
+        if (notesInfront.Count == 1)
+        {
+            //gm.doneOnce2 = true;
+           // gm.noNotesInFront = true;
+        }
+
+        else if (notesInfront.Count > 1)
+        {
+            gm.doneOnce2 = true;
+        }
+
         // Add a note to a list if it's infront of the player
         //  If the note is infront of the player, continue
         if (activeNotes[activeNotes.Count - 1].gameObject.transform.position.z > transform.position.z)
@@ -368,21 +429,22 @@ public class Player : MonoBehaviour
             }
         }
 
-        float FurthestDistance = 0;
+        //float closestDistance = 0;
         foreach (Transform Object in activeNotes)
         {
-            float ObjectDistance = Vector3.Distance(transform.position, Object.transform.position);
-            if (ObjectDistance > FurthestDistance && Object.gameObject.transform.position.z < transform.position.z)
+            //float ObjectDistance = Vector3.Distance(transform.position, Object.transform.position);
+            if (Object.gameObject.transform.position.z < transform.position.z)
             {
-                furthestBehindNote = Object.gameObject;
-                FurthestDistance = ObjectDistance;
+                closestBehindNote = Object.gameObject;
+                closestBehindNoteScript = closestBehindNote.GetComponent<Note>();
+                //closestDistance = ObjectDistance;
             }
         }
     }
     void Inputs()
     {
         // Do not allow any player movements if the game is paused
-        if (gm.gamePaused || gm.controllerConnected)
+        if (gm.gamePaused || gm.controllerConnected || gm.activeScene != "Game")
         {
             return;
         }
@@ -462,7 +524,7 @@ public class Player : MonoBehaviour
         else if (!holdingMovingLeftInp && !holdingMovingRightInp && blastInput && isShielding)
         {
             blastInput = false;
-            AssignHitLocation();
+            AssignHitLocation(true);
             //Debug.Break();
         }
 
@@ -618,7 +680,7 @@ public class Player : MonoBehaviour
         if (gm.blastLVal > 0 && gm.blastRVal > 0 && !attemptedBlast && isShielding)
         {
             attemptedBlast = true;
-            AssignHitLocation();
+            AssignHitLocation(true);
         }
 
 
@@ -868,7 +930,7 @@ public class Player : MonoBehaviour
         }
         #endregion
     }
-    public void SetNearestLaneNumber(bool forScore, GameObject nearestPath)
+    public void SetNearestLaneNumber(bool forScore, bool forBlast, GameObject nearestPath)
     {
         // If not moving, AND there is a nearest path to begin with
         // Update the oldNearestLaneNumber and nearestLaneNumber accordingly
@@ -880,86 +942,99 @@ public class Player : MonoBehaviour
         if (forScore)
         {
             //AssignFromAndToValuesNoteAndLaunch();
-            AssignHitLocation();
+            AssignHitLocation(forBlast);
         }
     }
 
-    void AssignHitLocation()
+    void AssignHitLocation(bool forBlast)
     {
-        if (nearestNote)
+        //Debug.Log(nearestNoteGame);
+        if (nearestNoteGame)
         {
             hitLocationInBeats = missCurrentPointInBeats;
 
-            if (nearestNoteScript.noteType == "note" || nearestNoteScript.noteType == "launch")
+            //Debug.Log(forBlast + " " + nearestNoteGameScript.noteType);
+            if (!forBlast && nearestNoteGameScript.noteType == "note" || nearestNoteGameScript.noteType == "launch")
             {
+                //Debug.Log("1");
                 CheckForNoteAndLaunchEffect();
             }
 
-            else if (nearestNoteScript.noteType == "blast")
+            else if (forBlast && nearestNoteGameScript.noteType == "blast")
             {
+                //Debug.Log("2");
                 CheckForBlastEffect();
             }
+        }
+
+        if (notesInfront.Count > 0)
+        {
+
         }
     }
     private void CheckForBlastEffect()
     {
         // if the nearest not has already been hit once, miss the player for attempt
-        if (nearestNoteScript.hitAmount > 1)
+        if (nearestNoteGameScript.hitAmount > 1)
         {
-            Missed(false);
+            Missed(false, nearestNoteGameScript, gameObject.name);
+            //Debug.Log("11");
         }
 
-        nearestNoteScript.hitAmount++;
+        nearestNoteGameScript.hitAmount++;
 
         // If the player has already got score for the nearest note, do not allow the note give score.
-        if (!nearestNoteScript.canGetNote)
+        if (!nearestNoteGameScript.canGetNote)
         {
             return;
         }
 
         gm.scoreIncreased = true;
 
-        nearestNoteScript.canGetNote = false;
-
+        nearestNoteGameScript.canGetNote = false;
+        //Debug.Log("12");
         CheckHitAccuracy();
+
     }
     private void CheckForNoteAndLaunchEffect()
     {
+        //Debug.Log("a");
         // if the nearest not has already been hit once, miss the player for attempt
         // OR if the movement that was made was made without the shield on
-        if (!nearestNote || !validMovement)
+        if (!nearestNoteGame || !validMovement)
         {
             return;
         }
 
-        if (nearestNoteScript.hitAmount > 1 && !nearestNoteScript.missed && nearestNoteScript.noteType != "note" && nearestNoteScript.noteDir != "up")
+        if (nearestNoteGameScript.hitAmount > 1 && !nearestNoteGameScript.missed && nearestNoteGameScript.noteType != "note" && nearestNoteGameScript.noteDir != "up")
         {
-            Missed(false);
+            Missed(false, nearestNoteGameScript, gameObject.name);
+            //Debug.Log("10");
         }
 
         // If the player has already got score for the nearest note, do not allow the note give score.
-        if (!nearestNoteScript.canGetNote)
+        if (!nearestNoteGameScript.canGetNote)
         {
             return;
         }
 
         // If the nearest note is an up arrow, ignore it. 
-        if (nearestNoteScript.noteDir == "up")
+        if (nearestNoteGameScript.noteDir == "up")
         {
             return;
         }
 
         gm.scoreIncreased = true;
 
-        nearestNoteScript.canGetNote = false;
+        nearestNoteGameScript.canGetNote = false;
 
-        nearestNoteScript.hitAmount++;
+        nearestNoteGameScript.hitAmount++;
 
         // In the case of a note with a left arrow
-        if (nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast")
+        if (nearestNoteGameScript.noteDir == "left" && nearestNoteGameScript.noteType != "launch" && nearestNoteGameScript.noteType != "blast")
         {
             // If the player moved into the correct lane, continue
-            if (nearestNoteScript.laneNumber == oldNearestLaneNumber - 1 && nearestNoteScript.laneNumber == nearestLaneNumber)
+            if (nearestNoteGameScript.laneNumber == oldNearestLaneNumber - 1 && nearestNoteGameScript.laneNumber == nearestLaneNumber)
             {
                 //Debug.Log("1");
                 //Debug.Log("oldNearestLaneNumber " + oldNearestLaneNumber);
@@ -968,16 +1043,16 @@ public class Player : MonoBehaviour
             }
             else
             {
-                Missed(false);
+                Missed(false, nearestNoteGameScript, gameObject.name);
                 //Debug.Log("6");
                 return;
             }
         }
         // In the case of a note with a right arrow
-        else if (nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "launch" && nearestNoteScript.noteType != "blast")
+        else if (nearestNoteGameScript.noteDir == "right" && nearestNoteGameScript.noteType != "launch" && nearestNoteGameScript.noteType != "blast")
         {
             // If the player moved into the correct lane, continue
-            if (nearestNoteScript.laneNumber == oldNearestLaneNumber + 1 && nearestNoteScript.laneNumber == nearestLaneNumber)
+            if (nearestNoteGameScript.laneNumber == oldNearestLaneNumber + 1 && nearestNoteGameScript.laneNumber == nearestLaneNumber)
             {
                 //Debug.Log("2");
                 //Debug.Log("oldNearestLaneNumber " + oldNearestLaneNumber);
@@ -986,49 +1061,51 @@ public class Player : MonoBehaviour
             }
             else
             {
-                Missed(false);
+                Missed(false, nearestNoteGameScript, gameObject.name);
                 //Debug.Log("7");
                 return;
             }
         }
 
         // In the case of a launch with a right arrow
-        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "right" && nearestNoteScript.noteType != "blast")
+        else if (nearestNoteGameScript.noteType == "launch" && nearestNoteGameScript.noteDir == "right" && nearestNoteGameScript.noteType != "blast")
         {
             // If the player moved into the correct lane, continue
-            if (nearestNoteScript.laneNumber == oldNearestLaneNumber + 1 && nearestNoteScript.laneNumber == nearestLaneNumber)
+            if (nearestNoteGameScript.laneNumber == oldNearestLaneNumber + 1 && nearestNoteGameScript.laneNumber == nearestLaneNumber)
             {
                 hitRLaunch = true;
-                //CheckHitAccuracy();
                 CheckHitAccuracy();
+                //CheckHitAccuracy();
+                //Debug.Log("15");
             }
             else
             {
-                Missed(false);
+                Missed(false, nearestNoteGameScript, gameObject.name);
                 //Debug.Log("8");
                 return;
             }
         }
 
         // in the case of a launch with a left arrow
-        else if (nearestNoteScript.noteType == "launch" && nearestNoteScript.noteDir == "left" && nearestNoteScript.noteType != "blast")
+        else if (nearestNoteGameScript.noteType == "launch" && nearestNoteGameScript.noteDir == "left" && nearestNoteGameScript.noteType != "blast")
         {
             // If the player moved into the correct lane, continue 
-            if (nearestNoteScript.laneNumber == oldNearestLaneNumber - 1 && nearestNoteScript.laneNumber == nearestLaneNumber)
+            if (nearestNoteGameScript.laneNumber == oldNearestLaneNumber - 1 && nearestNoteGameScript.laneNumber == nearestLaneNumber)
             {
                 hitLLaunch = true;
                 //CheckHitAccuracy();
                 CheckHitAccuracy();
+                //Debug.Log("15");
             }
             else
             {
-                Missed(false);
+                Missed(false, nearestNoteGameScript, gameObject.name);
                 //Debug.Log("9");
                 return;
             }
         }
     }
-    public void DoNoteEffectUp()
+    public void DoNoteEffectUp(Note noteScript)
     {
         // If there is no note active in the game, stop
         if (!nearestNote)
@@ -1037,40 +1114,40 @@ public class Player : MonoBehaviour
         }
 
         // If the up arrow that is nearest has already given score, stop
-        if (nearestNoteScript.doneUpArrow)
+        if (noteScript.doneUpArrow)
         {
             return;
         }
 
         // If the nearest up note has not been hit yet, and the player is shielding
-        if (nearestNoteScript.noteDir == "up" && isShielding && nearestNoteScript.noteType == "note")
+        if (noteScript.noteDir == "up" && isShielding && noteScript.noteType == "note")
         {
             // If the note is behind the player
-            if (nearestNoteScript.gameObject.transform.position.z < transform.position.z && !nearestNoteScript.missed && nearestNoteScript.laneNumber == nearestLaneNumber)
-            {   
+            if (noteScript.gameObject.transform.position.z < transform.position.z && !noteScript.missed && noteScript.laneNumber == nearestLaneNumber)
+            {
                 // Tell the note that it has just given score, so it knows not to allow it again in the future
-                nearestNoteScript.doneUpArrow = true;
+                noteScript.doneUpArrow = true;
 
                 // Give 'perfect' score
                 HitPerfect();
                 //Debug.Log("a");
 
                 // Increase the hit amounts of the up note by 1
-                nearestNoteScript.hitAmount++;
+                noteScript.hitAmount++;
 
                 // Make it so the up arrow can not give score again once done once aready
-                nearestNoteScript.canGetNote = false;
+                noteScript.canGetNote = false;
             }
         }
     }
 
     void CheckHitAccuracy()
     {
-        Debug.Log("1");
-        float difference = Mathf.Abs(nearestNoteScript.beatWaitCur + tc.selectedMap.noteTimeTaken - hitLocationInBeats);
-        //Debug.Log("difference " + difference + " beatWaitCur " + nearestNoteScript.beatWaitCur + " hitLocationInBeats " + hitLocationInBeats);
+        //Debug.Log("1");
+        float difference = Mathf.Abs(nearestNoteGameScript.beatWaitCur + tc.selectedMap.noteTimeTaken - hitLocationInBeats);
+        //Debug.Log("difference " + difference + " beatWaitCur " + nearestNoteGameScript.beatWaitCur + " hitLocationInBeats " + hitLocationInBeats);
         //Debug.Break();
-        
+
         if (difference < gm.perfectMin)
         {
             HitPerfect();
@@ -1088,8 +1165,8 @@ public class Player : MonoBehaviour
 
         else if (difference > gm.goodMin)
         {
-            Missed(false);
-            Debug.Log("2");
+            Missed(false, nearestNoteGameScript, gameObject.name);
+            //Debug.Log("2");
         }
     }
 
@@ -1189,8 +1266,9 @@ public class Player : MonoBehaviour
             }
         }
     }
-    public void Missed(bool hitByBomb)
+    public void Missed(bool hitByBomb, Note noteScript, string name)
     {
+        //Debug.Log("2");
         if (nearestAnyNote == null)
         {
             Debug.Log("?");
@@ -1202,10 +1280,13 @@ public class Player : MonoBehaviour
             animator.SetTrigger("ComboReset");
         }
 
-        if (!hitByBomb && nearestNoteScript.noteType != "slider")
+        if (!hitByBomb && noteScript.noteType != "slider")
         {
-            nearestNoteScript.canGetNote = false;
-            nearestNoteScript.missed = true;
+            //Debug.Log("b");
+            noteScript.canGetNote = false;
+            noteScript.missed = true;
+            //Debug.Log(noteScript.missed + " " + noteScript.gameObject.name);
+            //Debug.Break();
             gm.UpdateHealth(gm.regenMiss);
             gm.scoreIncreased = true;
 
@@ -1233,7 +1314,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (!hitByBomb && nearestNoteScript.noteType == "slider")
+        if (!hitByBomb && noteScript.noteType == "slider")
         {
             // Increase the max accuracy if the note got missed
             if (!nearestSliderScript.noteCalculatedAcc)
@@ -1247,7 +1328,7 @@ public class Player : MonoBehaviour
                 if (!nearestSliderStartEnd.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missed)
                 {
                     nearestSliderScript.noteCalculatedAcc = true;
-                    nearestNoteScript.missed = true;
+                    noteScript.missed = true;
                     nearestSliderStartEnd.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().Missed();
                     gm.UpdateHealth(gm.regenSlider);
                     gm.scoreIncreased = true;
@@ -1269,7 +1350,7 @@ public class Player : MonoBehaviour
                     return;
                 }
             }
-            else if (nearestNote)
+            else if (nearestNoteGame)
             {
                 nearestSliderScript.noteCalculatedAcc = true;
                 nearestSliderScript.Missed();
@@ -1318,7 +1399,7 @@ public class Player : MonoBehaviour
         if (hitLLaunch)
         {
             hitLLaunch = false;
-            playerPos.x = 1.5f * (nearestNoteScript.laneNumber - 2);
+            playerPos.x = 1.5f * (nearestNoteGameScript.laneNumber - 2);
             transform.position = playerPos;
 
             pm.FindNearestPath(false);
@@ -1327,7 +1408,7 @@ public class Player : MonoBehaviour
         else if (hitRLaunch)
         {
             hitRLaunch = false;
-            playerPos.x = 1.5f * (nearestNoteScript.laneNumber);
+            playerPos.x = 1.5f * (nearestNoteGameScript.laneNumber);
             transform.position = playerPos;
 
             pm.FindNearestPath(false);
