@@ -424,16 +424,27 @@ public class Gamemode : MonoBehaviour
         string[] temp = Input.GetJoystickNames();
         //Debug.Log(temp[1]);
 
-
         if (temp.Length > 0)
         {
-            controllerConnected = true;
-            cursor.GetComponent<Image>().color = Color.red;
-        }
-        else
-        {
-            controllerConnected = false;
-            cursor.GetComponent<Image>().color = Color.green;
+            for (int i = 0; i < temp.Length; ++i)
+            {
+                //Check if the string is empty or not
+                if (!string.IsNullOrEmpty(temp[i]))
+                {
+                    //Not empty, controller temp[i] is connected
+                    //Debug.Log("Controller " + i + " is connected using: " + temp[i]);
+                    controllerConnected = true;
+                    cursor.GetComponent<Image>().color = Color.red;
+                }
+                else
+                {
+                    //If it is empty, controller i is disconnected
+                    //where i indicates the controller number
+                    //Debug.Log("Controller: " + i + " is disconnected.");
+                    controllerConnected = false;
+                    cursor.GetComponent<Image>().color = Color.green;
+                }
+            }
         }
 
         if (!firstStart)
