@@ -168,10 +168,8 @@ public class Player : MonoBehaviour
                 //Debug.Log(nearestNote.transform.position.z);
                 if (closestBehindNote.transform.position.z < transform.position.z)
                 {
-                    //Debug.Log("1");
                     //nearestNoteGameScript.missed = true;
                     Missed(false, closestBehindNoteScript, gameObject.name);
-                    //Debug.Break();
                 }
             }
         }
@@ -449,35 +447,8 @@ public class Player : MonoBehaviour
             return;
         }
 
-        // This is a check for when both moving right and left movement are held
-        if (Input.GetKey(KeyCode.L))
-        {
-            holdingMovingRightInp = true;
-        }
-
-        else
-        {
-            holdingMovingRightInp = false;
-        }
-
-        // This is a check for when both moving right and left movement are held
-        if (Input.GetKey(KeyCode.A))
-        {
-            holdingMovingLeftInp = true;
-        }
-
-        else
-        {
-            holdingMovingLeftInp = false;
-        }
-
-        // If:
-        //      player is pressing for moving right
-        //      playing is NOT moving left or right already
-        //      player is not in the most RIGHT lane
-        //      blastInput is false
-        //      player is shielding
-        if (Input.GetKeyUp(KeyCode.L) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber && !blastInput && isShielding)
+        #region Moving Right Input
+        if (Input.GetKeyDown(KeyCode.L) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber && !blastInput && isShielding)
         {
             movingRight = true;
         }
@@ -492,13 +463,10 @@ public class Player : MonoBehaviour
             movingRightNoShield = false;
         }
 
-        // If:
-        //      player is pressing for moving left
-        //      playing is NOT moving left or right already
-        //      player is not in the most LEFT lane
-        //      blastInput is false
-        //      player is shielding
-        if (Input.GetKeyUp(KeyCode.A) && !movingRight && !movingLeft && nearestLaneNumber != 1 && !blastInput && isShielding)
+        #endregion
+
+        #region Moving Left Input
+        if (Input.GetKeyDown(KeyCode.A) && !movingRight && !movingLeft && nearestLaneNumber != 1 && !blastInput && isShielding)
         {
             movingLeft = true;
         }
@@ -512,27 +480,38 @@ public class Player : MonoBehaviour
         {
             movingLeftNoShield = false;
         }
+        #endregion
 
-        // If both the input for moving left and right are held down
-        // do not allow the player to move left or right after they are let go TOGETHER
-        if (holdingMovingLeftInp && holdingMovingRightInp)
+        #region Slider Speed alteration
+        if (Input.GetKey(KeyCode.S) || (Input.GetKey(KeyCode.K)))
+        {
+            gm.slowSpeedMultCur = gm.slowSpeedMult;
+        }
+        else
+        {
+            gm.slowSpeedMultCur = 1;
+        }
+        #endregion
+
+        #region Blast Input
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             blastInput = true;
+            if (nearestNoteGame)
+            {
+                if (nearestNoteGameScript.noteType == "blast")
+                {
+                    AssignHitLocation(true);
+                }
+            }
         }
-
-        // Blast action
-        else if (!holdingMovingLeftInp && !holdingMovingRightInp && blastInput && isShielding)
+        else
         {
             blastInput = false;
-            AssignHitLocation(true);
-            //Debug.Break();
         }
+        #endregion
 
-        else if (!holdingMovingLeftInp && !holdingMovingRightInp)
-        {
-            blastInput = false;
-        }
-
+        #region Shielding Input
         // if the play inputs to stop shielding stop shielding
         if (Input.GetKey(KeyCode.Space))
         {
@@ -544,6 +523,7 @@ public class Player : MonoBehaviour
         {
             isShielding = true;
         }
+        #endregion  
     }
 
     void ControllerInputsPost()
@@ -713,15 +693,6 @@ public class Player : MonoBehaviour
             yield break;
         }
 
-        // Stops strange drifting behaviour
-        //Vector3 playerPos2 = transform.position;
-        //playerPos2.z = 1;
-        //transform.position = playerPos2;
-
-        //playerPos = transform.position;
-
-        // Ensures that there is a nearest path to begin with
-        // There must be one for this code to work. 
         if (!pm.nearestPath)
         {
             yield break;
@@ -755,7 +726,7 @@ public class Player : MonoBehaviour
             movingLeft = false;
             validMovement = false;
 
-            playerPos.x += gm.shieldOffSpeed * Time.deltaTime;
+            playerPos.x += (gm.shieldOffSpeed * gm.slowSpeedMultCur) * Time.deltaTime;
             transform.position = playerPos;
 
             animator.SetTrigger("isMovingRightNSFast");
@@ -786,7 +757,7 @@ public class Player : MonoBehaviour
 
             yield return new WaitForSeconds(gm.timeForMoveBack);
 
-            //playerPos.x = 3;
+            playerPos.x = 3;
             transform.position = playerPos;
 
             pm.FindNearestPath(false);
@@ -800,7 +771,7 @@ public class Player : MonoBehaviour
             movingLeft = false;
             validMovement = false;
 
-            playerPos.x += gm.shieldOffSpeed * Time.deltaTime;
+            playerPos.x += (gm.shieldOffSpeed * gm.slowSpeedMultCur) * Time.deltaTime;
             transform.position = playerPos;
 
             pm.FindNearestPath(true);
@@ -842,7 +813,7 @@ public class Player : MonoBehaviour
             movingRight = false;
             validMovement = false;
 
-            playerPos.x -= gm.shieldOffSpeed * Time.deltaTime;
+            playerPos.x -= (gm.shieldOffSpeed * gm.slowSpeedMultCur) * Time.deltaTime;
             transform.position = playerPos;
 
             animator.SetTrigger("isMovingLeftNSFast");
@@ -872,7 +843,7 @@ public class Player : MonoBehaviour
 
             yield return new WaitForSeconds(gm.timeForMoveBack);
 
-            //playerPos.x = 3;
+            playerPos.x = 3;
             transform.position = playerPos;
 
             pm.FindNearestPath(false);
@@ -887,7 +858,7 @@ public class Player : MonoBehaviour
             movingLeft = false;
             validMovement = false;
 
-            playerPos.x += gm.shieldOffSpeed * Time.deltaTime;
+            playerPos.x += (gm.shieldOffSpeed * gm.slowSpeedMultCur) * Time.deltaTime;
             transform.position = playerPos;
 
             pm.FindNearestPath(true);
@@ -966,11 +937,6 @@ public class Player : MonoBehaviour
                 CheckForBlastEffect();
             }
         }
-
-        if (notesInfront.Count > 0)
-        {
-
-        }
     }
     private void CheckForBlastEffect()
     {
@@ -978,7 +944,7 @@ public class Player : MonoBehaviour
         if (nearestNoteGameScript.hitAmount > 1)
         {
             Missed(false, nearestNoteGameScript, gameObject.name);
-            //Debug.Log("11");
+            Debug.Log("11");
         }
 
         nearestNoteGameScript.hitAmount++;
@@ -1009,7 +975,7 @@ public class Player : MonoBehaviour
         if (nearestNoteGameScript.hitAmount > 1 && !nearestNoteGameScript.missed && nearestNoteGameScript.noteType != "note" && nearestNoteGameScript.noteDir != "up")
         {
             Missed(false, nearestNoteGameScript, gameObject.name);
-            //Debug.Log("10");
+            Debug.Log("10");
         }
 
         // If the player has already got score for the nearest note, do not allow the note give score.
@@ -1044,7 +1010,7 @@ public class Player : MonoBehaviour
             else
             {
                 Missed(false, nearestNoteGameScript, gameObject.name);
-                //Debug.Log("6");
+                Debug.Log("6");
                 return;
             }
         }
@@ -1062,7 +1028,7 @@ public class Player : MonoBehaviour
             else
             {
                 Missed(false, nearestNoteGameScript, gameObject.name);
-                //Debug.Log("7");
+                Debug.Log("7");
                 return;
             }
         }
@@ -1081,7 +1047,7 @@ public class Player : MonoBehaviour
             else
             {
                 Missed(false, nearestNoteGameScript, gameObject.name);
-                //Debug.Log("8");
+                Debug.Log("8");
                 return;
             }
         }
@@ -1100,7 +1066,7 @@ public class Player : MonoBehaviour
             else
             {
                 Missed(false, nearestNoteGameScript, gameObject.name);
-                //Debug.Log("9");
+                Debug.Log("9");
                 return;
             }
         }
@@ -1166,7 +1132,7 @@ public class Player : MonoBehaviour
         else if (difference > gm.goodMin)
         {
             Missed(false, nearestNoteGameScript, gameObject.name);
-            //Debug.Log("2");
+            Debug.Log("2");
         }
     }
 
@@ -1268,7 +1234,6 @@ public class Player : MonoBehaviour
     }
     public void Missed(bool hitByBomb, Note noteScript, string name)
     {
-        //Debug.Log("2");
         if (nearestAnyNote == null)
         {
             Debug.Log("?");
@@ -1278,6 +1243,11 @@ public class Player : MonoBehaviour
         if (gm.comboMulti >= 2)
         {
             animator.SetTrigger("ComboReset");
+        }
+
+        if (noteScript.tutStage >= 0 && !gm.tutStageFailed)
+        {
+            gm.tutStageFailed = true;
         }
 
         if (!hitByBomb && noteScript.noteType != "slider")

@@ -133,6 +133,8 @@ public class TrackCreator : MonoBehaviour
 
     public bool loadingTrack;
 
+    public int index = 1;
+
     void Start()
     {
         player = FindObjectOfType<Player>();
@@ -207,6 +209,8 @@ public class TrackCreator : MonoBehaviour
                 //if (noteType != "slider")
                 //{
                 noteLanes.Add(i);
+                //Debug.Log(noteLanes.Count);
+
                 // add notes to the all notes list
                 allNotes.Add(go);
                 //}
@@ -243,6 +247,11 @@ public class TrackCreator : MonoBehaviour
             UpdateMapSelectionUI();
 
             player.oldNearestLaneNumber = player.nearestLaneNumber;
+        }
+
+        if (selectedMap.title != "Tutorial" && !gm.jet.activeSelf)
+        {
+            gm.jet.SetActive(true);
         }
     }
 
@@ -390,6 +399,7 @@ public class TrackCreator : MonoBehaviour
                 }
 
                 gm.tutAreaTextBG.gameObject.SetActive(true);
+                gm.laneSwitching.SetActive(true);
             }
             #endregion
             // Right regular arrow note
@@ -471,6 +481,8 @@ public class TrackCreator : MonoBehaviour
                 {
                     gm.arrow[i].gameObject.SetActive(true);
                 }
+
+                gm.laneSwitching.SetActive(false);
             }
             #endregion
             // Launch Notes
@@ -738,6 +750,7 @@ public class TrackCreator : MonoBehaviour
             gm.tutorialStage = 0;
             return;
         }
+
         // Only allow an increase in stage when the next stage happens
         if (gm.tutorialStage > 0)
         {
@@ -748,7 +761,6 @@ public class TrackCreator : MonoBehaviour
                 player.RepositionPlayer();
             }
         }
-
 
         if (gm.tutorialStage >= 1 && gm.tutorialStage != gm.maxTutorialStages + 1 && trackPosInBeatsGame > gm.nextStageThreshholdBeats[gm.tutorialStage - 1] && !increasedStage)
         {

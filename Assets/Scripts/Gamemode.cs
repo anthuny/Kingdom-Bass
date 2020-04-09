@@ -31,6 +31,8 @@ public class Gamemode : MonoBehaviour
     public Color sliderEdgeColorMiss;
     public float sliderOffset;
     public int sliderIntervalCountGo;
+    public float slowSpeedMult = .5f;
+    public float slowSpeedMultCur;
 
     public int sliderIntervalCount;
 
@@ -109,6 +111,10 @@ public class Gamemode : MonoBehaviour
     public GameObject startBtn;
 
     [Header("Tutorial")]
+    public List<int> tutStageNoteAmounts = new List<int>();
+    public bool tutStageFailed;
+    public GameObject tutStageNoteHolder;
+    public GameObject laneSwitching;
     public Text tutAreaText;
     //[HideInInspector]
     public string tutAreaInfo;
@@ -160,6 +166,7 @@ public class Gamemode : MonoBehaviour
     public float launchRotAmount;
     public float launchRotTime;
 
+    public Color missedNoteC;
     public Color horizontalNoteArrowC;
     public Color horizontalLaunchArrowC;
     public Color upArrowC;
@@ -411,7 +418,10 @@ public class Gamemode : MonoBehaviour
         regenBombOri = regenBomb;
         regenSliderOri = regenSlider;
 
-        
+        jet.SetActive(false);
+        laneSwitching.SetActive(false);
+
+
         StartGame();
         InvokeRepeating("FindControllers", 0, 2f);
     }
@@ -456,7 +466,8 @@ public class Gamemode : MonoBehaviour
     
     public void StartGame()
     {
-        totalAccuracy = 100;
+
+       totalAccuracy = 100;
         totalAccuracyText.text = totalAccuracy.ToString() + "%";
 
         //lr.gameObject.SetActive(true);
@@ -597,12 +608,6 @@ public class Gamemode : MonoBehaviour
         UpdateHealthBar();
         SceneManager();
         CheckForNoUISelection();
-
-        if (jet.activeSelf)
-        {
-            jetZ = jetDistance + player.transform.position.z;
-            jet.transform.position = new Vector3(0, jetY, jetZ);
-        }
 
         // If there is a change in score, Update the UI
         if (score != oldScore)
@@ -1245,6 +1250,13 @@ public class Gamemode : MonoBehaviour
 
     public void EndTrack(bool retry)
     {
+        #region Tutorial reset
+        laneSwitching.SetActive(false);
+        #endregion
+
+        jet.SetActive(false);
+        //Debug.Log("ending");
+
         // Reset the tutorial stage if it had already proceeded into the first stage
         if (tutorialStage > 0)
         {
@@ -1307,6 +1319,7 @@ public class Gamemode : MonoBehaviour
         tc.oldNewStartingNoteAccum = 0;
         tc.beatWaitAccum = 0;
         tc.newStartingInt = 0;
+        tc.index = 1;
 
         score = 0;
         perfects = 0;

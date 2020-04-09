@@ -11,7 +11,7 @@ public class Note : MonoBehaviour
 
     [HideInInspector]
     public Vector3 startingPos;
-    [HideInInspector]
+    //[HideInInspector]
     public float pathWidth;
     [HideInInspector]
     private Player player;
@@ -55,6 +55,8 @@ public class Note : MonoBehaviour
     private float H;
     private float S;
     private float V;
+
+    private bool hasBeenMissed;
 
     [Tooltip("The player is only able to obtain 1 amount of score per note." +
     " If this variable is true, the player is able to still obtain score for this note.")]
@@ -112,7 +114,14 @@ public class Note : MonoBehaviour
     public GameObject notePredict;
     SliderInterval2 notePredictScript;
 
-    //public bool hasBeenAccCalculated;
+    [Header("Tutorial")]
+    public int tutStage = -1;
+    public bool tutResetNote;
+    public bool finalNoteInStage;
+    public float beatWaitCurFN;
+    public bool firstNoteInStage;
+    public float beatWaitCurLN;
+    public float beatWaitNewSet;
 
     // Start is called before the first frame update
     void Start()
@@ -123,22 +132,74 @@ public class Note : MonoBehaviour
         player = FindObjectOfType<Player>();
         noteRend = meshRendererRef.GetComponent<Renderer>();
         noteWidth = noteRend.bounds.size.z;
-
-        if (!clone && noteType != "slider")
+        
+        if (!tutResetNote)
         {
+            if (!clone && noteType != "slider")
+            {
+                if (noteType != "bomb")
+                {
+                    tc.notesSpawned++;
+                }
+            }
+
             if (noteType != "bomb")
             {
-                tc.notesSpawned++;
+                gm.totalNotes++;
+                noteNumber = gm.totalNotes;
             }
+
+            gm.totalAllNotes++;
         }
 
-        if (noteType != "bomb")
+        if (tc.selectedMap.title == "Tutorial" && !tutResetNote)
         {
-            gm.totalNotes++;
-            noteNumber = gm.totalNotes;
-        }
+            //Debug.Log("Index " + tc.index + " tutStageNoteAmounts.Count " + gm.tutStageNoteAmounts.Count + " totalAllNotes " + gm.totalAllNotes + " tutStageNoteAmounts[index] " + gm.tutStageNoteAmounts[tc.index-1]);
+            if (tc.index <= gm.tutStageNoteAmounts.Count && gm.totalAllNotes <= gm.tutStageNoteAmounts[tc.index-1] * tc.index)
+            {
+                //Debug.Log("Setting note tutstage to " + tc.index);
+                tutStage = tc.index - 1;
 
-        gm.totalAllNotes++;
+                GameObject go = Instantiate(tc.noteVisual, tc.notesObj.transform.position, Quaternion.identity);
+                Note noteScript = go.GetComponent<Note>();
+                noteScript.tutResetNote = true;
+                noteScript.beatWait = beatWait;
+                noteScript.beatWaitCur = beatWaitCur;
+                noteScript.laneNumber = laneNumber;
+                noteScript.noteType = noteType;
+                noteScript.noteDir = noteDir;
+                noteScript.noteNumber = noteNumber;
+                noteScript.gameObject.name = noteScript.laneNumber + " Tut-Respawned note";
+
+                // move the note to the correct lane
+                go.transform.position = new Vector3(tc.path.pathWidth,
+                    0.02f, pm.initialPath.GetComponent<Path>().pathLength);
+
+                go.transform.SetParent(gm.tutStageNoteHolder.transform);
+                noteScript.startingPos.z = go.transform.position.z;
+                noteScript.pathWidth = tc.path.pathWidth;
+
+                go.SetActive(false);        
+                
+            }
+            else
+            {
+                tc.index++;
+                tutStage = tc.index - 1;
+            }
+
+            if (gm.totalAllNotes == 1)
+            {
+                firstNoteInStage = true;
+                beatWaitCurFN = beatWaitCur;
+            }
+            if (gm.totalAllNotes == gm.tutStageNoteAmounts[tc.index - 1])
+            {
+                finalNoteInStage = true;
+                beatWaitCurLN = beatWaitCur;
+            }
+
+        }
 
         if (tc.notesSpawned == 1)
         {
@@ -601,8 +662,45 @@ public class Note : MonoBehaviour
 
         }
 
+        ReachedPlayer();
+    }
+    
+    IEnumerator CheckIfNoteMissedTut()
+    {
+        yield return new WaitForSeconds(.5f);
+
+        // Check if a note was missed during the tutorial stage...
+        // If yes, reset the stage for the player
+
+        if (gm.tutStageFailed && finalNoteInStage)
+        {
+            Debug.Log("failed stage");
+            beatWaitNewSet = beatWaitCurLN - beatWaitCurFN;
+
+            for (int i = 0; i < tc.notesObj.transform.childCount; i++)
+            {
+                tc.notesObj.transform.GetChild(i).GetComponent<Note>().beatWaitCur += beatWaitNewSet;
+
+                if (i < gm.tutStageNoteHolder.transform.childCount)
+                {
+                    gm.tutStageNoteHolder.transform.GetChild(i).GetComponent<Note>().beatWaitCur += beatWaitNewSet;
+                }
+            }
+
+            tc.notesObj.transform.GetChild(1).GetComponent<Note>().beatWait += beatWaitNewSet;
+        }
+
+
+    }
+    void ReachedPlayer()
+    {
         if (doneOnce2 && !doneOnce3)
         {
+            if (tc.selectedMap.title == "Tutorial")
+            {
+                StartCoroutine("CheckIfNoteMissedTut");
+            }
+
             doneOnce3 = true;
             gm.notesPassedPlayer++;
 
@@ -636,6 +734,22 @@ public class Note : MonoBehaviour
             {
                 behindPlayer = true;
             }
+        }
+    }
+
+    private void Update()
+    {
+        if (missed && noteType != "blast" && noteType != "slider" && !hasBeenMissed)
+        {
+            hasBeenMissed = true;
+            transform.GetChild(1).GetComponentInChildren<Image>().color = gm.missedNoteC;
+            spotLight.gameObject.SetActive(false);
+        }
+
+        if (missed && noteType == "blast" && !hasBeenMissed)
+        {
+            hasBeenMissed = true;
+            hitMarker.GetComponent<Image>().color = gm.missedNoteC;
         }
     }
 

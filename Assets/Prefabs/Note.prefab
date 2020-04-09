@@ -483,6 +483,7 @@ MonoBehaviour:
   assignedElectricity: 0
   lr: {fileID: 0}
   lrObj: {fileID: 0}
+  electricityHasTurnedOff: 0
   bombObj: {fileID: 1764232432220033741}
   bombHitPlayer: 0
   nextBombLane: 
