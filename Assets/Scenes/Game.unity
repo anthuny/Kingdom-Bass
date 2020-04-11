@@ -1733,6 +1733,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 276399796}
   m_CullTransparentMesh: 0
+--- !u!114 &277060765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3df29e7cc05fbec4aa43e06ea875565d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  rotation:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+    max: 360
+  skyIntensityMode:
+    m_OverrideState: 0
+    m_Value: 0
+  exposure:
+    m_OverrideState: 0
+    m_Value: 0
+  multiplier:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+  upperHemisphereLuxValue:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+  desiredLuxValue:
+    m_OverrideState: 0
+    m_Value: 20000
+  updateMode:
+    m_OverrideState: 0
+    m_Value: 0
+  updatePeriod:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+  includeSunInBaking:
+    m_OverrideState: 0
+    m_Value: 0
+  sunSize:
+    m_OverrideState: 0
+    m_Value: 0.04
+    min: 0
+    max: 1
+  sunSizeConvergence:
+    m_OverrideState: 0
+    m_Value: 5
+    min: 1
+    max: 10
+  atmosphereThickness:
+    m_OverrideState: 0
+    m_Value: 0.41
+    min: 0
+    max: 5
+  skyTint:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+    hdr: 0
+    showAlpha: 1
+    showEyeDropper: 1
+  groundColor:
+    m_OverrideState: 0
+    m_Value: {r: 0.369, g: 0.349, b: 0.341, a: 1}
+    hdr: 0
+    showAlpha: 1
+    showEyeDropper: 1
+  enableSunDisk:
+    m_OverrideState: 0
+    m_Value: 1
 --- !u!1 &295856274
 GameObject:
   m_ObjectHideFlags: 0
@@ -6323,82 +6399,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &796888136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3df29e7cc05fbec4aa43e06ea875565d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  active: 1
-  m_AdvancedMode: 0
-  rotation:
-    m_OverrideState: 0
-    m_Value: 0
-    min: 0
-    max: 360
-  skyIntensityMode:
-    m_OverrideState: 0
-    m_Value: 0
-  exposure:
-    m_OverrideState: 0
-    m_Value: 0
-  multiplier:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-  upperHemisphereLuxValue:
-    m_OverrideState: 0
-    m_Value: 1
-    min: 0
-  desiredLuxValue:
-    m_OverrideState: 0
-    m_Value: 20000
-  updateMode:
-    m_OverrideState: 0
-    m_Value: 0
-  updatePeriod:
-    m_OverrideState: 0
-    m_Value: 0
-    min: 0
-  includeSunInBaking:
-    m_OverrideState: 0
-    m_Value: 0
-  sunSize:
-    m_OverrideState: 0
-    m_Value: 0.04
-    min: 0
-    max: 1
-  sunSizeConvergence:
-    m_OverrideState: 0
-    m_Value: 5
-    min: 1
-    max: 10
-  atmosphereThickness:
-    m_OverrideState: 0
-    m_Value: 0.41
-    min: 0
-    max: 5
-  skyTint:
-    m_OverrideState: 0
-    m_Value: {r: 0, g: 0, b: 0, a: 1}
-    hdr: 0
-    showAlpha: 1
-    showEyeDropper: 1
-  groundColor:
-    m_OverrideState: 0
-    m_Value: {r: 0.369, g: 0.349, b: 0.341, a: 1}
-    hdr: 0
-    showAlpha: 1
-    showEyeDropper: 1
-  enableSunDisk:
-    m_OverrideState: 0
-    m_Value: 1
 --- !u!1 &838359643
 GameObject:
   m_ObjectHideFlags: 0
@@ -9700,35 +9700,25 @@ MonoBehaviour:
   mapSelectText: {fileID: 620472769}
   selectAMapText: "Select a Map!\t"
   startBtn: {fileID: 373370105}
-  tutStageNoteAmounts: 08000000080000000800000008000000000000000000000000000000
-  tutStageFailed: 0
-  tutStageNoteHolder: {fileID: 85996589}
   laneSwitching: {fileID: 1804473741}
   tutAreaText: {fileID: 726899452}
   tutAreaInfo: 
   tutTexts:
-  - Press the A Key as the Note reaches you to enter the lane according to the displayed
-    arrow direction.
-  - Press the L Key as the Note reaches you to enter the lane according to the displayed
-    arrow direction.
-  - Move Left and Right accordingly to the following Notes
-  - Move Left and Right accordingly to the following Launch notes
-  - Move Left and Right accordingly, although stay in the same lane the Up Notes are
-    in to trigger them
-  - Hold the A and L Key while the blast is approaching, then release both at the
-    same time as it reaches you
+  - Move left, just as the Left Note reaches you!
+  - Move right, just as the Right Note reaches you!
+  - Move Left and Right accordingly!
+  - Move Left and Right accordingly to the following Launch Notes!
+  - Make sure to get the Target notes by hitting them!
+  - Make sure to get the Blast notes right as the note reaches the player!
   - Avoid bombs to maintain your combo!
-  - "Moving Left or Right with your shield activated will always trigger the note
-    ahead for score. \r\n\r\nHold Space to deactivate your shield, allowing you to
-    move Left and Right without triggering any notes.\r\n\r\nDeactivate your shield
-    when you want to travel more then one lane to get to the note ahead. \r\n\r\nMake
-    sure to enable your shield again by letting go of space after you have repositioned
-    yourself for the upcoming note, so that you can be able to trigger it.\r\n\r\n\rWhen
-    your shield is deactivated, instead of moving Left / Right happening when you
-    release A / L. It will happen upon press of A / L.\r\n\r\n"
+  - 'Deactivate your shield to change the way you move for Slider notes. '
+  - All horizontal notes contain power within them. Moving with your shield activated
+    will take that power from the note. If a horizontal note has no power, you will
+    receive a miss. Make sure deactivate your shield when moving to other lanes if
+    there is a horizontal note infront.
   tutorialStage: 0
   maxTutorialStages: 9
-  nextStageThreshholdBeats: 25000000410000005d0000007f000000ab000000c7000000f1000000450100005e010000
+  nextStageThreshholdBeats: 25000000410000005d0000007f000000b4000000d2000000f1000000240100005e010000
   timeForMoveBack: 0.1
   tutorialUI: {fileID: 425524064}
   allVisuals:
@@ -11502,7 +11492,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1804473742
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12899,7 +12889,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Profile: {fileID: 11400000, guid: 674c84359d7439d468b9dbd105d6fb92, type: 2}
   m_StaticLightingSkyUniqueID: 2
-  m_SkySettings: {fileID: 796888136}
+  m_SkySettings: {fileID: 277060765}
   m_SkySettingsFromProfile: {fileID: 7703627546803110766, guid: 674c84359d7439d468b9dbd105d6fb92,
     type: 2}
 --- !u!114 &2088084804

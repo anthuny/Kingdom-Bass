@@ -765,23 +765,17 @@ public class Player : MonoBehaviour
         }
 
         // Functionality of moving right WITHOUT shield during first few stages of tutorial
-        if (movingRightNoShield && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
+        if (movingRightNoShield && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage >= 8 && transform.position.x < 5.7f)
         {
             movingRight = false;
             movingLeft = false;
             validMovement = false;
 
             playerPos.x += (gm.shieldOffSpeed * gm.slowSpeedMultCur) * Time.deltaTime;
-            transform.position = playerPos;
 
-            pm.FindNearestPath(true);
+            animator.SetTrigger("isMovingRightNSFast");
 
-            yield return new WaitForSeconds(gm.timeForMoveBack);
-
-            //playerPos.x = 3;
-            transform.position = playerPos;
-
-            pm.FindNearestPath(false);
+            ControllerInputsPost();
         }
         #endregion
         #region Normal - Moving Left
@@ -852,23 +846,17 @@ public class Player : MonoBehaviour
 
 
         // Functionality of moving left without shield during first few stages of tutorial
-        if (movingLeft && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
+        if (movingLeftNoShield && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage >= 8 && transform.position.x > 0.3f)
         {
             movingRight = false;
             movingLeft = false;
             validMovement = false;
 
-            playerPos.x += (gm.shieldOffSpeed * gm.slowSpeedMultCur) * Time.deltaTime;
-            transform.position = playerPos;
+            playerPos.x -= (gm.shieldOffSpeed * gm.slowSpeedMultCur) * Time.deltaTime;
 
-            pm.FindNearestPath(true);
+            animator.SetTrigger("isMovingLeftNSFast");
 
-            yield return new WaitForSeconds(gm.timeForMoveBack);
-
-            //playerPos.x = 3;
-            transform.position = playerPos;
-
-            pm.FindNearestPath(false);
+            ControllerInputsPost();
         }
 
         #endregion
@@ -1245,10 +1233,6 @@ public class Player : MonoBehaviour
             animator.SetTrigger("ComboReset");
         }
 
-        if (noteScript.tutStage >= 0 && !gm.tutStageFailed)
-        {
-            gm.tutStageFailed = true;
-        }
 
         if (!hitByBomb && noteScript.noteType != "slider")
         {

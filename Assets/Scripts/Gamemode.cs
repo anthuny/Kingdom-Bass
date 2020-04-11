@@ -111,9 +111,6 @@ public class Gamemode : MonoBehaviour
     public GameObject startBtn;
 
     [Header("Tutorial")]
-    public List<int> tutStageNoteAmounts = new List<int>();
-    public bool tutStageFailed;
-    public GameObject tutStageNoteHolder;
     public GameObject laneSwitching;
     public Text tutAreaText;
     //[HideInInspector]
@@ -1553,6 +1550,8 @@ public class Gamemode : MonoBehaviour
             {
                 tutUnPauseText.gameObject.SetActive(false);
             }
+
+            activeScene = "Game";
         }
     }
 }

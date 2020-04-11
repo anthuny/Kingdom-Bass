@@ -96,13 +96,16 @@ public class Note : MonoBehaviour
     public bool clone;
 
     [Header("Slider")]
-    private int indexInNotes;
+    public Note nextNoteScript;
+    public string prevNoteNoteDir;
+    public string prevNoteNoteType;
+    public int indexInNotes;
     public bool usedAsSlider;
     private float sliderInterval;
     public List<Vector3> sliderintervals = new List<Vector3>();
     private int indexOfSliderNoteSet;
     public LineRenderer sliderLr;
-    private Slider sliderScript;
+    public Slider sliderScript;
 
     private bool doneOnce6;
     public bool isEndOfSlider;
@@ -132,74 +135,23 @@ public class Note : MonoBehaviour
         player = FindObjectOfType<Player>();
         noteRend = meshRendererRef.GetComponent<Renderer>();
         noteWidth = noteRend.bounds.size.z;
-        
-        if (!tutResetNote)
-        {
-            if (!clone && noteType != "slider")
-            {
-                if (noteType != "bomb")
-                {
-                    tc.notesSpawned++;
-                }
-            }
 
+
+        if (!clone && noteType != "slider")
+        {
             if (noteType != "bomb")
             {
-                gm.totalNotes++;
-                noteNumber = gm.totalNotes;
+                tc.notesSpawned++;
             }
-
-            gm.totalAllNotes++;
         }
 
-        if (tc.selectedMap.title == "Tutorial" && !tutResetNote)
+        if (noteType != "bomb")
         {
-            //Debug.Log("Index " + tc.index + " tutStageNoteAmounts.Count " + gm.tutStageNoteAmounts.Count + " totalAllNotes " + gm.totalAllNotes + " tutStageNoteAmounts[index] " + gm.tutStageNoteAmounts[tc.index-1]);
-            if (tc.index <= gm.tutStageNoteAmounts.Count && gm.totalAllNotes <= gm.tutStageNoteAmounts[tc.index-1] * tc.index)
-            {
-                //Debug.Log("Setting note tutstage to " + tc.index);
-                tutStage = tc.index - 1;
-
-                GameObject go = Instantiate(tc.noteVisual, tc.notesObj.transform.position, Quaternion.identity);
-                Note noteScript = go.GetComponent<Note>();
-                noteScript.tutResetNote = true;
-                noteScript.beatWait = beatWait;
-                noteScript.beatWaitCur = beatWaitCur;
-                noteScript.laneNumber = laneNumber;
-                noteScript.noteType = noteType;
-                noteScript.noteDir = noteDir;
-                noteScript.noteNumber = noteNumber;
-                noteScript.gameObject.name = noteScript.laneNumber + " Tut-Respawned note";
-
-                // move the note to the correct lane
-                go.transform.position = new Vector3(tc.path.pathWidth,
-                    0.02f, pm.initialPath.GetComponent<Path>().pathLength);
-
-                go.transform.SetParent(gm.tutStageNoteHolder.transform);
-                noteScript.startingPos.z = go.transform.position.z;
-                noteScript.pathWidth = tc.path.pathWidth;
-
-                go.SetActive(false);        
-                
-            }
-            else
-            {
-                tc.index++;
-                tutStage = tc.index - 1;
-            }
-
-            if (gm.totalAllNotes == 1)
-            {
-                firstNoteInStage = true;
-                beatWaitCurFN = beatWaitCur;
-            }
-            if (gm.totalAllNotes == gm.tutStageNoteAmounts[tc.index - 1])
-            {
-                finalNoteInStage = true;
-                beatWaitCurLN = beatWaitCur;
-            }
-
+            gm.totalNotes++;
+            noteNumber = gm.totalNotes;
         }
+
+        gm.totalAllNotes++;
 
         if (tc.notesSpawned == 1)
         {
@@ -244,6 +196,13 @@ public class Note : MonoBehaviour
 
         // Find the index of this note in the notes list
         indexInNotes = tc.notes.IndexOf(gameObject);
+                                                                                                                              
+        if (tc.notes.Count >= 3)
+        {                                               
+            nextNoteScript = tc.notes[indexInNotes + 1].GetComponent<Note>();
+            nextNoteScript.prevNoteNoteDir = noteDir;
+            nextNoteScript.prevNoteNoteType = noteType;
+        }
 
         //Determine the direction of the arrow on the note
         switch (noteDir)
@@ -337,9 +296,10 @@ public class Note : MonoBehaviour
                     hitMarkerCanvas.SetActive(false);                
 
                     // If the note before this note is not a slider OR the end of a slider, continue
-                    if (tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().noteType != "slider" || tc.notes[indexInNotes - 1].gameObject.GetComponent<Note>().noteDir == "down")
+                    if (prevNoteNoteType != "slider" || prevNoteNoteDir == "down")
                     {
-                        isStartOfSlider = true;
+                        Debug.Log("spawning slider");
+                        isStartOfSlider = true; 
 
                         sliderLr = Instantiate(gm.sliderRef, transform.position, Quaternion.identity);
                         gm.sliders.Add(sliderLr.gameObject.transform);
@@ -665,42 +625,10 @@ public class Note : MonoBehaviour
         ReachedPlayer();
     }
     
-    IEnumerator CheckIfNoteMissedTut()
-    {
-        yield return new WaitForSeconds(.5f);
-
-        // Check if a note was missed during the tutorial stage...
-        // If yes, reset the stage for the player
-
-        if (gm.tutStageFailed && finalNoteInStage)
-        {
-            Debug.Log("failed stage");
-            beatWaitNewSet = beatWaitCurLN - beatWaitCurFN;
-
-            for (int i = 0; i < tc.notesObj.transform.childCount; i++)
-            {
-                tc.notesObj.transform.GetChild(i).GetComponent<Note>().beatWaitCur += beatWaitNewSet;
-
-                if (i < gm.tutStageNoteHolder.transform.childCount)
-                {
-                    gm.tutStageNoteHolder.transform.GetChild(i).GetComponent<Note>().beatWaitCur += beatWaitNewSet;
-                }
-            }
-
-            tc.notesObj.transform.GetChild(1).GetComponent<Note>().beatWait += beatWaitNewSet;
-        }
-
-
-    }
     void ReachedPlayer()
     {
         if (doneOnce2 && !doneOnce3)
         {
-            if (tc.selectedMap.title == "Tutorial")
-            {
-                StartCoroutine("CheckIfNoteMissedTut");
-            }
-
             doneOnce3 = true;
             gm.notesPassedPlayer++;
 

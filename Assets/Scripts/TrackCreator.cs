@@ -757,7 +757,7 @@ public class TrackCreator : MonoBehaviour
             if (trackPosInBeatsGame > gm.nextStageThreshholdBeats[gm.tutorialStage - 1])
             {
                 increasedStage = false;
-                gm.PauseGame(true);
+                //gm.PauseGame(true);
                 player.RepositionPlayer();
             }
         }
