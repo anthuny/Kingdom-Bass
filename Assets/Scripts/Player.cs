@@ -135,7 +135,7 @@ public class Player : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update() 
+    void Update()
     {
         if (gm.tutPaused)
         {
@@ -153,6 +153,95 @@ public class Player : MonoBehaviour
         CheckMissForSlider();
 
         missCurrentPointInBeats = tc.trackPosInBeatsGame;
+    }
+
+    public IEnumerator RepositionPlayerSlider(Note noteScript)
+    {
+        yield return new WaitForSeconds(gm.tutPosResetTime);
+        for (int i = 1; i < 6; i++)
+        {
+            Debug.Log("b");
+            if (noteScript.laneNumber == i)
+            {
+                Debug.Log("moving Player asdasd");
+                playerPos.x = pathWidth * (i - 1);
+                transform.position = playerPos;
+                pm.FindNearestPath(false);
+                yield break;
+            }
+        }
+    }
+    public IEnumerator RepositionPlayerTut(Note noteScript)
+    {
+        yield return new WaitForSeconds(gm.tutPosResetTime);
+
+        if (noteScript.noteDir == "up" && noteScript.noteType == "note" || noteScript.noteType == "slider" && noteScript.isStartOfSlider)
+        {
+            for (int i = 1; i < 6; i++)
+            {
+                if (noteScript.laneNumber == i)
+                {
+                    Debug.Log("moving Player asdasd");
+                    playerPos.x = pathWidth * (i - 1);
+                    transform.position = playerPos;
+                    pm.FindNearestPath(false);
+                    yield break;
+                }
+            }
+        }
+
+
+        if (noteScript.noteType == "note" || noteScript.noteType == "launch")
+        {
+            switch (noteScript.noteDir)
+            {
+                case "left":
+                    for (int i = 1; i < 5; i++)
+                    {
+                        if (noteScript.noteDir == "left" && noteScript.laneNumber == i)
+                        {
+                            if (noteScript.noteType == "note")
+                            {
+                                playerPos.x = pathWidth * i;
+                                transform.position = playerPos;
+                                pm.FindNearestPath(false);
+                                yield break;
+                            }
+                            else if (noteScript.noteType == "launch" && i > 1)
+                            {
+                                playerPos.x = pathWidth * i;
+                                transform.position = playerPos;
+                                pm.FindNearestPath(false);
+                                yield break;
+                            }
+                        }
+                    }
+                    break;
+
+                case "right":
+                    for (int i = 2; i < 6; i++)
+                    {
+                        if (noteScript.noteDir == "right" && noteScript.laneNumber == i)
+                        {
+                            if (noteScript.noteType == "note")
+                            {
+                                playerPos.x = pathWidth * (i - 2);
+                                transform.position = playerPos;
+                                pm.FindNearestPath(false);
+                                yield break;
+                            }
+                            else if (noteScript.noteType == "launch" && i < 5)
+                            {
+                                playerPos.x = pathWidth * (i - 2);
+                                transform.position = playerPos;
+                                pm.FindNearestPath(false);
+                                yield break;
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
     }
 
     // Assigns misses if the note is too far behind the player to get score from
@@ -1233,6 +1322,7 @@ public class Player : MonoBehaviour
             animator.SetTrigger("ComboReset");
         }
 
+        int index = noteScript.gameObject.transform.GetSiblingIndex();
 
         if (!hitByBomb && noteScript.noteType != "slider")
         {
@@ -1265,11 +1355,27 @@ public class Player : MonoBehaviour
             StartCoroutine("DiminishAccuracyUI");
             gm.comboMulti = 1;
             gm.updateGameUI();
+
+            if (gm.resetPosition)
+            {
+                Debug.Log("14");
+                if (tc.notesObj.transform.childCount >= 2)
+                {
+                    if (tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>().noteDir != "down")
+                    {
+                        Debug.Log("15");
+                        StartCoroutine("RepositionPlayerTut", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
+                    }
+                }
+
+            }
+
             return;
         }
 
         if (!hitByBomb && noteScript.noteType == "slider")
         {
+            Debug.Log("13");
             // Increase the max accuracy if the note got missed
             if (!nearestSliderScript.noteCalculatedAcc)
             {
@@ -1301,6 +1407,19 @@ public class Player : MonoBehaviour
                     StartCoroutine("DiminishAccuracyUI");
                     gm.comboMulti = 1;
                     gm.updateGameUI();
+
+                    if (gm.resetPosition)
+                    {
+                        if (tc.notesObj.transform.childCount >= 2)
+                        {
+                            if (tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>().noteDir != "down")
+                            {
+                                Debug.Log("15");
+                                StartCoroutine("RepositionPlayerTut", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
+                            }
+                        }
+                    }
+
                     return;
                 }
             }
@@ -1325,9 +1444,22 @@ public class Player : MonoBehaviour
                 StartCoroutine("DiminishAccuracyUI");
                 gm.comboMulti = 1;
                 gm.updateGameUI();
+
+                if (gm.resetPosition)
+                {
+                    Debug.Log("13");
+                    if (tc.notesObj.transform.childCount >= 2)
+                    {
+                        if (tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>().noteDir != "down")
+                        {
+                            Debug.Log("15");
+                            StartCoroutine("RepositionPlayerTut", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
+                        }
+                    }
+                }
+
                 return;
             }
-
             return;
         }
 

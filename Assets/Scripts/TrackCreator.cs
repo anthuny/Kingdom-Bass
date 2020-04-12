@@ -330,6 +330,8 @@ public class TrackCreator : MonoBehaviour
             #region Tutorial Stage 1
             if (gm.tutorialStage == 1)
             {
+                gm.resetPosition = true;
+
                 gm.plusSymbol.gameObject.SetActive(false);
 
                 // Enable/disable the correct key images
@@ -399,7 +401,7 @@ public class TrackCreator : MonoBehaviour
                 }
 
                 gm.tutAreaTextBG.gameObject.SetActive(true);
-                gm.laneSwitching.SetActive(true);
+                //gm.laneSwitching.SetActive(true);
             }
             #endregion
             // Right regular arrow note
@@ -482,7 +484,7 @@ public class TrackCreator : MonoBehaviour
                     gm.arrow[i].gameObject.SetActive(true);
                 }
 
-                gm.laneSwitching.SetActive(false);
+                //gm.laneSwitching.SetActive(false);
             }
             #endregion
             // Launch Notes
@@ -767,6 +769,7 @@ public class TrackCreator : MonoBehaviour
             UpdateTutorialSlides();
         }
     }
+
     void SpawnNotes()
     {
         // Declare what the current segment is, if it hasn't been done already.

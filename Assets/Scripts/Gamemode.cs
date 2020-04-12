@@ -111,6 +111,8 @@ public class Gamemode : MonoBehaviour
     public GameObject startBtn;
 
     [Header("Tutorial")]
+    public float tutPosResetTime;
+    public bool resetPosition;
     public GameObject laneSwitching;
     public Text tutAreaText;
     //[HideInInspector]
@@ -1057,6 +1059,10 @@ public class Gamemode : MonoBehaviour
 
     void EndingMap()
     {
+        if (tc.selectedMap.title == "Tutorial")
+        {
+            am.StopSound("Tutorial");
+        }
         // Enable the post map stats UI to see
         postMapStatsUI.SetActive(true);
 
@@ -1064,6 +1070,37 @@ public class Gamemode : MonoBehaviour
         postMapUI.SetActive(true);
 
         activeScene = "PostMap";
+
+        #region Disable All UI from Tutorial
+
+        plusSymbol.gameObject.SetActive(false);
+        arrowNotes[0].gameObject.SetActive(false);
+        arrowNotes[1].gameObject.SetActive(false);
+        arrow[0].gameObject.SetActive(false);
+        arrow[1].gameObject.SetActive(false);
+        tutAreaTextBG.gameObject.SetActive(false);
+
+        foreach (GameObject g in allVisuals)
+        {
+            g.SetActive(false);
+        }
+        foreach (Text t in keyTexts)
+        {
+            t.gameObject.SetActive(false);
+        }
+        foreach (Text t in supportingTexts)
+        {
+            t.gameObject.SetActive(false);
+        }
+        foreach (Text t in spaceSupportingTexts)
+        {
+            t.gameObject.SetActive(false);
+        }
+        foreach (Image i in spaceBar)
+        {
+            i.gameObject.SetActive(false);
+        }
+        #endregion
 
         if (controllerConnected)
         {
@@ -1293,6 +1330,7 @@ public class Gamemode : MonoBehaviour
         tc.beatWaitCountAccum.Clear();
         playerScript.electricNotes.Clear();
         notesPassedPlayer = 0;
+        totalAllNotes = 0;
         lrs.Clear();
 
         tc.noteLanes.Clear();
@@ -1317,6 +1355,7 @@ public class Gamemode : MonoBehaviour
         tc.beatWaitAccum = 0;
         tc.newStartingInt = 0;
         tc.index = 1;
+        resetPosition = false;
 
         score = 0;
         perfects = 0;

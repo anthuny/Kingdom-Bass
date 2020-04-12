@@ -118,6 +118,9 @@ public class Note : MonoBehaviour
     SliderInterval2 notePredictScript;
 
     [Header("Tutorial")]
+    public bool prepareForPlayerReposition;
+    public bool prepareForPlayerReposition2;
+    public bool doneOnce7;
     public int tutStage = -1;
     public bool tutResetNote;
     public bool finalNoteInStage;
@@ -298,7 +301,6 @@ public class Note : MonoBehaviour
                     // If the note before this note is not a slider OR the end of a slider, continue
                     if (prevNoteNoteType != "slider" || prevNoteNoteDir == "down")
                     {
-                        Debug.Log("spawning slider");
                         isStartOfSlider = true; 
 
                         sliderLr = Instantiate(gm.sliderRef, transform.position, Quaternion.identity);
@@ -620,11 +622,16 @@ public class Note : MonoBehaviour
                 player.closestNoteInFrontScript = null;
             }
 
+            ReachedPlayer();
         }
-
-        ReachedPlayer();
     }
+
     
+    void RepositionPlayerForSliderEnd()
+    {
+        StartCoroutine(player.RepositionPlayerTut(nextNoteScript));
+    }
+
     void ReachedPlayer()
     {
         if (doneOnce2 && !doneOnce3)
@@ -655,13 +662,13 @@ public class Note : MonoBehaviour
                 tc.nextIndex3++;
             }
 
-            QueueEndOfTrack();
-
             // If this note is behind the player, turn behindPlayer to true
             if (player.transform.position.z > transform.position.z)
             {
                 behindPlayer = true;
             }
+
+            QueueEndOfTrack();
         }
     }
 
@@ -678,6 +685,12 @@ public class Note : MonoBehaviour
         {
             hasBeenMissed = true;
             hitMarker.GetComponent<Image>().color = gm.missedNoteC;
+        }
+
+        if (noteDir == "down" && !doneOnce7 && doneOnce3 && sliderScript.missed)
+        {
+            doneOnce7 = true;
+            RepositionPlayerForSliderEnd();
         }
     }
 
@@ -767,7 +780,7 @@ public class Note : MonoBehaviour
             return;
         }
 
-        tc.trackPosIntervalsList2.RemoveAt(0);
+        //tc.trackPosIntervalsList2.RemoveAt(0);
 
         // If this is the last note of the track, queue the post statistics screen
         if (gm.notesLeftInfront <= 0)
