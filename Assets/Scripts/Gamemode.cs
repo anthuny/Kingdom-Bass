@@ -111,6 +111,58 @@ public class Gamemode : MonoBehaviour
     public GameObject startBtn;
 
     [Header("Tutorial")]
+    public Animator tutTextAnimator;
+
+    [Header("Parent UI")]
+    public GameObject keyboardUI;
+    public Animator keyboardUIAnimator;
+    public GameObject controllerUI;
+    public Animator controllerUIAnimator;
+    [Header("Keyboard UI")]
+    public GameObject noteKB;
+    public Animator noteKBAnimator;
+    public GameObject noteDoubleKB;
+    public Animator noteDoubleKBAnimator;
+    public GameObject key;
+    public Animator keyAnimator;
+    public GameObject keyDouble;
+    public Animator keyDoubleAnimator;
+    [Header("Controller UI")]
+    public GameObject noteCT;
+    public Animator noteCTAnimator;
+    public GameObject noteDoubleCT;
+    public Animator noteDoubleCTAnimator;
+    public GameObject controllerImage;
+    public GameObject leftArrowCT;
+    public GameObject rightArrowCT;
+    public Animator tiltTextAnimator;
+    public GameObject pressBothText;
+
+    [Header("Sprites")]
+    public Sprite leftArrowNote;
+    public Sprite RightArrowNote;
+    public Sprite leftLaunchNote;
+    public Sprite rightLaunchNote;
+    public Sprite blastNote;
+    public Sprite upArrowNote;
+    public Sprite bombIcon;
+    public Sprite playerShield;
+    public Sprite playerNoShield;
+
+    public Sprite aKeyImageSprite;
+    public Sprite lKeyImageSprite;
+    public Sprite leftControllerImageSprite;
+    public Sprite rightControllerImageSprite;
+    public Sprite middleControllerImageSprite;
+    public Sprite tutStageTarget;
+    public Sprite tutStageBlastPlayer;
+    public Sprite tutStageBlastContr;
+    public Sprite spacePressed;
+    public Sprite cross;
+
+    [Header("Other")]
+    public int doneTutStageCount;
+
     public float tutPosResetTime;
     public bool resetPosition;
     public GameObject laneSwitching;
@@ -121,6 +173,7 @@ public class Gamemode : MonoBehaviour
     public string[] tutTexts;
     //[HideInInspector]
     public int tutorialStage = 0;
+    public int oldTutorialStage;
     public int maxTutorialStages;
     public int[] nextStageThreshholdBeats;
     public float timeForMoveBack;
@@ -143,15 +196,6 @@ public class Gamemode : MonoBehaviour
     [HideInInspector]
     public Vector3 originalSecondUIPos;
 
-    public Sprite leftArrowNote;
-    public Sprite RightArrowNote;
-    public Sprite leftLaunchNote;
-    public Sprite rightLaunchNote;
-    public Sprite blastNote;
-    public Sprite upArrowNote;
-    public Sprite bombIcon;
-    public Sprite playerShield;
-    public Sprite playerNoShield;
     //public Sprite unpressedKey;
     //public Sprite pressedKey;
 
@@ -455,18 +499,21 @@ public class Gamemode : MonoBehaviour
                 }
             }
         }
-
-        if (!firstStart)
-        {
-            firstStart = true;
-            MainMenu();
-        }
     }
     
     public void StartGame()
     {
+        if (!firstStart)
+        {
+            firstStart = true;
 
-       totalAccuracy = 100;
+            tutorialUI.SetActive(false);
+            keyboardUI.SetActive(false);
+            controllerUI.SetActive(false);
+
+            MainMenu();
+        }
+        totalAccuracy = 100;
         totalAccuracyText.text = totalAccuracy.ToString() + "%";
 
         //lr.gameObject.SetActive(true);
@@ -483,8 +530,8 @@ public class Gamemode : MonoBehaviour
         playerScript.nearestLaneNumber = 3;
         playerScript.oldNearestLaneNumber = 2;
 
-        originalFirstUIPos = firstUI.gameObject.GetComponent<RectTransform>().localPosition;
-        originalSecondUIPos = secondUI.gameObject.GetComponent<RectTransform>().localPosition;
+        //originalFirstUIPos = firstUI.gameObject.GetComponent<RectTransform>().localPosition;
+        //originalSecondUIPos = secondUI.gameObject.GetComponent<RectTransform>().localPosition;
 
         //pressKeyToContinueEnd.gameObject.SetActive(false);
         postMapStatsUI.SetActive(false);

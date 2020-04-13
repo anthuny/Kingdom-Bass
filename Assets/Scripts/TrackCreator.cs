@@ -135,6 +135,8 @@ public class TrackCreator : MonoBehaviour
 
     public int index = 1;
 
+    public bool movedUI;
+
     void Start()
     {
         player = FindObjectOfType<Player>();
@@ -164,7 +166,8 @@ public class TrackCreator : MonoBehaviour
             //Debug.Log("beatWait " + beatWait);
             //Debug.Break();
 
-            if (laneNumber.Substring(0, 1).Contains(i.ToString()))
+
+            if (laneNumber.Substring(0).Contains(i.ToString()))
             {
                 // Spawn noteVisual, at notes position
                 GameObject go = Instantiate(noteVisual, notesObj.transform.position, Quaternion.identity);
@@ -194,7 +197,6 @@ public class TrackCreator : MonoBehaviour
                 // Set the note type and arrow direction
                 noteScript.noteType = noteType;
                 noteScript.noteDir = arrowD;
-
 
                 // Set the amount of beatWaits the note is to perform
                 noteScript.beatWait = float.Parse(beatWait);
@@ -315,6 +317,307 @@ public class TrackCreator : MonoBehaviour
         }
     }
 
+    IEnumerator activateAnimators(Animator animatorKB, Animator animatorCT)
+    {
+        if (gm.tutorialStage == 1)
+        {
+            yield return new WaitForSeconds(8.5f);
+
+            gm.tutorialUI.SetActive(true);
+
+            // Enable / Disable entire parents 
+            gm.keyboardUI.SetActive(true);
+            gm.controllerUI.SetActive(true);
+
+            // Change the note / key sprite for keyboard ui
+            gm.noteKB.GetComponent<Image>().sprite = gm.leftArrowNote;
+            gm.key.GetComponent<Image>().sprite = gm.aKeyImageSprite;
+
+            // Change the colour of note
+            gm.noteKB.GetComponent<Image>().color = gm.horizontalNoteArrowC;
+
+            // Change the note / controller sprite for controller ui
+            gm.noteCT.GetComponent<Image>().sprite = gm.leftArrowNote;
+            gm.controllerImage.GetComponent<Image>().sprite = gm.leftControllerImageSprite;
+
+            // Change the colour of note
+            gm.noteCT.GetComponent<Image>().color = gm.horizontalNoteArrowC;
+
+            // Enable the correct arrow UI for controller UI
+            gm.leftArrowCT.SetActive(true);
+            gm.rightArrowCT.SetActive(false);
+
+            gm.tiltTextAnimator.SetTrigger("GoLeft");
+
+            // Reposition the UI
+            animatorKB.SetBool("Side", false);
+            animatorCT.SetBool("Side", false);
+
+            gm.tutTextAnimator.SetBool("Side", false);
+
+            gm.noteKBAnimator.SetBool("Double", false);
+            gm.noteDoubleKBAnimator.SetBool("Double", false);
+
+            gm.keyAnimator.SetBool("Double", false);
+            gm.keyDoubleAnimator.SetBool("Double", false);
+
+            yield return new WaitForSeconds(5.5f);
+
+            // Reposition the UI
+            animatorKB.SetBool("Side", true);
+            animatorCT.SetBool("Side", true);
+
+            gm.tutTextAnimator.SetBool("Side", true);
+
+            yield break;
+        }
+
+        else if (gm.tutorialStage == 2)
+        {
+            yield return new WaitForSeconds(2.2f);
+
+            // Change the note / key sprite for keyboard ui
+            gm.noteKB.GetComponent<Image>().sprite = gm.RightArrowNote;
+            gm.key.GetComponent<Image>().sprite = gm.lKeyImageSprite;
+
+            // Change the note / controller sprite for controller ui
+            gm.noteCT.GetComponent<Image>().sprite = gm.RightArrowNote;
+            gm.controllerImage.GetComponent<Image>().sprite = gm.rightControllerImageSprite;
+
+            // Enable the correct arrow UI for controller UI
+            gm.leftArrowCT.SetActive(false);
+            gm.rightArrowCT.SetActive(true);
+
+            // Reposition the UI
+            gm.tiltTextAnimator.SetTrigger("GoRight");
+
+            yield return new WaitForSeconds(5.8f);
+
+            // Reposition the UI
+            animatorKB.SetBool("Side", true);
+            animatorCT.SetBool("Side", true);
+
+            gm.tutTextAnimator.SetBool("Side", true);
+
+            yield break;
+        }
+
+        else if (gm.tutorialStage == 3)
+        {
+            yield return new WaitForSeconds(1.3f);
+
+            // Change the note / key sprite for keyboard ui
+            gm.noteKB.GetComponent<Image>().sprite = gm.leftArrowNote;
+            gm.key.GetComponent<Image>().sprite = gm.aKeyImageSprite;
+
+            // Change the note / controller sprite for controller ui
+            gm.noteCT.GetComponent<Image>().sprite = gm.leftArrowNote;
+            gm.controllerImage.GetComponent<Image>().sprite = gm.middleControllerImageSprite;
+
+            // Enable the correct arrow UI for keyboard UI
+            gm.noteKB.SetActive(true);
+            gm.key.SetActive(true);
+
+            gm.noteDoubleKB.SetActive(true);
+            gm.keyDouble.SetActive(true);
+
+            // Enable the correct arrow UI for controller UI
+            gm.leftArrowCT.SetActive(true);
+            gm.rightArrowCT.SetActive(true);
+
+            gm.noteDoubleCT.SetActive(true);
+
+            // Reposition the keyboard UI
+            gm.noteKBAnimator.SetBool("Double", true);
+            gm.noteDoubleKBAnimator.SetBool("Double", true);
+
+            gm.keyAnimator.SetBool("Double", true);
+            gm.keyDoubleAnimator.SetBool("Double", true);
+
+            gm.tiltTextAnimator.SetTrigger("GoMiddle");
+
+            // Reposition the controller UI
+            gm.noteCTAnimator.SetBool("Double", true);
+            gm.noteDoubleCTAnimator.SetBool("Double", true);
+
+            gm.tiltTextAnimator.SetTrigger("GoMiddle");
+
+            yield return new WaitForSeconds(7.3f);
+
+            // Reposition the UI
+            animatorKB.SetBool("Side", true);
+            animatorCT.SetBool("Side", true);
+
+            gm.tutTextAnimator.SetBool("Side", true);
+
+            yield break;
+        }
+
+        else if (gm.tutorialStage == 4)
+        {
+            yield return new WaitForSeconds(1.7f);
+
+            // Change the note / key sprite for keyboard ui
+            gm.noteKB.GetComponent<Image>().sprite = gm.leftLaunchNote;
+            gm.noteDoubleKB.GetComponent<Image>().sprite = gm.leftLaunchNote;
+
+            // Change the colour of note
+            gm.noteKB.GetComponent<Image>().color = gm.horizontalLaunchArrowC;
+            gm.noteDoubleKB.GetComponent<Image>().color = gm.horizontalLaunchArrowC;
+
+            // Change the note / controller sprite for controller ui
+            gm.noteCT.GetComponent<Image>().sprite = gm.leftLaunchNote;
+            gm.noteDoubleCT.GetComponent<Image>().sprite = gm.leftLaunchNote;
+
+            // Change the colour of note
+            gm.noteCT.GetComponent<Image>().color = gm.horizontalLaunchArrowC;
+            gm.noteDoubleCT.GetComponent<Image>().color = gm.horizontalLaunchArrowC;
+
+            // Reposition the UI
+            gm.noteKBAnimator.SetBool("Double", true);
+            gm.noteDoubleKBAnimator.SetBool("Double", true);
+
+            gm.keyAnimator.SetBool("Double", true);
+            gm.keyDoubleAnimator.SetBool("Double", true);
+
+            gm.tiltTextAnimator.SetTrigger("GoMiddle");
+
+            yield return new WaitForSeconds(15.3f);
+
+            // Reposition the UI
+            animatorKB.SetBool("Side", true);
+            animatorCT.SetBool("Side", true);
+
+            gm.tutTextAnimator.SetBool("Side", true);
+
+            yield break;
+        }
+
+        else if (gm.tutorialStage == 5)
+        {
+            yield return new WaitForSeconds(1.8f);
+
+            // Change the note / key sprite for keyboard ui
+            gm.noteKB.GetComponent<Image>().sprite = gm.upArrow;
+            gm.key.GetComponent<Image>().sprite = gm.tutStageTarget;
+
+            // Change the colour of note
+            gm.noteKB.GetComponent<Image>().color = gm.upArrowC;
+
+            // Change the note / controller sprite for controller ui
+            gm.noteCT.GetComponent<Image>().sprite = gm.upArrow;
+            gm.controllerImage.GetComponent<Image>().sprite = gm.tutStageTarget;
+
+            // Change the colour of note
+            gm.noteCT.GetComponent<Image>().color = gm.upArrowC;
+
+            gm.noteDoubleKB.SetActive(false);
+
+            gm.keyDouble.SetActive(false);
+
+            gm.noteDoubleCT.SetActive(false);
+
+            gm.leftArrowCT.SetActive(false);
+            gm.rightArrowCT.SetActive(false);
+
+            gm.key.transform.GetChild(0).gameObject.SetActive(false);
+
+            gm.tiltTextAnimator.gameObject.SetActive(false);
+
+            // Reposition the UI
+            gm.noteKBAnimator.SetBool("Double", false);
+            gm.keyAnimator.SetBool("Double", false);
+
+            gm.noteCTAnimator.SetBool("Double", false);
+  
+
+            yield return new WaitForSeconds(8.2f);
+
+            // Reposition the UI
+            animatorKB.SetBool("Side", true);
+            animatorCT.SetBool("Side", true);
+
+            gm.tutTextAnimator.SetBool("Side", true);
+
+            yield break;
+        }
+
+        else if (gm.tutorialStage == 6)
+        {
+            yield return new WaitForSeconds(1.2f);
+
+            // Change the note / key sprite for keyboard ui
+            gm.noteKB.GetComponent<Image>().sprite = gm.tutStageBlastPlayer;
+            gm.key.GetComponent<Image>().sprite = gm.spacePressed;
+
+            // Change the colour of note
+            gm.noteKB.GetComponent<Image>().color = Color.white;
+
+            // Change the note / controller sprite for controller ui
+            gm.noteCT.GetComponent<Image>().sprite = gm.tutStageBlastPlayer;
+            gm.controllerImage.GetComponent<Image>().sprite = gm.tutStageBlastContr;
+
+            // Change the colour of note
+            gm.noteCT.GetComponent<Image>().color = Color.white;
+
+            // Enable / Disable the correct Keyboard UI
+
+            gm.pressBothText.SetActive(true);       
+
+            // Reposition the Keyboard UI
+            gm.noteKBAnimator.SetBool("Double", false);
+            gm.keyAnimator.SetBool("Double", false);
+
+            // Reposition the Controller UI
+            gm.noteCTAnimator.SetBool("Double", false);
+
+            gm.key.GetComponent<RectTransform>().sizeDelta = new Vector2(606.8f, 290);
+
+            yield return new WaitForSeconds(6.8f);
+
+            // Reposition the UI
+            animatorKB.SetBool("Side", true);
+            animatorCT.SetBool("Side", true);
+
+            gm.tutTextAnimator.SetBool("Side", true);
+
+            yield break;
+        }
+
+        else if (gm.tutorialStage == 7)
+        {
+            yield return new WaitForSeconds(18.5f);
+
+            // Enable / Disable entire parents 
+            gm.keyboardUI.SetActive(true);
+            gm.controllerUI.SetActive(true);
+
+            // Change the note / key sprite for keyboard ui
+            gm.noteKB.GetComponent<Image>().sprite = gm.bombIcon;
+            gm.key.GetComponent<Image>().sprite = gm.cross;
+
+            // Change the note / controller sprite for controller ui
+            gm.noteCT.GetComponent<Image>().sprite = gm.bombIcon;
+            gm.controllerImage.GetComponent<Image>().sprite = gm.cross;
+
+            gm.key.GetComponent<RectTransform>().sizeDelta = new Vector2(606.8f, 606.8f);
+
+            gm.pressBothText.SetActive(false);
+
+            animatorCT.SetBool("Side", false);
+
+            yield return new WaitForSeconds(8.5f);
+
+            // Reposition the UI
+            animatorKB.SetBool("Side", true);
+            animatorCT.SetBool("Side", true);
+
+            gm.tutTextAnimator.SetBool("Side", true);
+
+            yield break;
+        }
+    }
+
     // This is called during StartSong if tutorial is on
     void UpdateTutorialSlides()
     {
@@ -328,321 +631,139 @@ public class TrackCreator : MonoBehaviour
 
             // Left regular arrow note
             #region Tutorial Stage 1
-            if (gm.tutorialStage == 1)
+            if (gm.tutorialStage == 1 && gm.doneTutStageCount == 0)
             {
+                gm.doneTutStageCount++;
+
                 gm.resetPosition = true;
 
-                gm.plusSymbol.gameObject.SetActive(false);
+                gm.noteDoubleKB.SetActive(false);
+                gm.keyDouble.SetActive(false);
+                gm.noteDoubleCT.SetActive(false);
+                gm.pressBothText.SetActive(false);
 
-                // Enable/disable the correct key images
-                for (int i = 0; i < gm.allVisuals.Length; i++)
-                {
-                    if (i == 0 || i == 1)
-                    {
-                        gm.arrowNotes[i].transform.localScale = Vector3.one * 2.1f;
-                        gm.allVisuals[i].gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        gm.allVisuals[i].gameObject.SetActive(false);
-                    }
-                }
+                am.PlaySound("Tut_Stage_1");
 
-                // enable/disable the correct arrow
-                for (int i = 0; i < gm.arrow.Length; i++)
-                {
-                    if (i == 0)
-                    {
-                        gm.arrow[i].gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        gm.arrow[i].gameObject.SetActive(false);
-                    }
-                }
+                StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
 
-                // Enable/Disable the correct arrow notes
-                for (int i = 0; i < gm.arrowNotes.Length; i++)
-                {
-                    if (i == 0)
-                    {
-                        //gm.allVisuals[i].gameObject.transform.localScale = new Vector3(1, 1, 1);
-                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.leftArrowNote;
-                        gm.arrowNotes[i].color = gm.horizontalNoteArrowC;
-                        gm.arrowNotes[i].gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        gm.arrowNotes[i].gameObject.SetActive(false);
-                    }
-                }
-
-                for (int i = 0; i < gm.spaceSupportingTexts.Length; i++)
-                {
-                    gm.spaceSupportingTexts[i].gameObject.SetActive(false);
-                }
-
-                // Enables/Disables the 'Hold / Release' Texts
-                for (int i = 0; i < gm.supportingTexts.Length; i++)
-                {
-                    gm.supportingTexts[i].gameObject.SetActive(true);
-                }
-
-                // Enable/Disable the space bar images
-                for (int i = 0; i < gm.spaceBar.Length; i++)
-                {
-                    gm.spaceBar[i].gameObject.SetActive(false);
-                }
-
-                // Enables/Disables the supporting 'Hold / Release' Texts
-                for (int i = 0; i < gm.spaceSupportingTexts.Length; i++)
-                {
-                    gm.spaceSupportingTexts[i].gameObject.SetActive(false);
-                }
-
-                gm.tutAreaTextBG.gameObject.SetActive(true);
-                //gm.laneSwitching.SetActive(true);
+                return;
             }
             #endregion
             // Right regular arrow note
             #region Tutorial Stage 2
-            if (gm.tutorialStage == 2)
+            if (gm.tutorialStage == 2 && gm.doneTutStageCount == 1)
             {
-                // Position the second group of UI to be in the same position the first UI was in
-                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = gm.firstUI.gameObject.GetComponent<RectTransform>().localPosition;
+                gm.doneTutStageCount++;
 
-                // Enable/disable the correct key images
-                for (int i = 0; i < gm.allVisuals.Length; i++)
-                {
-                    if (i == 2 || i == 3)
-                    {
-                        gm.allVisuals[i].gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        gm.allVisuals[i].gameObject.SetActive(false);
-                    }
-                }
+                // Reposition the UI
+                gm.keyboardUIAnimator.SetBool("Side", false);
+                gm.controllerUIAnimator.SetBool("Side", false);
 
-                // Enable/Disable the correct arrow notes
-                for (int i = 0; i < gm.arrowNotes.Length; i++)
-                {
-                    if (i == 1)
-                    {
-                        //gm.arrowNotes[i].gameObject.transform.position = new Vector3(gm.arrowNotes[i].gameObject.transform.localPosition.x, tempY - 100, gm.arrowNotes[i].gameObject.transform.position.z);
-                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.RightArrowNote;
-                        gm.arrowNotes[i].color = gm.horizontalNoteArrowC;
-                        gm.arrowNotes[i].gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        gm.arrowNotes[i].gameObject.SetActive(false);
-                    }
-                }
+                gm.tutTextAnimator.SetBool("Side", false);
 
-                // enable/disable the correct arrow
-                for (int i = 0; i < gm.arrow.Length; i++)
-                {
-                    if (i == 1)
-                    {
-                        gm.arrow[i].gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        gm.arrow[i].gameObject.SetActive(false);
-                    }
-                }
+                am.PlaySound("Tut_Stage_2");
+
+                StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
+                return;
             }
             #endregion
             // Combine left/right regular arrow note
             #region Tutorial Stage 3   
-            if (gm.tutorialStage == 3)
+            if (gm.tutorialStage == 3 & gm.doneTutStageCount == 2)
             {
-                // Lower the Y position of the secondUI UI area
-                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = gm.originalSecondUIPos;
+                gm.doneTutStageCount++;
 
-                //pos.y = -50;
-                //gm.secondUI.position = pos;
-                //gm.secondUI.GetComponent<RectTransform>().localPosition = pos;
+                // Reposition the UI
+                gm.keyboardUIAnimator.SetBool("Side", false);
+                gm.controllerUIAnimator.SetBool("Side", false);
 
-                // Enable/disable the correct key images
-                for (int i = 0; i < gm.allVisuals.Length; i++)
-                {
-                    gm.allVisuals[i].gameObject.SetActive(true);
-                }
+                gm.tutTextAnimator.SetBool("Side", false);
 
-                // Enable/Disable the correct arrow notes
-                for (int i = 0; i < gm.arrowNotes.Length; i++)
-                {
-                    gm.arrowNotes[i].color = gm.horizontalNoteArrowC;
-                    gm.arrowNotes[i].gameObject.SetActive(true);
-                }
+                am.PlaySound("Tut_Stage_3");
 
-                // enable/disable the correct arrow
-                for (int i = 0; i < gm.arrow.Length; i++)
-                {
-                    gm.arrow[i].gameObject.SetActive(true);
-                }
-
-                //gm.laneSwitching.SetActive(false);
+                StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
+                return;
             }
             #endregion
             // Launch Notes
             #region Tutorial Stage 4
-            if (gm.tutorialStage == 4)
+            if (gm.tutorialStage == 4 && gm.doneTutStageCount == 3)
             {
-                // Lower the Y position of the secondUI UI area
-                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = gm.originalSecondUIPos;
+                gm.doneTutStageCount++;
 
-                //pos.y = -50;
-                //gm.secondUI.position = pos;
-                //gm.secondUI.GetComponent<RectTransform>().localPosition = pos;
+                // Reposition the UI
+                gm.keyboardUIAnimator.SetBool("Side", false);
+                gm.controllerUIAnimator.SetBool("Side", false);
 
-                // Enable/disable the correct key images
-                for (int i = 0; i < gm.allVisuals.Length; i++)
-                {
-                    gm.allVisuals[i].gameObject.SetActive(true);
-                }
+                gm.tutTextAnimator.SetBool("Side", false);
 
-                // Enable/Disable the correct arrow notes
-                for (int i = 0; i < gm.arrowNotes.Length; i++)
-                {
-                    gm.arrowNotes[i].color = gm.horizontalLaunchArrowC;
-                    gm.arrowNotes[0].GetComponent<Image>().sprite = gm.leftLaunchNote;
-                    gm.arrowNotes[1].GetComponent<Image>().sprite = gm.rightLaunchNote;
-                    gm.arrowNotes[i].gameObject.SetActive(true);
-                }
+                am.PlaySound("Tut_Stage_4");
 
-                // enable/disable the correct arrow
-                for (int i = 0; i < gm.arrow.Length; i++)
-                {
-                    gm.arrow[i].gameObject.SetActive(true);
-                }
+                StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
+                return;
             }
             #endregion
             // Up arrow notes
             #region Tutorial Stage 5
-            if (gm.tutorialStage == 5)
+            if (gm.tutorialStage == 5 && gm.doneTutStageCount == 4)
             {
-                // Lower the Y position of the secondUI UI area
-                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = gm.originalSecondUIPos;
+                gm.doneTutStageCount++;
 
-                //pos.y = -50;
-                //gm.secondUI.position = pos;
-                //gm.secondUI.GetComponent<RectTransform>().localPosition = pos;
+                // Reposition the UI
+                gm.keyboardUIAnimator.SetBool("Side", false);
+                gm.controllerUIAnimator.SetBool("Side", false);
 
-                // Enable/disable the correct key images
-                for (int i = 0; i < gm.allVisuals.Length; i++)
-                {
-                    gm.allVisuals[i].gameObject.SetActive(false);
-                }
+                gm.tutTextAnimator.SetBool("Side", false);
 
-                // Enable/Disable the correct arrow notes
-                for (int i = 0; i < gm.arrowNotes.Length; i++)
-                {
-                    gm.arrowNotes[i].color = gm.upArrowC;
-                    gm.arrowNotes[0].GetComponent<Image>().sprite = gm.upArrowNote;
-                    if (i == 1)
-                    {
-                        gm.arrowNotes[i].gameObject.SetActive(false);
-                    }
-                }
+                am.PlaySound("Tut_Stage_5");
 
-                // enable/disable the correct arrow
-                for (int i = 0; i < gm.arrow.Length; i++)
-                {
-                    gm.arrow[i].gameObject.SetActive(false);
-                }
-
-                // Enables/Disables the 'Hold / Release' Texts
-                for (int i = 0; i < gm.supportingTexts.Length; i++)
-                {
-                    gm.supportingTexts[i].gameObject.SetActive(false);
-                }
+                StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
+                return;
             }
             #endregion
             // Blast notes
             #region Tutorial Stage 6
-            if (gm.tutorialStage == 6)
             {
-                // Lower the Y position of the secondUI UI area
-                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition.x, 230, gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition.z);
-
-                gm.plusSymbol.gameObject.SetActive(true);
-
-                // Enable/disable the correct key images
-                for (int i = 0; i < gm.allVisuals.Length; i++)
+                if (gm.tutorialStage == 6 && gm.doneTutStageCount == 5)
                 {
-                    gm.allVisuals[i].gameObject.SetActive(true);
-                }
+                    gm.doneTutStageCount++;
 
-                // Enable/Disable the correct arrow notes
-                for (int i = 0; i < gm.arrowNotes.Length; i++)
-                {
-                    if (i == 0)
-                    {
-                        gm.arrowNotes[i].color = gm.blastNoteC;
-                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.blastNote;
-                        gm.arrowNotes[i].gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        gm.arrowNotes[i].gameObject.SetActive(false);
-                    }
-                }
+                    // Reposition the UI
+                    gm.keyboardUIAnimator.SetBool("Side", false);
+                    gm.controllerUIAnimator.SetBool("Side", false);
 
-                // Enables/Disables the 'Hold / Release' Texts
-                for (int i = 0; i < gm.supportingTexts.Length; i++)
-                {
-                    if (i == 2 || i == 3)
-                    {
-                        gm.supportingTexts[i].gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        gm.supportingTexts[i].gameObject.SetActive(false);
-                    }
+                    gm.tutTextAnimator.SetBool("Side", false);
+
+                    am.PlaySound("Tut_Stage_6");
+
+                    StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
+                    return;
                 }
             }
+            
             #endregion
             // Bomb notes
             #region Tutorial Stage 7
             if (gm.tutorialStage == 7)
             {
-                gm.plusSymbol.gameObject.SetActive(false);
-
-                // Enable/disable the correct key images
-                for (int i = 0; i < gm.allVisuals.Length; i++)
+                if (gm.tutorialStage == 7 && gm.doneTutStageCount == 6)
                 {
-                    gm.allVisuals[i].gameObject.SetActive(false);
-                }
+                    gm.doneTutStageCount++;
 
-                // Enable/Disable the correct arrow notes
-                for (int i = 0; i < gm.arrowNotes.Length; i++)
-                {
-                    if (i == 0)
-                    {
-                        gm.arrowNotes[i].GetComponent<Image>().color = Color.white;
-                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.bombIcon;
-                        gm.arrowNotes[i].gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        gm.arrowNotes[i].gameObject.SetActive(false);
-                    }
+                    // Enable / Disable entire parents 
+                    gm.keyboardUI.SetActive(false);
+                    gm.controllerUI.SetActive(false);
 
-                }
+                    // Reposition the UI
+                    gm.keyboardUIAnimator.SetBool("Side", false);
+                    gm.controllerUIAnimator.SetBool("Side", false);
 
-                // enable/disable the correct arrow
-                for (int i = 0; i < gm.arrow.Length; i++)
-                {
-                    gm.arrow[i].gameObject.SetActive(false);
-                }
+                    gm.tutTextAnimator.SetBool("Side", false);
 
-                // Enables/Disables the 'Hold / Release' Texts
-                for (int i = 0; i < gm.supportingTexts.Length; i++)
-                {
-                    gm.supportingTexts[i].gameObject.SetActive(false);
+                    am.PlaySound("Tut_Stage_7");
+
+                    StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
+                    return;
                 }
             }
             #endregion
@@ -650,76 +771,9 @@ public class TrackCreator : MonoBehaviour
             #region Tutorial Stage 8
             if (gm.tutorialStage == 8)
             {
-                // Lower the Y position of the secondUI UI area
-                gm.secondUI.gameObject.GetComponent<RectTransform>().localPosition = gm.originalSecondUIPos;
-
-                // Enable/disable the correct key images
-                for (int i = 0; i < gm.allVisuals.Length; i++)
-                {
-                    gm.allVisuals[i].gameObject.SetActive(false);
-                }
-
-                // Enable/Disable the correct arrow notes
-                for (int i = 0; i < gm.arrowNotes.Length; i++)
-                {
-                    if (i == 0)
-                    {
-                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.playerShield;
-                    }
-                    else
-                    {
-                        gm.arrowNotes[i].GetComponent<Image>().sprite = gm.playerNoShield;
-                    }
-
-                    gm.arrowNotes[i].GetComponent<Image>().color = Color.white;
-                    gm.arrowNotes[i].transform.localScale *= 1.5f;
-                    gm.arrowNotes[i].gameObject.SetActive(true);
-                }
-
-                // enable/disable the correct arrow
-                for (int i = 0; i < gm.arrow.Length; i++)
-                {
-                    gm.arrow[i].gameObject.SetActive(false);
-                }
-
-                // Enables/Disables the 'Hold / Release' Texts
-                for (int i = 0; i < gm.supportingTexts.Length; i++)
-                {
-                    gm.supportingTexts[i].gameObject.SetActive(false);
-                }
-
-                // Enable/Disable the space bar images
-                for (int i = 0; i < gm.spaceBar.Length; i++)
-                {
-                    gm.spaceBar[i].gameObject.SetActive(true);
-                }
-
-                for (int i = 0; i < gm.spaceSupportingTexts.Length; i++)
-                {
-                    gm.spaceSupportingTexts[i].gameObject.SetActive(true);
-                }
-
-                gm.tutAreaTextBG.gameObject.SetActive(true);
+                return;
             }
             #endregion
-
-            if (gm.tutorialStage < 3)
-                {
-                    foreach (Text t in gm.keyTexts)
-                    {
-                        t.text = gm.keyText[gm.tutorialStage - 1];
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < gm.keyTexts.Length; i++)
-                    {
-                        gm.keyTexts[0].text = "A";
-                        gm.keyTexts[1].text = "A";
-                        gm.keyTexts[2].text = "L";
-                        gm.keyTexts[3].text = "L";
-                    }
-                }
         }
 
         //Debug.Log(gm.tutTexts[gm.tutorialStage]);
