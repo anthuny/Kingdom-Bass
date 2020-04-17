@@ -50,6 +50,7 @@ public class Player : MonoBehaviour
     public float pointFrom;
 
     public bool isShielding;
+    private bool oldIsShielding;
 
     private float currentPointInBeats;
     public float missCurrentPointInBeats;
@@ -67,6 +68,8 @@ public class Player : MonoBehaviour
     public Transform nearestAnyNote;
     // the nearest NON bomb note
     public Transform nearestNote;
+    public Transform nearestBlast;
+    public Note nearestBlastScript;
     public Transform nearestSlider;
     public GameObject closestBehindNote;
     public Note closestBehindNoteScript;
@@ -74,6 +77,7 @@ public class Player : MonoBehaviour
     public Material shieldMat;
     private Color shieldColor;
     public GameObject shield;
+    private Animator shieldAnimator;
 
     public float newPerfect;
     public float newGreat;
@@ -107,6 +111,10 @@ public class Player : MonoBehaviour
     private Vector3 playerPos3;
 
     public float hitLocationInBeats;
+
+    private Coroutine blockCoroutine;
+    private Coroutine diminishAccuracyUI;
+    private Coroutine turnOffShield;
     // Start is called before the first frame update
     void Start()
     {
@@ -122,7 +130,7 @@ public class Player : MonoBehaviour
 
         pathWidth = pm.initialPath.GetComponent<Path>().pathWidth;
 
-        ShieldReset();
+        shieldAnimator = shield.GetComponent<Animator>();
     }
 
     public void RepositionPlayer()
@@ -141,18 +149,32 @@ public class Player : MonoBehaviour
         {
             return;
         }
-
+        
         Inputs();
         ControllerInputs();
         StartCoroutine("KeyBoardMovement");
         FindNearestNote();
-        UpdateShield();
         UpdateNotesInFront();
         AssignMisses();
         IncMaxAcc();
         CheckMissForSlider();
+        Shield();
+        ShieldCheck();
 
         missCurrentPointInBeats = tc.trackPosInBeatsGame;
+    }
+
+    void ShieldCheck()
+    {
+        // Sometimes the shield object is off and cant easily turn back on, this stops it
+        if (tc.selectedMap)
+        {
+            if (!shield.activeSelf && isShielding && tc.selectedMap.title != "Tutorial")
+            {
+                shield.SetActive(true);
+            }
+        }
+
     }
 
     public IEnumerator RepositionPlayerSlider(Note noteScript)
@@ -181,7 +203,6 @@ public class Player : MonoBehaviour
             {
                 if (noteScript.laneNumber == i)
                 {
-                    Debug.Log("moving Player asdasd");
                     playerPos.x = pathWidth * (i - 1);
                     transform.position = playerPos;
                     pm.FindNearestPath(false);
@@ -313,7 +334,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                tc.nextNoteInBeats = tc.beatWaitCountAccum[gm.totalAllNotes - 5];
+                //tc.nextNoteInBeats = tc.beatWaitCountAccum[gm.totalAllNotes - 5];
                 //float valueTemp = tc.beatWaitCountAccum.IndexOf(gm.totalAllNotes - 5);
                 //Debug.Log(valueTemp);
                 //Debug.Log("index " + temp);
@@ -331,19 +352,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    void UpdateShield()
-    {
-        shieldMat.SetFloat("Vector1_A7E2E21E", gm.shieldOpacity);
-        shieldColor = gm.shieldColor;
-        shieldMat.SetColor("Color_58F8661B", shieldColor * gm.shieldEmissionInc);
-    }
-
-    void ShieldReset()
-    {
-        // Ensure that the shield is off when the game starts
-        shieldMat.SetFloat("Vector1_A7E2E21E", 0);
-        shieldMat.SetColor("Color_58F8661B", shieldColor * 0);
-    }
     public void DestroyFurthestNoteNote()
     {
         Invoke("DestroyFurthestNote", 0.2f);
@@ -394,6 +402,7 @@ public class Player : MonoBehaviour
 
         float minDist2 = Mathf.Infinity;
         float minDist4 = Mathf.Infinity;
+        float minDist5 = Mathf.Infinity;
 
         // Detect the nearest non note position
         foreach (Transform t in activeNotes)
@@ -403,6 +412,16 @@ public class Player : MonoBehaviour
 
             float dist4 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
                             new Vector3(transform.position.x, transform.position.y, transform.position.z));
+
+            float dist5 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
+                            new Vector3(transform.position.x, transform.position.y, transform.position.z));
+
+            if (minDist5 > dist5 && t.GetComponent<Note>().noteType == "blast")
+            {
+                nearestBlast = t;
+                nearestBlastScript = nearestBlast.GetComponent<Note>();
+                minDist5 = dist5;
+            }
 
             if (minDist2 > dist2 && t.GetComponent<Note>().noteType != "bomb")
             {
@@ -626,7 +645,89 @@ public class Player : MonoBehaviour
 
     void MoveShieldSFX()
     {
-        am.PlaySound("MoveShield");
+        am.PlaySound("Player_ShieldMove");
+    }
+
+    void Shield()
+    {
+        if (tc.selectedMap)
+        {
+            if (tc.selectedMap.title == "Tutorial" && gm.tutorialStage <= 7)
+            {
+                if (shield.activeSelf)
+                {
+                    shield.SetActive(false);
+                }
+                return;
+            }
+        }
+
+        if (oldIsShielding != isShielding)
+        {
+            oldIsShielding = isShielding;
+
+            if (isShielding)
+            {
+                if (nearestBlast)
+                {
+                    if (nearestBlastScript.distToPlayer < 10)
+                    {
+                        return;
+                    }
+                }
+
+                if (!shield.activeSelf)
+                {
+                    if (turnOffShield != null)
+                    {
+                        StopCoroutine(turnOffShield);
+                    }
+                    Debug.Log("turning shield off");
+                    shield.SetActive(true);
+                }
+
+                am.PlaySound("ShieldOn");
+
+                // Play shield turn on animation     
+                shieldAnimator.SetBool("Idle", false);
+                shieldAnimator.SetTrigger("ShieldOn");
+                shieldAnimator.SetBool("Idle", true);
+            }
+
+            else
+            {
+                if (nearestBlast)
+                {
+                    if (nearestBlastScript.distToPlayer < 10)
+                    {
+                        return;
+                    }
+                }
+
+                am.PlaySound("ShieldOff");
+
+                // Play shield turn off animation
+                shieldAnimator.SetBool("Idle", false);
+                shieldAnimator.SetTrigger("ShieldOff");
+                shieldAnimator.SetBool("Idle", true);
+
+                if (turnOffShield != null)
+                {
+                    StopCoroutine(turnOffShield);
+                }
+                turnOffShield = StartCoroutine(TurnOffShield());
+            }
+        }
+    }
+
+    IEnumerator TurnOffShield()
+    {
+        yield return new WaitForSeconds(.15f);
+        shield.SetActive(false);
+    }
+    public void KillPlayer()
+    {
+        animator.SetTrigger("Death");
     }
 
     void ControllerInputs()
@@ -1021,7 +1122,6 @@ public class Player : MonoBehaviour
         if (nearestNoteGameScript.hitAmount > 1)
         {
             Missed(false, nearestNoteGameScript, gameObject.name);
-            Debug.Log("11");
         }
 
         nearestNoteGameScript.hitAmount++;
@@ -1052,7 +1152,6 @@ public class Player : MonoBehaviour
         if (nearestNoteGameScript.hitAmount > 1 && !nearestNoteGameScript.missed && nearestNoteGameScript.noteType != "note" && nearestNoteGameScript.noteDir != "up")
         {
             Missed(false, nearestNoteGameScript, gameObject.name);
-            Debug.Log("10");
         }
 
         // If the player has already got score for the nearest note, do not allow the note give score.
@@ -1209,7 +1308,24 @@ public class Player : MonoBehaviour
         else if (difference > gm.goodMin)
         {
             Missed(false, nearestNoteGameScript, gameObject.name);
-            Debug.Log("2");
+        }
+    }
+    IEnumerator DoShieldBlock()
+    {
+        am.PlaySound("Shield_Block");
+
+        shieldAnimator.SetBool("Idle", false);
+        shieldAnimator.SetTrigger("Block");
+
+        yield return new WaitForSeconds(.2f);
+
+        shieldAnimator.SetBool("Idle", true);
+
+        // Sometimes the visual for shield stays on after blocking, even when not shielding anymore, this stops it
+        if (!isShielding && shield.activeSelf)
+        {
+            Debug.Log("needed to turn shield visual off");
+            shield.SetActive(false);
         }
     }
 
@@ -1226,8 +1342,13 @@ public class Player : MonoBehaviour
         //Update player accuracy UI
         accuracyUI.text = gm.perfectScoreName;
 
+        if (diminishAccuracyUI != null)
+        {
+            StopCoroutine(diminishAccuracyUI);
+        }
+
         // Began the cooldown till the acuracy ui text vanishes
-        StartCoroutine("DiminishAccuracyUI");
+        diminishAccuracyUI = StartCoroutine("DiminishAccuracyUI");
 
         // Make not invisible
         MakeNoteInvisible();
@@ -1235,11 +1356,18 @@ public class Player : MonoBehaviour
         // Update total accuracy UI
         gm.UpdateTotalAccuracy();
 
-        //am.PlaySound("NoteHit");
+        if (nearestNoteScript.noteType == "blast")
+        {
+            if (blockCoroutine != null)
+            {
+                StopCoroutine(blockCoroutine);
+            }
+
+            blockCoroutine = StartCoroutine(DoShieldBlock());
+        }
 
         validMovement = false;
     }
-
     private void HitGreat()
     {
         // Check if the player needs to move for hitting a launch note
@@ -1253,8 +1381,13 @@ public class Player : MonoBehaviour
         //Update player accuracy UI
         accuracyUI.text = gm.greatScoreName;
 
+        if (diminishAccuracyUI != null)
+        {
+            StopCoroutine(diminishAccuracyUI);
+        }
+
         // Began the cooldown till the acuracy ui text vanishes
-        StartCoroutine("DiminishAccuracyUI");
+        diminishAccuracyUI = StartCoroutine("DiminishAccuracyUI");
 
         // Make not invisible
         MakeNoteInvisible();
@@ -1262,7 +1395,14 @@ public class Player : MonoBehaviour
         // Update total accuracy UI
         gm.UpdateTotalAccuracy();
 
-        //am.PlaySound("NoteHit");
+        if (nearestNoteScript.noteType == "blast")
+        {
+            if (blockCoroutine != null)
+            {
+                StopCoroutine(blockCoroutine);
+            }
+            blockCoroutine = StartCoroutine(DoShieldBlock());
+        }
 
         validMovement = false;
         //Debug.Break();
@@ -1280,8 +1420,13 @@ public class Player : MonoBehaviour
         //Update player accuracy UI
         accuracyUI.text = gm.goodScoreName;
 
+        if (diminishAccuracyUI != null)
+        {
+            StopCoroutine(diminishAccuracyUI);
+        }
+
         // Began the cooldown till the acuracy ui text vanishes
-        StartCoroutine("DiminishAccuracyUI");
+        diminishAccuracyUI = StartCoroutine("DiminishAccuracyUI");
 
         // Make not invisible
         MakeNoteInvisible();
@@ -1289,8 +1434,14 @@ public class Player : MonoBehaviour
         // Update total accuracy UI
         gm.UpdateTotalAccuracy();
 
-        //am.PlaySound("NoteHit");
-
+        if (nearestNoteScript.noteType == "blast")
+        {
+            if (blockCoroutine != null)
+            {
+                StopCoroutine(blockCoroutine);
+            }
+            blockCoroutine = StartCoroutine(DoShieldBlock());
+        }
         validMovement = false;
         //Debug.Break();
     }
@@ -1313,13 +1464,13 @@ public class Player : MonoBehaviour
     {
         if (nearestAnyNote == null)
         {
-            Debug.Log("?");
             return;
         }
 
         if (gm.comboMulti >= 2)
         {
             animator.SetTrigger("ComboReset");
+            am.PlaySound("PlayerHurt");
         }
 
         int index = noteScript.gameObject.transform.GetSiblingIndex();
@@ -1351,19 +1502,23 @@ public class Player : MonoBehaviour
             // Update total accuracy UI
             gm.UpdateTotalAccuracy();
 
+            if (diminishAccuracyUI != null)
+            {
+                StopCoroutine(diminishAccuracyUI);
+            }
+
             // Began the cooldown till the acuracy ui text vanishes
-            StartCoroutine("DiminishAccuracyUI");
+            diminishAccuracyUI = StartCoroutine("DiminishAccuracyUI");
+
             gm.comboMulti = 1;
             gm.updateGameUI();
 
             if (gm.resetPosition)
             {
-                Debug.Log("14");
                 if (tc.notesObj.transform.childCount >= 2)
                 {
                     if (tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>().noteDir != "down")
                     {
-                        Debug.Log("15");
                         StartCoroutine("RepositionPlayerTut", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
                     }
                 }
@@ -1375,7 +1530,6 @@ public class Player : MonoBehaviour
 
         if (!hitByBomb && noteScript.noteType == "slider")
         {
-            Debug.Log("13");
             // Increase the max accuracy if the note got missed
             if (!nearestSliderScript.noteCalculatedAcc)
             {
@@ -1390,7 +1544,7 @@ public class Player : MonoBehaviour
                     nearestSliderScript.noteCalculatedAcc = true;
                     noteScript.missed = true;
                     nearestSliderStartEnd.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().Missed();
-                    gm.UpdateHealth(gm.regenSlider);
+                    gm.UpdateHealth(gm.regenSlider);    
                     gm.scoreIncreased = true;
 
                     gm.misses++;
@@ -1403,8 +1557,14 @@ public class Player : MonoBehaviour
                     // Update total accuracy UI
                     gm.UpdateTotalAccuracy();
 
+                    if (diminishAccuracyUI != null)
+                    {
+                        StopCoroutine(diminishAccuracyUI);
+                    }
+
                     // Began the cooldown till the acuracy ui text vanishes
-                    StartCoroutine("DiminishAccuracyUI");
+                    diminishAccuracyUI = StartCoroutine("DiminishAccuracyUI");
+
                     gm.comboMulti = 1;
                     gm.updateGameUI();
 
@@ -1414,7 +1574,6 @@ public class Player : MonoBehaviour
                         {
                             if (tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>().noteDir != "down")
                             {
-                                Debug.Log("15");
                                 StartCoroutine("RepositionPlayerTut", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
                             }
                         }
@@ -1440,19 +1599,23 @@ public class Player : MonoBehaviour
                 // Update total accuracy UI
                 gm.UpdateTotalAccuracy();
 
+                if (diminishAccuracyUI != null)
+                {
+                    StopCoroutine(diminishAccuracyUI);
+                }
+
                 // Began the cooldown till the acuracy ui text vanishes
-                StartCoroutine("DiminishAccuracyUI");
+                diminishAccuracyUI = StartCoroutine("DiminishAccuracyUI");
+
                 gm.comboMulti = 1;
                 gm.updateGameUI();
 
                 if (gm.resetPosition)
                 {
-                    Debug.Log("13");
                     if (tc.notesObj.transform.childCount >= 2)
                     {
                         if (tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>().noteDir != "down")
                         {
-                            Debug.Log("15");
                             StartCoroutine("RepositionPlayerTut", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
                         }
                     }
@@ -1503,7 +1666,7 @@ public class Player : MonoBehaviour
 
     IEnumerator DiminishAccuracyUI()
     {
-        yield return new WaitForSeconds(.75f);
+        yield return new WaitForSeconds(.35f);
         accuracyUI.text = "";   
     }
 }

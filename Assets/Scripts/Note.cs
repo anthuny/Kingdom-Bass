@@ -129,6 +129,13 @@ public class Note : MonoBehaviour
     public float beatWaitCurLN;
     public float beatWaitNewSet;
 
+    [Header("Jet")]
+    private Jet jScript;
+    public bool usedForJetAim;
+
+    [Header("Shield")]
+    public float distToPlayer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -138,7 +145,7 @@ public class Note : MonoBehaviour
         player = FindObjectOfType<Player>();
         noteRend = meshRendererRef.GetComponent<Renderer>();
         noteWidth = noteRend.bounds.size.z;
-
+        jScript = gm.jScript;
 
         if (!clone && noteType != "slider")
         {
@@ -200,7 +207,7 @@ public class Note : MonoBehaviour
         // Find the index of this note in the notes list
         indexInNotes = tc.notes.IndexOf(gameObject);
                                                                                                                               
-        if (tc.notes.Count >= 3)
+        if (tc.notes.Count >= 3 && noteType == "slider")
         {                                               
             nextNoteScript = tc.notes[indexInNotes + 1].GetComponent<Note>();
             nextNoteScript.prevNoteNoteDir = noteDir;
@@ -511,6 +518,15 @@ public class Note : MonoBehaviour
 
     void CheckToPlayHitSound()
     {
+        if (noteType == "blast" && gm.jet.activeSelf)
+        {
+            gm.am.PlaySound("Jet_Shoot");
+        }
+        else if (noteType == "blast")
+        {
+            gm.am.PlaySound("Hit_Blast");
+        }
+
         if (noteType != "bomb" && noteType != "blast" && !missed)
         {
             if (noteType == "slider" && !player.nearestSliderStartEnd.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missed)
@@ -674,6 +690,7 @@ public class Note : MonoBehaviour
 
     private void Update()
     {
+        distToPlayer = Mathf.Abs(player.gameObject.transform.position.z - gameObject.transform.position.z);
         if (missed && noteType != "blast" && noteType != "slider" && !hasBeenMissed)
         {
             hasBeenMissed = true;

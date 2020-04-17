@@ -13,7 +13,7 @@ public class Map : ScriptableObject
     public string subGenre;
     public float noteTimeTaken;
     public float timeBeforeStart;
-    public int averageBeatsBtwNotes;
+    public int sliderFastSpeed;
     [Tooltip("1 is normal, higher = more health loss upon bad performance, lower = less health loss upon bad performance")]
     public float healthDrain;
 

@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: ba6ecdd5cd1984f4e85c771060fdfb86, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -488,9 +488,14 @@ MonoBehaviour:
   bombHitPlayer: 0
   nextBombLane: 
   clone: 0
+  nextNoteScript: {fileID: 0}
+  prevNoteNoteDir: 
+  prevNoteNoteType: 
+  indexInNotes: 0
   usedAsSlider: 0
   sliderintervals: []
   sliderLr: {fileID: 0}
+  sliderScript: {fileID: 0}
   isEndOfSlider: 0
   isStartOfSlider: 0
   sliderEdge: {fileID: 8252779649027652543}
@@ -498,6 +503,16 @@ MonoBehaviour:
     type: 3}
   notePredict: {fileID: 295481199899510916, guid: cb58bcd9a89c4614ba8208031682d6cc,
     type: 3}
+  prepareForPlayerReposition: 0
+  prepareForPlayerReposition2: 0
+  doneOnce7: 0
+  tutStage: -1
+  tutResetNote: 0
+  finalNoteInStage: 0
+  beatWaitCurFN: 0
+  firstNoteInStage: 0
+  beatWaitCurLN: 0
+  beatWaitNewSet: 0
 --- !u!1 &8252779649027652543
 GameObject:
   m_ObjectHideFlags: 0

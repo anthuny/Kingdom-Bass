@@ -6,11 +6,12 @@ using UnityEngine.EventSystems;
 
 public class Gamemode : MonoBehaviour
 {
-    private TrackCreator tc;
+    public TrackCreator tc;
     public AudioManager am;
     public GameObject player;
     public Player playerScript;
     public GameObject jet;
+    public Jet jScript;
     public float jetZ;
     public float jetY;
     public GameObject eventSystem;
@@ -18,6 +19,9 @@ public class Gamemode : MonoBehaviour
 
     [Header("Scene Manager")]
     public string activeScene;
+
+    [Header("Jet")]
+    public float noteDistForAim;
 
     [Header("Slider")]
     public GameObject sliderTransformPar;
@@ -31,7 +35,6 @@ public class Gamemode : MonoBehaviour
     public Color sliderEdgeColorMiss;
     public float sliderOffset;
     public int sliderIntervalCountGo;
-    public float slowSpeedMult = .5f;
     public float slowSpeedMultCur;
 
     public int sliderIntervalCount;
@@ -133,6 +136,9 @@ public class Gamemode : MonoBehaviour
     public GameObject noteDoubleCT;
     public Animator noteDoubleCTAnimator;
     public GameObject controllerImage;
+    public Animator controllerImageAnimator;
+    public GameObject controllerImageDouble;
+    public Animator controllerImageDoubleAnimator;
     public GameObject leftArrowCT;
     public GameObject rightArrowCT;
     public Animator tiltTextAnimator;
@@ -158,7 +164,12 @@ public class Gamemode : MonoBehaviour
     public Sprite tutStageBlastPlayer;
     public Sprite tutStageBlastContr;
     public Sprite spacePressed;
+    public Sprite spaceHeld;
     public Sprite cross;
+    public Sprite slider;
+    public Sprite shieldControllerImageSprite;
+    public Sprite noShieldPlayer;
+    
 
     [Header("Other")]
     public int doneTutStageCount;
@@ -264,25 +275,6 @@ public class Gamemode : MonoBehaviour
     [Tooltip("Max amount of time in seconds for how long it takes for movements to NOT give score")]
     public float maxTimeBetweenInputs;
 
-    [Header("Shield")]
-    public float shieldOpacityIncSpeed = 1;
-    public float shieldEmissionIncSpeed = 3;
-    //[HideInInspector]
-    public float shieldOpacity;
-    public float maxOpacity;
-    //[HideInInspector]
-    public float shieldEmissionInc;
-    [ColorUsageAttribute(true, true)]
-    public Color shieldColor;
-
-    private bool allowIncOpacity;
-    private bool allowIncEmission;
-    public float shieldMaxEmission;
-    public float shieldPulseSpeed = 5;
-    public float shieldMinScale;
-    public float shieldMaxScale;
-    public float shieldScaleSpeed;
-
     [Header("Path")]
     public Color lane1Color;
     public Color lane2Color;
@@ -290,6 +282,7 @@ public class Gamemode : MonoBehaviour
 
     [Header("Player")]
     public float shieldOffSpeed;
+    public float slowSpeedMult = .5f;
 
     [Header("Health")]
     public GameObject gameUI;
@@ -389,7 +382,6 @@ public class Gamemode : MonoBehaviour
     public Sprite controllerDisconnectedImage;
 
     public GameObject cursor;
-
     //public Vector3 playerPos;
 
     private void Awake()
@@ -444,6 +436,9 @@ public class Gamemode : MonoBehaviour
         playerScript = player.GetComponent<Player>();
         tc = FindObjectOfType<TrackCreator>();
         am = FindObjectOfType<AudioManager>();
+        jScript = FindObjectOfType<Jet>();
+
+        jScript.AssignVariables();
 
         updateGameUI();
 
@@ -461,7 +456,7 @@ public class Gamemode : MonoBehaviour
         regenBombOri = regenBomb;
         regenSliderOri = regenSlider;
 
-        jet.SetActive(false);
+        jScript.DisableJet();
         laneSwitching.SetActive(false);
 
 
@@ -646,7 +641,6 @@ public class Gamemode : MonoBehaviour
     }
     void Update()
     {
-        UpdateShield();
         UpdateElectricity();
         TutorialUnpause();
         PlayerDeath();
@@ -669,6 +663,19 @@ public class Gamemode : MonoBehaviour
 
     void UpdateElectricity()
     {
+        if (!tc.selectedMap)
+        {
+            return;
+        }
+
+        if (tc.selectedMap.title == "Tutorial" && tutorialStage < 9 || playerDead)
+        {
+            ElectrictyBallPS.gameObject.SetActive(false);
+            return;
+        }
+
+        ElectrictyBallPS.gameObject.SetActive(true);
+
         // Ensure that there is electricity for every horizontal note
         for (int i = 0; i < playerScript.electricNotes.Count; i++)
         {
@@ -783,95 +790,6 @@ public class Gamemode : MonoBehaviour
 
 
     }
-    void UpdateShield()
-    {
-        // Turning the visuals ON for the shield
-        if (playerScript.isShielding)
-        {
-            //completed1 = false;
-            allowIncOpacity = true;
-            allowIncEmission = true;
-        }
-
-        if (allowIncOpacity)
-        {
-            // Increase the opacity of the shield
-            shieldOpacity += Time.deltaTime * shieldOpacityIncSpeed;
-
-            // If shield is active, set pulse speed to it's actual value
-            playerScript.shieldMat.SetFloat("Vector1_60F525E0", shieldPulseSpeed);
-
-            // Increase the scale of the shield
-            //playerScript.shield.transform.localScale = Vector3.Lerp(new Vector3(shieldMinScale, shieldMinScale, shieldMinScale),
-            //    new Vector3(shieldMaxScale, shieldMaxScale, shieldMaxScale), shieldScaleSpeed);
-
-            playerScript.shield.transform.localScale += Vector3.one * Time.deltaTime * shieldScaleSpeed;
-
-            // if the shield opacity reaches 1, stop it from continuing
-            if (shieldOpacity >= maxOpacity || playerScript.shield.transform.localScale.x >= shieldMaxScale)
-            {
-                shieldOpacity = maxOpacity;
-
-                // Set the scale of the shield to the max scale
-                playerScript.shield.transform.localScale = new Vector3(shieldMaxScale, shieldMaxScale, shieldMaxScale);
-            }
-        }
-
-        if (allowIncEmission)
-        {
-            // Increase the emission over time
-            shieldEmissionInc += Time.deltaTime * shieldEmissionIncSpeed;
-
-            // If the shield emmision reaches or passes the max, stop it from continuing
-            if (shieldEmissionInc >= shieldMaxEmission)
-            {
-                shieldEmissionInc = shieldMaxEmission;
-            }
-        }
-
-        // Turning the visuals OFF for the shield
-        if (!playerScript.isShielding)
-        {
-            allowIncOpacity = false;
-            allowIncEmission = false;
-        }
-
-        if (!allowIncOpacity)
-        {
-            // Increase the opacity of the shield
-            shieldOpacity -= Time.deltaTime * shieldOpacityIncSpeed;
-
-            // If shield is active, set pulse speed to 0
-            playerScript.shieldMat.SetFloat("Vector1_60F525E0", 0);
-
-            // Decrease the scale of the shield
-            //playerScript.shield.transform.localScale = Vector3.Lerp(new Vector3(shieldMaxScale, shieldMaxScale, shieldMaxScale),
-            //   new Vector3(shieldMinScale, shieldMinScale, shieldMinScale), shieldScaleSpeed);
-
-            playerScript.shield.transform.localScale -= Vector3.one * Time.deltaTime * shieldScaleSpeed;
-
-            // if the shield opacity reaches 0, stop it from continuing
-            if (shieldOpacity <= 0 || playerScript.shield.transform.localScale.x <= shieldMinScale)
-            {
-                shieldOpacity = 0;
-                shieldEmissionInc = 0;
-                // Set the scale of the shield to the min scale
-                playerScript.shield.transform.localScale = new Vector3(shieldMinScale, shieldMinScale, shieldMinScale);
-            }
-        }
-
-        if (!allowIncEmission)
-        {
-            // Increase the emission over time
-            shieldEmissionInc -= Time.deltaTime * shieldEmissionIncSpeed;
-
-            // If the shield emmision reaches or passes the max, stop it from continuing
-            if (shieldEmissionInc <= 0)
-            {
-                shieldEmissionInc = 0;
-            }
-        }
-    }
     public void updateGameUI()
     {
         if (score != oldScore && tc.notesSpawned > 0)
@@ -907,6 +825,7 @@ public class Gamemode : MonoBehaviour
             killingPlayer = true;
             health = 0f;
             am.PlaySound("TrackDeath");
+            playerScript.KillPlayer();
             return;
         }
         else if (health > healthMax)
@@ -917,6 +836,7 @@ public class Gamemode : MonoBehaviour
         else if (health != healthMax && !playerDead || amount != healthRegen && !playerDead)
         {
             health += amount;
+            //Debug.Log(amount);
             updateGameUI();          
         }
     }
@@ -956,6 +876,8 @@ public class Gamemode : MonoBehaviour
                     killingPlayer = false;
                     GameOver();
                     y = 1;
+
+                    CancelInvoke("UpdateHealthRegen");
                 }
             }
         }
@@ -1006,6 +928,9 @@ public class Gamemode : MonoBehaviour
         pausedUI.SetActive(false);
         gamePaused = false;
         EndTrack(true);
+
+        Time.timeScale = 1;
+        tutorialUI.SetActive(false);
     }
 
     // This function only happens when the game needs to restart from either DYING or RESTARTING or GOING TO MAP SELECTION
@@ -1120,33 +1045,7 @@ public class Gamemode : MonoBehaviour
 
         #region Disable All UI from Tutorial
 
-        plusSymbol.gameObject.SetActive(false);
-        arrowNotes[0].gameObject.SetActive(false);
-        arrowNotes[1].gameObject.SetActive(false);
-        arrow[0].gameObject.SetActive(false);
-        arrow[1].gameObject.SetActive(false);
-        tutAreaTextBG.gameObject.SetActive(false);
-
-        foreach (GameObject g in allVisuals)
-        {
-            g.SetActive(false);
-        }
-        foreach (Text t in keyTexts)
-        {
-            t.gameObject.SetActive(false);
-        }
-        foreach (Text t in supportingTexts)
-        {
-            t.gameObject.SetActive(false);
-        }
-        foreach (Text t in spaceSupportingTexts)
-        {
-            t.gameObject.SetActive(false);
-        }
-        foreach (Image i in spaceBar)
-        {
-            i.gameObject.SetActive(false);
-        }
+        tutorialUI.SetActive(false);
         #endregion
 
         if (controllerConnected)
@@ -1236,6 +1135,14 @@ public class Gamemode : MonoBehaviour
     // map selection button
     public void MapSelection()
     {
+        Time.timeScale = 1;
+
+        // Stop the tutorial's UI from displaying after the map has been closed
+        if (tc.selectedMap && tc.selectedMap.title == "Tutorial")
+        {
+            StopCoroutine(tc.activeCoroutine);
+        }
+
         if (mapSelectionUI.activeSelf)
         {
             mapSelectionUI.SetActive(false);
@@ -1263,6 +1170,9 @@ public class Gamemode : MonoBehaviour
         gamePaused = false;
         cantPause = true;
         EndTrack(false);
+
+
+
     }
 
     IEnumerator MapSelectionContr()
@@ -1283,6 +1193,8 @@ public class Gamemode : MonoBehaviour
     }
     public void MainMenu()
     {
+        Time.timeScale = 1;
+
         if (mapSelectionUI.activeSelf)
         {
             mapSelectionUI.SetActive(false);
@@ -1333,9 +1245,10 @@ public class Gamemode : MonoBehaviour
     {
         #region Tutorial reset
         laneSwitching.SetActive(false);
+        doneTutStageCount = 0;
         #endregion
 
-        jet.SetActive(false);
+        jScript.DisableJet();
         //Debug.Log("ending");
 
         // Reset the tutorial stage if it had already proceeded into the first stage
@@ -1529,7 +1442,7 @@ public class Gamemode : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Escape) || (Input.GetKeyDown("joystick button 2")) && gamePaused && !countingDown)
             {
                 //Debug.Log("2");
-                StartCoroutine(UnpauseGame());
+                UnPauseGameBut();
             }
         }
 
@@ -1546,9 +1459,8 @@ public class Gamemode : MonoBehaviour
             //Debug.Log("4");
             MainMenu();
         }
-
-
     }
+
     // If fate is true, the pause is for the end of a map
     // if fate is false, it's for the tutorial stage pauses
     public void PauseGame(bool tutPause)
@@ -1556,6 +1468,8 @@ public class Gamemode : MonoBehaviour
         AudioListener.pause = true;
 
         activeScene = "Paused";
+
+        Time.timeScale = 0;
 
         if (tutPause)
         {
@@ -1595,34 +1509,57 @@ public class Gamemode : MonoBehaviour
     // This exists so the continue button in the pause menu can be linked to this
     public void UnPauseGameBut()
     {
-        StartCoroutine(UnpauseGame());
+        if (tc.selectedMap.title == "Tutorial")
+        {
+            StartCoroutine(UnpauseGame(true));
+        }
+        else
+        {
+            StartCoroutine(UnpauseGame(false));
+        }
     }
 
-    public IEnumerator UnpauseGame()
+    public IEnumerator UnpauseGame(bool tut)
     {
-        countingDown = true;
-        pausedUI.SetActive(false);
-        countdownText.gameObject.SetActive(true);
+        if (!tut)
+        {
+            countingDown = true;
+            pausedUI.SetActive(false);
+            countdownText.gameObject.SetActive(true);
 
-        countdownText.text = "3";
+            countdownText.text = "3";
 
-        yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1f);
 
-        countdownText.text = "2";
+            countdownText.text = "2";
 
-        yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1f);
 
-        countdownText.text = "1";
+            countdownText.text = "1";
 
-        yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1f);
 
-        countdownText.gameObject.SetActive(false);
-        gamePaused = false;
-        countingDown = false;
-        cantPause = false;
-        AudioListener.pause = false;
+            countdownText.gameObject.SetActive(false);
+            countingDown = false;
+            gamePaused = false;
+            cantPause = false;
+            AudioListener.pause = false;
+            Time.timeScale = 1;
+            activeScene = "Game";
+        }
+        else
+        {
+            pausedUI.SetActive(false);
+            gamePaused = false;
 
-        activeScene = "Game";
+            cantPause = false;
+            AudioListener.pause = false;
+
+            Time.timeScale = 1;
+
+            activeScene = "Game";
+        }
+
     }
 
     public void TutorialUnpause()

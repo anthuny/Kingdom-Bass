@@ -9,6 +9,7 @@ public class TrackCreator : MonoBehaviour
     private Gamemode gm;
     private PathManager pm;
     private AudioManager am;
+    private Jet jScript;
 
     [Header("Map Selection")]
     public bool mapHasBeenSelected;
@@ -21,6 +22,7 @@ public class TrackCreator : MonoBehaviour
 
     [Header("Tutorial")]
     public bool increasedStage;
+    public Coroutine activeCoroutine;
 
 
     public string[] laneCodes = new string[] { "lane1Code", "lane2Code", "lane3Code", "lane4Code", "lane5Code", "lane6Code", "lane7Code", "lane8Code" };
@@ -143,6 +145,7 @@ public class TrackCreator : MonoBehaviour
         gm = FindObjectOfType<Gamemode>();
         pm = FindObjectOfType<PathManager>();
         am = FindObjectOfType<AudioManager>();
+        jScript = gm.jet.GetComponent<Jet>();
     }
 
     private void Update()
@@ -167,7 +170,7 @@ public class TrackCreator : MonoBehaviour
             //Debug.Break();
 
 
-            if (laneNumber.Substring(0).Contains(i.ToString()))
+            if (laneNumber.Substring(0, 1).Contains(i.ToString()))
             {
                 // Spawn noteVisual, at notes position
                 GameObject go = Instantiate(noteVisual, notesObj.transform.position, Quaternion.identity);
@@ -253,7 +256,7 @@ public class TrackCreator : MonoBehaviour
 
         if (selectedMap.title != "Tutorial" && !gm.jet.activeSelf)
         {
-            gm.jet.SetActive(true);
+            jScript.EnableJet();
         }
     }
 
@@ -286,7 +289,7 @@ public class TrackCreator : MonoBehaviour
 
         if (selectedMap.title == "Tutorial")
         {
-            UpdateTutorialSlides();
+            UpdateTutorialSlides();        
 
             // Disable game UI
             gm.gameUI.SetActive(false);
@@ -329,6 +332,14 @@ public class TrackCreator : MonoBehaviour
             gm.keyboardUI.SetActive(true);
             gm.controllerUI.SetActive(true);
 
+            gm.key.GetComponent<RectTransform>().sizeDelta = new Vector2(606.8f, 606.8f);
+
+            gm.controllerImageDouble.SetActive(false);
+            gm.controllerImageAnimator.SetBool("Double", false);
+
+
+            yield return new WaitForSeconds(1);
+
             // Change the note / key sprite for keyboard ui
             gm.noteKB.GetComponent<Image>().sprite = gm.leftArrowNote;
             gm.key.GetComponent<Image>().sprite = gm.aKeyImageSprite;
@@ -356,12 +367,19 @@ public class TrackCreator : MonoBehaviour
             gm.tutTextAnimator.SetBool("Side", false);
 
             gm.noteKBAnimator.SetBool("Double", false);
-            gm.noteDoubleKBAnimator.SetBool("Double", false);
+            if (gm.noteDoubleKB.activeSelf)
+            {
+                gm.noteDoubleKBAnimator.SetBool("Double", false);
+            }
 
             gm.keyAnimator.SetBool("Double", false);
-            gm.keyDoubleAnimator.SetBool("Double", false);
 
-            yield return new WaitForSeconds(5.5f);
+            if (gm.keyDouble.activeSelf)
+            {
+                gm.keyDoubleAnimator.SetBool("Double", false);
+            }
+
+            yield return new WaitForSeconds(4.5f);
 
             // Reposition the UI
             animatorKB.SetBool("Side", true);
@@ -408,7 +426,12 @@ public class TrackCreator : MonoBehaviour
 
             // Change the note / key sprite for keyboard ui
             gm.noteKB.GetComponent<Image>().sprite = gm.leftArrowNote;
+            gm.noteDoubleKB.GetComponent<Image>().sprite = gm.RightArrowNote;
+            gm.noteDoubleCT.GetComponent<Image>().sprite = gm.RightArrowNote;
             gm.key.GetComponent<Image>().sprite = gm.aKeyImageSprite;
+
+            gm.noteDoubleKB.GetComponent<Image>().color = gm.horizontalNoteArrowC;
+            gm.noteDoubleCT.GetComponent<Image>().color = gm.horizontalNoteArrowC;
 
             // Change the note / controller sprite for controller ui
             gm.noteCT.GetComponent<Image>().sprite = gm.leftArrowNote;
@@ -459,7 +482,7 @@ public class TrackCreator : MonoBehaviour
 
             // Change the note / key sprite for keyboard ui
             gm.noteKB.GetComponent<Image>().sprite = gm.leftLaunchNote;
-            gm.noteDoubleKB.GetComponent<Image>().sprite = gm.leftLaunchNote;
+            gm.noteDoubleKB.GetComponent<Image>().sprite = gm.rightLaunchNote;
 
             // Change the colour of note
             gm.noteKB.GetComponent<Image>().color = gm.horizontalLaunchArrowC;
@@ -467,7 +490,7 @@ public class TrackCreator : MonoBehaviour
 
             // Change the note / controller sprite for controller ui
             gm.noteCT.GetComponent<Image>().sprite = gm.leftLaunchNote;
-            gm.noteDoubleCT.GetComponent<Image>().sprite = gm.leftLaunchNote;
+            gm.noteDoubleCT.GetComponent<Image>().sprite = gm.rightLaunchNote;
 
             // Change the colour of note
             gm.noteCT.GetComponent<Image>().color = gm.horizontalLaunchArrowC;
@@ -586,12 +609,6 @@ public class TrackCreator : MonoBehaviour
 
         else if (gm.tutorialStage == 7)
         {
-            yield return new WaitForSeconds(18.5f);
-
-            // Enable / Disable entire parents 
-            gm.keyboardUI.SetActive(true);
-            gm.controllerUI.SetActive(true);
-
             // Change the note / key sprite for keyboard ui
             gm.noteKB.GetComponent<Image>().sprite = gm.bombIcon;
             gm.key.GetComponent<Image>().sprite = gm.cross;
@@ -602,11 +619,122 @@ public class TrackCreator : MonoBehaviour
 
             gm.key.GetComponent<RectTransform>().sizeDelta = new Vector2(606.8f, 606.8f);
 
+            // Enable / Disable entire parents 
+            //gm.keyboardUI.SetActive(true);
+            //gm.controllerUI.SetActive(true);
+            //gm.tutAreaTextBG.gameObject.SetActive(true);
+
             gm.pressBothText.SetActive(false);
 
             animatorCT.SetBool("Side", false);
+            animatorKB.SetBool("Side", false);
+            gm.tutTextAnimator.SetBool("Side", false);
 
             yield return new WaitForSeconds(8.5f);
+
+            // Reposition the UI
+            animatorKB.SetBool("Side", true);
+            animatorCT.SetBool("Side", true);
+
+            gm.tutTextAnimator.SetBool("Side", true);
+
+            yield break;
+        }
+
+        else if (gm.tutorialStage == 8)
+        {
+            yield return new WaitForSeconds(1.1f);
+
+            // Enable / Disable entire parents 
+            gm.keyboardUI.SetActive(true);
+            gm.controllerUI.SetActive(true);
+
+            // Change the note / key sprite for keyboard ui
+            gm.noteKB.GetComponent<Image>().sprite = gm.slider;
+            gm.key.GetComponent<Image>().sprite = gm.spaceHeld;
+
+            // Change the note / controller sprite for controller ui
+            gm.noteCT.GetComponent<Image>().sprite = gm.slider;
+            gm.controllerImage.GetComponent<Image>().sprite = gm.middleControllerImageSprite;
+            gm.controllerImageDouble.GetComponent<Image>().sprite = gm.shieldControllerImageSprite;
+            
+            gm.controllerImageDouble.SetActive(true);
+            gm.tiltTextAnimator.gameObject.SetActive(true);
+            gm.controllerImageDouble.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Hold";
+
+            gm.key.GetComponent<RectTransform>().sizeDelta = new Vector2(606.8f, 290);
+
+            gm.leftArrowCT.SetActive(true);
+            gm.rightArrowCT.SetActive(true);
+
+            gm.tutAreaTextBG.gameObject.SetActive(true);
+
+            gm.pressBothText.SetActive(false);
+
+            gm.tutTextAnimator.SetBool("Side", false);
+
+            animatorCT.SetBool("Side", false);
+            animatorKB.SetBool("Side", false);
+
+            gm.controllerImageAnimator.SetBool("Double", true); 
+            gm.keyAnimator.SetBool("Double", false);
+
+            gm.key.transform.GetChild(0).GetComponent<Text>().text = "Hold";
+            gm.keyDouble.transform.GetChild(0).GetComponent<Text>().text = "Hold";
+
+            yield return new WaitForSeconds(23.9f);
+
+            // Reposition the UI
+            animatorKB.SetBool("Side", true);
+            animatorCT.SetBool("Side", true);
+
+            gm.tutTextAnimator.SetBool("Side", true);
+
+            yield break;
+        }
+
+        else if (gm.tutorialStage == 9)
+        {
+            yield return new WaitForSeconds(1.1f);
+
+            // Enable / Disable entire parents 
+            gm.keyboardUI.SetActive(true);
+            gm.controllerUI.SetActive(true);
+
+            // Change the note / key sprite for keyboard ui
+            gm.noteKB.GetComponent<Image>().sprite = gm.noShieldPlayer;
+            gm.key.GetComponent<Image>().sprite = gm.spaceHeld;
+
+            // Change the note / controller sprite for controller ui
+            gm.noteCT.GetComponent<Image>().sprite = gm.noteKB.GetComponent<Image>().sprite = gm.noShieldPlayer;
+            gm.controllerImage.GetComponent<Image>().sprite = gm.middleControllerImageSprite;
+            gm.controllerImageDouble.GetComponent<Image>().sprite = gm.shieldControllerImageSprite;
+
+            gm.controllerImageDouble.SetActive(true);
+            gm.tiltTextAnimator.gameObject.SetActive(true);
+            gm.controllerImageDouble.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Hold";
+
+            gm.key.GetComponent<RectTransform>().sizeDelta = new Vector2(606.8f, 290);
+
+            gm.leftArrowCT.SetActive(true);
+            gm.rightArrowCT.SetActive(true);
+
+            gm.tutAreaTextBG.gameObject.SetActive(true);
+
+            gm.pressBothText.SetActive(false);
+
+            gm.tutTextAnimator.SetBool("Side", false);
+
+            animatorCT.SetBool("Side", false);
+            animatorKB.SetBool("Side", false);
+
+            gm.controllerImageAnimator.SetBool("Double", true);
+            gm.keyAnimator.SetBool("Double", false);
+
+            gm.key.transform.GetChild(0).GetComponent<Text>().text = "Hold";
+            gm.keyDouble.transform.GetChild(0).GetComponent<Text>().text = "Hold";
+
+            yield return new WaitForSeconds(25.9f);
 
             // Reposition the UI
             animatorKB.SetBool("Side", true);
@@ -624,15 +752,17 @@ public class TrackCreator : MonoBehaviour
         increasedStage = true;
         gm.tutorialStage++;
 
+        //Debug.Log("increasing stage" + gm.tutorialStage + " " +  gm.doneTutStageCount);
+
         // Change the text on the tutorial text to be the first slide of information
-        if (gm.tutorialStage <= gm.maxTutorialStages - 1)
+        if (gm.tutorialStage <= gm.maxTutorialStages)
         {
             gm.tutAreaInfo = gm.tutTexts[gm.tutorialStage - 1];
 
             // Left regular arrow note
             #region Tutorial Stage 1
             if (gm.tutorialStage == 1 && gm.doneTutStageCount == 0)
-            {
+            {               
                 gm.doneTutStageCount++;
 
                 gm.resetPosition = true;
@@ -644,9 +774,7 @@ public class TrackCreator : MonoBehaviour
 
                 am.PlaySound("Tut_Stage_1");
 
-                StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
-
-                return;
+                activeCoroutine = StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
             }
             #endregion
             // Right regular arrow note
@@ -663,8 +791,7 @@ public class TrackCreator : MonoBehaviour
 
                 am.PlaySound("Tut_Stage_2");
 
-                StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
-                return;
+                activeCoroutine = StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
             }
             #endregion
             // Combine left/right regular arrow note
@@ -681,8 +808,7 @@ public class TrackCreator : MonoBehaviour
 
                 am.PlaySound("Tut_Stage_3");
 
-                StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
-                return;
+                activeCoroutine = StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
             }
             #endregion
             // Launch Notes
@@ -699,8 +825,7 @@ public class TrackCreator : MonoBehaviour
 
                 am.PlaySound("Tut_Stage_4");
 
-                StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
-                return;
+                activeCoroutine = StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
             }
             #endregion
             // Up arrow notes
@@ -717,8 +842,7 @@ public class TrackCreator : MonoBehaviour
 
                 am.PlaySound("Tut_Stage_5");
 
-                StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
-                return;
+                activeCoroutine = StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
             }
             #endregion
             // Blast notes
@@ -736,61 +860,81 @@ public class TrackCreator : MonoBehaviour
 
                     am.PlaySound("Tut_Stage_6");
 
-                    StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
-                    return;
+                    activeCoroutine = StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
                 }
             }
             
             #endregion
             // Bomb notes
             #region Tutorial Stage 7
-            if (gm.tutorialStage == 7)
+            if (gm.tutorialStage == 7 && gm.doneTutStageCount == 6)
             {
-                if (gm.tutorialStage == 7 && gm.doneTutStageCount == 6)
-                {
-                    gm.doneTutStageCount++;
+                gm.doneTutStageCount++;
 
-                    // Enable / Disable entire parents 
-                    gm.keyboardUI.SetActive(false);
-                    gm.controllerUI.SetActive(false);
+                // Reposition the UI
+                gm.keyboardUIAnimator.SetBool("Side", false);
+                gm.controllerUIAnimator.SetBool("Side", false);
 
-                    // Reposition the UI
-                    gm.keyboardUIAnimator.SetBool("Side", false);
-                    gm.controllerUIAnimator.SetBool("Side", false);
+                gm.tutTextAnimator.SetBool("Side", false);
 
-                    gm.tutTextAnimator.SetBool("Side", false);
+                // Enable / Disable entire parents 
+                //gm.keyboardUI.SetActive(false);
+                //gm.controllerUI.SetActive(false);
+                //gm.tutAreaTextBG.gameObject.SetActive(false);
 
-                    am.PlaySound("Tut_Stage_7");
+                am.PlaySound("Tut_Stage_7");
 
-                    StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
-                    return;
-                }
+                activeCoroutine = StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
+            }
+            #endregion
+            // Slider
+            #region Tutorial Stage 8
+            if (gm.tutorialStage == 8 && gm.doneTutStageCount == 7)
+            {
+                gm.doneTutStageCount++;
+
+                // Enable / Disable entire parents 
+                gm.keyboardUI.SetActive(true);
+                gm.controllerUI.SetActive(true);
+                gm.tutAreaTextBG.gameObject.SetActive(true);
+
+                // Reposition the UI
+                gm.keyboardUIAnimator.SetBool("Side", false);
+                gm.controllerUIAnimator.SetBool("Side", false);
+
+                gm.tutTextAnimator.SetBool("Side", false);
+
+                am.PlaySound("Tut_Stage_8");
+
+                activeCoroutine = StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
             }
             #endregion
             // Shield
-            #region Tutorial Stage 8
-            if (gm.tutorialStage == 8)
+            #region Tutorial Stage 9
+            if (gm.tutorialStage == 9 && gm.doneTutStageCount == 8)
             {
-                return;
+                gm.doneTutStageCount++;
+
+                // Enable / Disable entire parents 
+                gm.keyboardUI.SetActive(true);
+                gm.controllerUI.SetActive(true);
+                gm.tutAreaTextBG.gameObject.SetActive(true);
+
+                // Reposition the UI
+                gm.keyboardUIAnimator.SetBool("Side", false);
+                gm.controllerUIAnimator.SetBool("Side", false);
+
+                gm.tutTextAnimator.SetBool("Side", false);
+
+                am.PlaySound("Tut_Stage_9");
+
+                activeCoroutine = StartCoroutine(activateAnimators(gm.keyboardUIAnimator, gm.controllerUIAnimator));
             }
             #endregion
         }
 
-        //Debug.Log(gm.tutTexts[gm.tutorialStage]);
-        //Debug.Break();
-
         // Assign the correct text for the text
         gm.tutAreaText.text = gm.tutAreaInfo;
-
-        // turn the tutorial text to visible
-        gm.tutAreaText.gameObject.SetActive(true);
-
-        // turn on the tutorial UI
-        if (!gm.tutorialUI.activeSelf)
-        {
-            gm.tutorialUI.SetActive(true);
-        }
-
     }
 
     // Called every update
@@ -982,7 +1126,7 @@ public class TrackCreator : MonoBehaviour
             // Disable the ability to pause
             gm.cantPause = true;
 
-            gm.accuracy = selectedMap.averageBeatsBtwNotes;
+            gm.shieldOffSpeed = selectedMap.sliderFastSpeed;
 
             // disable all buttons in map selection screen
             gm.mapSelectionUI.SetActive(false);

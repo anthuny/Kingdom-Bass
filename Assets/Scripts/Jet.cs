@@ -4,84 +4,70 @@ using UnityEngine;
 
 public class Jet : MonoBehaviour
 {
-    [HideInInspector]
-    public Transform aimHolder;
-    [HideInInspector]
-    public Transform shootHolder;
+    public Gamemode gm;
     private GameObject player;
-    private float shootCD;
-    private Vector3 aimPos;
-    private Vector3 shootPos;
+    private Player pScript;
+    private AudioManager amScript;
+    private TrackCreator tcScript;
+    private Animator animator;
 
-    public GameObject aimLaser;
-    public GameObject shootLaser;
-    public GameObject hit;
-
-    public float laserAimSpeed;
-    public float laserShootSpeed;
-    public float laserForwardInf;
-    public float shootCDMin;
-    public float shootCDMax;
-    public bool shooting;
-    public ParticleSystem hitParticle;
-
-    void Start()
+    private void Start()
     {
-        player = FindObjectOfType<Player>().gameObject;
-        aimHolder = transform.Find("AimHolder");
-        shootHolder = transform.Find("ShootHolder");
-
-        // Get shoot cooldown before shooting once, so laser
-        // doesn't spawn instantly when game starts  
-
-        //StartCoroutine(GetShootCooldown());
+        animator = GetComponent<Animator>();
     }
 
-    void Aim()
+    public void AssignVariables()
     {
-        /*
-        //Rotate gunholder to look at aim position
-        aimPos = player.transform.position + (player.GetComponent<Player>().rb.velocity) * laserForwardInf;
-
-        // Look at player
-        aimHolder.transform.LookAt(aimPos);
-
-        // Spawn a laser
-        GameObject go = Instantiate(aimLaser, aimHolder.position, Quaternion.identity);
-        go.GetComponent<Laser>().player = player.transform;
-        go.GetComponent<Laser>().jet = GetComponent<Jet>();
-        go.transform.rotation = aimHolder.rotation;
-
-        // Get new shot cooldown
-        //StartCoroutine(GetShootCooldown());
-        */
+        player = gm.player;
+        pScript = gm.playerScript;
+        tcScript = gm.tc;
+    }
+    private void Update()
+    {
+        CheckToAim();
+    }
+    public void EnableJet()
+    {
+        gameObject.SetActive(true);
     }
 
-    public void Shoot()
+    public void DisableJet()
     {
-        /*
-        //Rotate gunholder to look at aim position
-        shootPos = player.transform.position;
-
-        // Look at player
-        shootHolder.transform.LookAt(shootPos);
-
-        // Spawn a laser
-        GameObject go2 = Instantiate(shootLaser, shootHolder.position, Quaternion.identity);
-        go2.GetComponent<Laser>().player = player.transform;
-        go2.GetComponent<Laser>().jet = GetComponent<Jet>();
-        go2.transform.rotation = shootHolder.rotation;
-        go2.GetComponent<Laser>().isLaser = true;
-        */
+        gameObject.SetActive(false);
     }
 
-
-    IEnumerator GetShootCooldown()
+    public void CheckToAim()
     {
-        shootCD = Random.Range(shootCDMin, shootCDMax);
+        // If a note is close enough to the player, play Jet's aim animation
+        if (pScript.nearestBlast)
+        {
+            float difference = Mathf.Abs(pScript.nearestBlast.transform.position.z - player.transform.position.z);
+            Note nearestBlast = pScript.nearestBlastScript;
+            float bigMath = (gm.noteDistForAim * (1 + (1 - ((tcScript.selectedMap.noteTimeTaken - ((1 - (tcScript.selectedMap.noteTimeTaken / 7))) * 6) / 7))) * (1 + ((1 * (tcScript.selectedMap.bpm / 128)))));
+            if (difference <= bigMath && !nearestBlast.usedForJetAim)
+            {
+                nearestBlast.usedForJetAim = true;
+                StartCoroutine(Shoot());
+            }
+        }
+    }
 
-        yield return new WaitForSeconds(shootCD);
+    IEnumerator Shoot()
+    {
+        gm.am.PlaySound("Jet_Aiming");
 
-        //Aim();
+        animator.SetBool("Idle", false);
+        animator.SetBool("Aim", true);
+
+        yield return new WaitForSeconds(1.05f);
+
+        animator.SetBool("Idle", false);    
+        animator.SetBool("Aim", false);
+        animator.SetTrigger("Shoot");
+
+        yield return new WaitForSeconds(.5f);
+
+        animator.SetBool("Idle", true);
     }
 }
+
