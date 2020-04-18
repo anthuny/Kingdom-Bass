@@ -326,6 +326,8 @@ public class TrackCreator : MonoBehaviour
         {
             yield return new WaitForSeconds(8.5f);
 
+            gm.blur.SetActive(true);
+
             gm.tutorialUI.SetActive(true);
 
             // Enable / Disable entire parents 
@@ -358,7 +360,7 @@ public class TrackCreator : MonoBehaviour
             gm.leftArrowCT.SetActive(true);
             gm.rightArrowCT.SetActive(false);
 
-            gm.tiltTextAnimator.SetTrigger("GoLeft");
+            gm.tiltText.GetComponent<Animator>().SetTrigger("GoLeft");
 
             // Reposition the UI
             animatorKB.SetBool("Side", false);
@@ -381,6 +383,8 @@ public class TrackCreator : MonoBehaviour
 
             yield return new WaitForSeconds(4.5f);
 
+            gm.blur.SetActive(false);
+
             // Reposition the UI
             animatorKB.SetBool("Side", true);
             animatorCT.SetBool("Side", true);
@@ -393,6 +397,8 @@ public class TrackCreator : MonoBehaviour
         else if (gm.tutorialStage == 2)
         {
             yield return new WaitForSeconds(2.2f);
+
+            gm.blur.SetActive(true);
 
             // Change the note / key sprite for keyboard ui
             gm.noteKB.GetComponent<Image>().sprite = gm.RightArrowNote;
@@ -407,9 +413,11 @@ public class TrackCreator : MonoBehaviour
             gm.rightArrowCT.SetActive(true);
 
             // Reposition the UI
-            gm.tiltTextAnimator.SetTrigger("GoRight");
+            gm.tiltText.GetComponent<Animator>().SetTrigger("GoRight");
 
             yield return new WaitForSeconds(5.8f);
+
+            gm.blur.SetActive(false);
 
             // Reposition the UI
             animatorKB.SetBool("Side", true);
@@ -423,6 +431,8 @@ public class TrackCreator : MonoBehaviour
         else if (gm.tutorialStage == 3)
         {
             yield return new WaitForSeconds(1.3f);
+
+            gm.blur.SetActive(true);
 
             // Change the note / key sprite for keyboard ui
             gm.noteKB.GetComponent<Image>().sprite = gm.leftArrowNote;
@@ -457,15 +467,17 @@ public class TrackCreator : MonoBehaviour
             gm.keyAnimator.SetBool("Double", true);
             gm.keyDoubleAnimator.SetBool("Double", true);
 
-            gm.tiltTextAnimator.SetTrigger("GoMiddle");
+            gm.tiltText.GetComponent<Animator>().SetTrigger("GoMiddle");
 
             // Reposition the controller UI
             gm.noteCTAnimator.SetBool("Double", true);
             gm.noteDoubleCTAnimator.SetBool("Double", true);
 
-            gm.tiltTextAnimator.SetTrigger("GoMiddle");
+            gm.tiltText.GetComponent<Animator>().SetTrigger("GoMiddle");
 
             yield return new WaitForSeconds(7.3f);
+
+            gm.blur.SetActive(false);
 
             // Reposition the UI
             animatorKB.SetBool("Side", true);
@@ -479,6 +491,8 @@ public class TrackCreator : MonoBehaviour
         else if (gm.tutorialStage == 4)
         {
             yield return new WaitForSeconds(1.7f);
+
+            gm.blur.SetActive(true);
 
             // Change the note / key sprite for keyboard ui
             gm.noteKB.GetComponent<Image>().sprite = gm.leftLaunchNote;
@@ -503,9 +517,11 @@ public class TrackCreator : MonoBehaviour
             gm.keyAnimator.SetBool("Double", true);
             gm.keyDoubleAnimator.SetBool("Double", true);
 
-            gm.tiltTextAnimator.SetTrigger("GoMiddle");
+            gm.tiltText.GetComponent<Animator>().SetTrigger("GoMiddle");
 
             yield return new WaitForSeconds(15.3f);
+
+            gm.blur.SetActive(false);
 
             // Reposition the UI
             animatorKB.SetBool("Side", true);
@@ -519,6 +535,8 @@ public class TrackCreator : MonoBehaviour
         else if (gm.tutorialStage == 5)
         {
             yield return new WaitForSeconds(1.8f);
+
+            gm.blur.SetActive(true);
 
             // Change the note / key sprite for keyboard ui
             gm.noteKB.GetComponent<Image>().sprite = gm.upArrow;
@@ -545,7 +563,7 @@ public class TrackCreator : MonoBehaviour
 
             gm.key.transform.GetChild(0).gameObject.SetActive(false);
 
-            gm.tiltTextAnimator.gameObject.SetActive(false);
+            gm.tiltText.gameObject.SetActive(false);
 
             // Reposition the UI
             gm.noteKBAnimator.SetBool("Double", false);
@@ -555,6 +573,8 @@ public class TrackCreator : MonoBehaviour
   
 
             yield return new WaitForSeconds(8.2f);
+
+            gm.blur.SetActive(false);
 
             // Reposition the UI
             animatorKB.SetBool("Side", true);
@@ -568,6 +588,8 @@ public class TrackCreator : MonoBehaviour
         else if (gm.tutorialStage == 6)
         {
             yield return new WaitForSeconds(1.2f);
+
+            gm.blur.SetActive(true);
 
             // Change the note / key sprite for keyboard ui
             gm.noteKB.GetComponent<Image>().sprite = gm.tutStageBlastPlayer;
@@ -598,6 +620,8 @@ public class TrackCreator : MonoBehaviour
 
             yield return new WaitForSeconds(6.8f);
 
+            gm.blur.SetActive(false);
+
             // Reposition the UI
             animatorKB.SetBool("Side", true);
             animatorCT.SetBool("Side", true);
@@ -609,6 +633,8 @@ public class TrackCreator : MonoBehaviour
 
         else if (gm.tutorialStage == 7)
         {
+            gm.blur.SetActive(true);
+
             // Change the note / key sprite for keyboard ui
             gm.noteKB.GetComponent<Image>().sprite = gm.bombIcon;
             gm.key.GetComponent<Image>().sprite = gm.cross;
@@ -632,6 +658,8 @@ public class TrackCreator : MonoBehaviour
 
             yield return new WaitForSeconds(8.5f);
 
+            gm.blur.SetActive(false);
+
             // Reposition the UI
             animatorKB.SetBool("Side", true);
             animatorCT.SetBool("Side", true);
@@ -644,6 +672,8 @@ public class TrackCreator : MonoBehaviour
         else if (gm.tutorialStage == 8)
         {
             yield return new WaitForSeconds(1.1f);
+
+            gm.blur.SetActive(true);
 
             // Enable / Disable entire parents 
             gm.keyboardUI.SetActive(true);
@@ -659,7 +689,7 @@ public class TrackCreator : MonoBehaviour
             gm.controllerImageDouble.GetComponent<Image>().sprite = gm.shieldControllerImageSprite;
             
             gm.controllerImageDouble.SetActive(true);
-            gm.tiltTextAnimator.gameObject.SetActive(true);
+            gm.tiltText.gameObject.SetActive(true);
             gm.controllerImageDouble.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Hold";
 
             gm.key.GetComponent<RectTransform>().sizeDelta = new Vector2(606.8f, 290);
@@ -684,6 +714,8 @@ public class TrackCreator : MonoBehaviour
 
             yield return new WaitForSeconds(23.9f);
 
+            gm.blur.SetActive(false);
+
             // Reposition the UI
             animatorKB.SetBool("Side", true);
             animatorCT.SetBool("Side", true);
@@ -696,6 +728,8 @@ public class TrackCreator : MonoBehaviour
         else if (gm.tutorialStage == 9)
         {
             yield return new WaitForSeconds(1.1f);
+
+            gm.blur.SetActive(true);
 
             // Enable / Disable entire parents 
             gm.keyboardUI.SetActive(true);
@@ -711,7 +745,7 @@ public class TrackCreator : MonoBehaviour
             gm.controllerImageDouble.GetComponent<Image>().sprite = gm.shieldControllerImageSprite;
 
             gm.controllerImageDouble.SetActive(true);
-            gm.tiltTextAnimator.gameObject.SetActive(true);
+            gm.tiltText.gameObject.SetActive(true);
             gm.controllerImageDouble.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Hold";
 
             gm.key.GetComponent<RectTransform>().sizeDelta = new Vector2(606.8f, 290);
@@ -735,6 +769,8 @@ public class TrackCreator : MonoBehaviour
             gm.keyDouble.transform.GetChild(0).GetComponent<Text>().text = "Hold";
 
             yield return new WaitForSeconds(25.9f);
+
+            gm.blur.SetActive(false);
 
             // Reposition the UI
             animatorKB.SetBool("Side", true);
@@ -762,7 +798,7 @@ public class TrackCreator : MonoBehaviour
             // Left regular arrow note
             #region Tutorial Stage 1
             if (gm.tutorialStage == 1 && gm.doneTutStageCount == 0)
-            {               
+            {
                 gm.doneTutStageCount++;
 
                 gm.resetPosition = true;
@@ -1120,6 +1156,8 @@ public class TrackCreator : MonoBehaviour
         // Used to ensure the button is pressed once.
         if (!loadingTrack)
         {
+            gm.blur.SetActive(false);
+
             loadingTrack = true;
 
             gm.activeScene = "Game";

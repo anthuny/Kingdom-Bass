@@ -57,10 +57,14 @@ public class Gamemode : MonoBehaviour
     public Sprite[] ranks;
     public Image rankImage;
     public GameObject postMapStatsUI;
-    public Text endScoreText;
-    public Text endTotalAccuracyText;
-    public Text indivAccAmountText;
-    public Text finalComboText;
+    public Text postScoreText;
+    public Text postTotalAccuracyText;
+    public Text perfectAmountText;
+    public Text greatAmountText;
+    public Text goodAmountText;
+    public Text missAmountText;
+    public Text postComboText;
+    public Text trackName;
     public GameObject postMapUI;
 
     [Header("Menu")]
@@ -141,7 +145,7 @@ public class Gamemode : MonoBehaviour
     public Animator controllerImageDoubleAnimator;
     public GameObject leftArrowCT;
     public GameObject rightArrowCT;
-    public Animator tiltTextAnimator;
+    public GameObject tiltText;
     public GameObject pressBothText;
 
     [Header("Sprites")]
@@ -169,9 +173,10 @@ public class Gamemode : MonoBehaviour
     public Sprite slider;
     public Sprite shieldControllerImageSprite;
     public Sprite noShieldPlayer;
-    
+
 
     [Header("Other")]
+    public GameObject blur;
     public int doneTutStageCount;
 
     public float tutPosResetTime;
@@ -206,9 +211,6 @@ public class Gamemode : MonoBehaviour
     public Vector3 originalFirstUIPos;
     [HideInInspector]
     public Vector3 originalSecondUIPos;
-
-    //public Sprite unpressedKey;
-    //public Sprite pressedKey;
 
     [Header("Other")]
     public int debugUICounter = 1;
@@ -382,6 +384,8 @@ public class Gamemode : MonoBehaviour
     public Sprite controllerDisconnectedImage;
 
     public GameObject cursor;
+
+    public bool canReturn;
     //public Vector3 playerPos;
 
     private void Awake()
@@ -457,8 +461,6 @@ public class Gamemode : MonoBehaviour
         regenSliderOri = regenSlider;
 
         jScript.DisableJet();
-        laneSwitching.SetActive(false);
-
 
         StartGame();
         InvokeRepeating("FindControllers", 0, 2f);
@@ -589,6 +591,15 @@ public class Gamemode : MonoBehaviour
             }
             return;
         }
+
+        else if (activeScene == "Paused")
+            if (canReturn)
+            {
+                if (Input.GetKeyDown("joystick button 2") || Input.GetKeyDown(KeyCode.Escape))
+                {
+                    UnPauseGameBut();
+                }
+            }
     }
 
     void CheckForNoUISelection()
@@ -642,7 +653,6 @@ public class Gamemode : MonoBehaviour
     void Update()
     {
         UpdateElectricity();
-        TutorialUnpause();
         PlayerDeath();
         PauseInput();
         UpdateHealthBar();
@@ -888,6 +898,12 @@ public class Gamemode : MonoBehaviour
     {
         activeScene = "GameOver";
 
+        // Enable the blue background image
+        if (!blur.activeSelf)
+        {
+            blur.SetActive(true);
+        }
+
         // Disable game UI
         gameUI.SetActive(false);
 
@@ -924,12 +940,14 @@ public class Gamemode : MonoBehaviour
     // Replay button
     public void Replay()
     {
+        Time.timeScale = 1;
+        canReturn = false;
+
         DestroyAllRemainingNotes();
         pausedUI.SetActive(false);
         gamePaused = false;
         EndTrack(true);
 
-        Time.timeScale = 1;
         tutorialUI.SetActive(false);
     }
 
@@ -960,14 +978,21 @@ public class Gamemode : MonoBehaviour
         // Disable game UI
         gameUI.SetActive(false);
 
+        // Enable the blue background image
+        if (!blur.activeSelf)
+        {
+            blur.SetActive(true);
+        }
         // Calculate the post map stat UI
-        endScoreText.text = score.ToString();
-        endTotalAccuracyText.text = totalAccuracy.ToString("F2") + "%";
-        indivAccAmountText.text =  "Perfect " + perfects.ToString() +
-            "\nGreat " + greats.ToString() +
-            "\nGood " + goods.ToString() +
-            "\nMiss " + misses.ToString();
-        finalComboText.text = "Final Combo Multiplier " + comboMulti.ToString();
+        postScoreText.text = score.ToString();
+        postTotalAccuracyText.text = totalAccuracy.ToString("F2") + "%";
+        perfectAmountText.text = perfects.ToString() + "x";
+        greatAmountText.text = greats.ToString() + "x";
+        goodAmountText.text = goods.ToString() + "x";
+        missAmountText.text = misses.ToString() + "x";
+        postComboText.text = comboMulti.ToString() + "x";
+
+        trackName.text = tc.selectedMap.title.ToString() + " - " + tc.selectedMap.difficulty.ToString();
 
         #region Calculation for Rank Letter
 
@@ -1034,6 +1059,7 @@ public class Gamemode : MonoBehaviour
         if (tc.selectedMap.title == "Tutorial")
         {
             am.StopSound("Tutorial");
+            am.StopSound("Tut_Stage_" + tutorialStage.ToString());
         }
         // Enable the post map stats UI to see
         postMapStatsUI.SetActive(true);
@@ -1082,6 +1108,12 @@ public class Gamemode : MonoBehaviour
             StartCoroutine("ExitGamePromptContr");
         }
 
+        // Enable the blue background image
+        if (!blur.activeSelf)
+        {
+            blur.SetActive(true);
+        }
+
         activeScene = "ExitGamePrompt";
     }
 
@@ -1118,6 +1150,12 @@ public class Gamemode : MonoBehaviour
         {
             StartCoroutine("MainMenuContr");
         }
+
+        // Enable the blue background image
+        if (!blur.activeSelf)
+        {
+            blur.SetActive(true);
+        }
     }
 
     public void PlayBtn()
@@ -1129,6 +1167,12 @@ public class Gamemode : MonoBehaviour
             StartCoroutine("MapSelectionContr");
         }
 
+        // Enable the blue background image
+        if (!blur.activeSelf)
+        {
+            blur.SetActive(true);
+        }
+
         activeScene = "MapSelection";
     }
 
@@ -1137,10 +1181,16 @@ public class Gamemode : MonoBehaviour
     {
         Time.timeScale = 1;
 
+        canReturn = false;
+
         // Stop the tutorial's UI from displaying after the map has been closed
         if (tc.selectedMap && tc.selectedMap.title == "Tutorial")
         {
-            StopCoroutine(tc.activeCoroutine);
+            am.StopSound("Tut_Stage_" + tutorialStage.ToString());
+            if (tc.activeCoroutine != null)
+            {
+                StopCoroutine(tc.activeCoroutine);
+            }
         }
 
         if (mapSelectionUI.activeSelf)
@@ -1163,16 +1213,20 @@ public class Gamemode : MonoBehaviour
             StartCoroutine("MapSelectionContr");
         }
 
+        // Enable the blue background image
+        if (!blur.activeSelf)
+        {
+            blur.SetActive(true);
+        }
+
         activeScene = "MapSelection";
 
         DestroyAllRemainingNotes();
         pausedUI.SetActive(false);
+        Debug.Log("set off 3");
         gamePaused = false;
         cantPause = true;
         EndTrack(false);
-
-
-
     }
 
     IEnumerator MapSelectionContr()
@@ -1217,6 +1271,12 @@ public class Gamemode : MonoBehaviour
             StartCoroutine("MainMenuContr");
         }
 
+        // Enable the blue background image
+        if (!blur.activeSelf)
+        {
+            blur.SetActive(true);
+        }
+
         activeScene = "MainMenu";
 
         cantPause = true;
@@ -1244,8 +1304,11 @@ public class Gamemode : MonoBehaviour
     public void EndTrack(bool retry)
     {
         #region Tutorial reset
-        laneSwitching.SetActive(false);
         doneTutStageCount = 0;
+        if (tc.activeCoroutine != null)
+        {
+            StopCoroutine(tc.activeCoroutine);
+        }
         #endregion
 
         jScript.DisableJet();
@@ -1365,6 +1428,12 @@ public class Gamemode : MonoBehaviour
                 StartCoroutine("MapSelectionContr");
             }
 
+            // Enable the blue background image
+            if (!blur.activeSelf)
+            {
+                blur.SetActive(true);
+            }
+
             activeScene = "MapSelection";
 
             tc.selectedMap = null;
@@ -1433,8 +1502,14 @@ public class Gamemode : MonoBehaviour
                 // Input to pause the game
                 if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown("joystick button 9") && !mapSelectionUI.activeSelf && !countingDown && !gamePaused && !tc.allNotes[tc.allNotes.Count - 1].GetComponent<Note>().behindPlayer)
                 {
-                    //Debug.Log("1");
-                    PauseGame(false);
+                    if (tc.selectedMap.title == "Tutorial")
+                    {
+                        PauseGame(false);
+                    }
+                    else
+                    {
+                        PauseGame(false);
+                    }
                 }
             }
 
@@ -1461,20 +1536,33 @@ public class Gamemode : MonoBehaviour
         }
     }
 
+    IEnumerator enableReturnFromPause()
+    {
+        yield return new WaitForSecondsRealtime(.4f);
+        canReturn = true;
+    }
+
     // If fate is true, the pause is for the end of a map
     // if fate is false, it's for the tutorial stage pauses
     public void PauseGame(bool tutPause)
     {
+        StartCoroutine(enableReturnFromPause());
+
         AudioListener.pause = true;
+
+        Time.timeScale = 0;
+        // Enable the blur background image
+        if (!blur.activeSelf)
+        {
+            blur.SetActive(true);
+        }
 
         activeScene = "Paused";
 
-        Time.timeScale = 0;
-
         if (tutPause)
         {
-            tutUnPauseText.gameObject.SetActive(true);
-            tutPaused = true;
+            //StopCoroutine(tc.activeCoroutine);
+            //MapSelection();
         }
         else
         {
@@ -1521,10 +1609,16 @@ public class Gamemode : MonoBehaviour
 
     public IEnumerator UnpauseGame(bool tut)
     {
+        // Disable the blue background image
+        blur.SetActive(false);
+
+        canReturn = false;
+
         if (!tut)
         {
             countingDown = true;
             pausedUI.SetActive(false);
+            Debug.Log("set off 4");
             countdownText.gameObject.SetActive(true);
 
             countdownText.text = "3";
@@ -1544,37 +1638,26 @@ public class Gamemode : MonoBehaviour
             gamePaused = false;
             cantPause = false;
             AudioListener.pause = false;
+
             Time.timeScale = 1;
+
             activeScene = "Game";
         }
         else
         {
+            Time.timeScale = 1;
+
             pausedUI.SetActive(false);
+            Debug.Log("set off 5");
             gamePaused = false;
 
             cantPause = false;
             AudioListener.pause = false;
 
-            Time.timeScale = 1;
+            am.UnPause("Tut_Stage_" + tutorialStage.ToString());
 
             activeScene = "Game";
         }
 
-    }
-
-    public void TutorialUnpause()
-    {
-        if (Input.GetKeyDown(KeyCode.Return) && tutPaused && tc.selectedMap.title == "Tutorial")
-        {
-            tutPaused = false;
-            AudioListener.pause = false;
-
-            if (tutUnPauseText.enabled)
-            {
-                tutUnPauseText.gameObject.SetActive(false);
-            }
-
-            activeScene = "Game";
-        }
     }
 }

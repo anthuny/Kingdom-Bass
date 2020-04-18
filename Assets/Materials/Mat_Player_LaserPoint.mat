@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_laserStart
+  m_Name: Mat_Player_LaserPoint
   m_Shader: {fileID: -6465566751694194690, guid: d257b344f1cd55f48b2d85ba14cb375d,
     type: 3}
   m_ShaderKeywords: 

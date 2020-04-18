@@ -17,9 +17,9 @@ MonoBehaviour:
   length: 2.44
   difficulty: 1
   subGenre: N/A
-  noteTimeTaken: 6
+  noteTimeTaken: 9
   timeBeforeStart: 1
-  averageBeatsBtwNotes: 4
+  sliderFastSpeed: 0
   healthDrain: 0
   track: {fileID: 8300000, guid: 757476ad5826eb7459986bf94dabb8e1, type: 3}
   trackLoop: {fileID: 0}

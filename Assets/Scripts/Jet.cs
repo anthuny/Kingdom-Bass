@@ -11,6 +11,17 @@ public class Jet : MonoBehaviour
     private TrackCreator tcScript;
     private Animator animator;
 
+    [Header("Laser")]
+    public Transform laserHolder;
+    public LineRenderer laser;
+    public float laserDecSizeSpeed;
+
+    [Header("Laser Point")]
+    public ParticleSystem laserPoint;
+
+    private bool shooting;
+    private bool decLaserSize;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -25,6 +36,8 @@ public class Jet : MonoBehaviour
     private void Update()
     {
         CheckToAim();
+        ShootVisuals();
+        DecreaseLaserSize();
     }
     public void EnableJet()
     {
@@ -54,20 +67,77 @@ public class Jet : MonoBehaviour
 
     IEnumerator Shoot()
     {
+        shooting = true;
+        laser.gameObject.SetActive(true);
+
+        // Trigger the laser point for jet
+        laserPoint.gameObject.SetActive(true);
+
+        laser.startWidth = 0;
+        laser.endWidth = 0;
+
         gm.am.PlaySound("Jet_Aiming");
 
         animator.SetBool("Idle", false);
         animator.SetBool("Aim", true);
 
-        yield return new WaitForSeconds(1.05f);
+        yield return new WaitForSeconds(.25f);
+        laser.startWidth = 1;
+        laser.endWidth = 1;
+        yield return new WaitForSeconds(.1f);
+        laser.startWidth = 0;
+        laser.endWidth = 0;
+        yield return new WaitForSeconds(.1f);
+        laser.startWidth = 1;
+        laser.endWidth = 1;
+        yield return new WaitForSeconds(.1f);
+        laser.startWidth = 0;
+        laser.endWidth = 0;
+        yield return new WaitForSeconds(.5f);
 
         animator.SetBool("Idle", false);    
         animator.SetBool("Aim", false);
         animator.SetTrigger("Shoot");
 
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.25f);
+
+        laser.startWidth = 10;
+        laser.endWidth = 10;
+
+        decLaserSize = true;
+
+        yield return new WaitForSeconds(.25f);
 
         animator.SetBool("Idle", true);
+
+        yield return new WaitForSeconds(.7f);
+
+        // Trigger the laser point for jet
+        laserPoint.gameObject.SetActive(false);
+
+        laser.gameObject.SetActive(false);
+
+
+        decLaserSize = false;
+        shooting = false;
+    }
+    
+    void ShootVisuals()
+    {
+        if (shooting)
+        {
+            laser.SetPosition(0, laserHolder.position);
+            laser.SetPosition(1, new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z));
+        }
+    }
+
+    void DecreaseLaserSize()
+    {
+        if (decLaserSize && laser.startWidth > 0)
+        {
+            laser.startWidth -= laserDecSizeSpeed * Time.deltaTime;
+            laser.endWidth -= laserDecSizeSpeed * Time.deltaTime;
+        }
     }
 }
 

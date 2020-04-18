@@ -682,7 +682,6 @@ public class Player : MonoBehaviour
                     {
                         StopCoroutine(turnOffShield);
                     }
-                    Debug.Log("turning shield off");
                     shield.SetActive(true);
                 }
 
