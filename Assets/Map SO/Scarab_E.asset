@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Scarab
   bpm: 128
-  length: 142
-  difficulty: 1
+  length: 2:37
+  difficulty: Easy
+  starCount: 0
   subGenre: House
   noteTimeTaken: 7
   timeBeforeStart: 1

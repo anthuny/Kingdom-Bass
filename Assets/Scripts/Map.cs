@@ -8,8 +8,9 @@ public class Map : ScriptableObject
     [Header("General Info")]
     public string title;
     public int bpm;
-    public float length;
-    public float difficulty;
+    public string length;
+    public string difficulty;
+    public float starCount;
     public string subGenre;
     public float noteTimeTaken;
     public float timeBeforeStart;

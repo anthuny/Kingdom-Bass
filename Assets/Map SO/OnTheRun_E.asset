@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: On The Run
   bpm: 174
-  length: 90
-  difficulty: 1
-  subGenre: Drum n Bass
+  length: 1:30
+  difficulty: Easy
+  starCount: 0
+  subGenre: Drum 'n Bass
   noteTimeTaken: 9
   timeBeforeStart: 1
   sliderFastSpeed: 8

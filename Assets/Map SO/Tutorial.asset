@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: Tutorial
   bpm: 120
-  length: 2.44
-  difficulty: 1
+  length: 5:41
+  difficulty: Easy
+  starCount: 0
   subGenre: N/A
   noteTimeTaken: 9
   timeBeforeStart: 1

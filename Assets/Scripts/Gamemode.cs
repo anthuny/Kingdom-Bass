@@ -388,6 +388,11 @@ public class Gamemode : MonoBehaviour
     public bool canReturn;
     //public Vector3 playerPos;
 
+    [Header("UI")]
+    public Color defColor;
+    public Color defMapColor;
+    public Color highlightedColor;
+
     private void Awake()
     {
         controls = new Controller();
@@ -569,6 +574,11 @@ public class Gamemode : MonoBehaviour
         {
             if (Input.GetKeyDown("joystick button 2"))
             {
+                es.SetSelectedGameObject(null);
+                foreach (Button b in mapButtons)
+                {
+                    b.GetComponent<UI>().selected = false;
+                }
                 MainMenu();
             }
             return;
@@ -578,6 +588,11 @@ public class Gamemode : MonoBehaviour
         {
             if (Input.GetKeyDown("joystick button 2"))
             {
+                es.SetSelectedGameObject(null);
+                foreach (Button b in mapButtons)
+                {
+                    b.GetComponent<UI>().selected = false;
+                }
                 ExitGamePrompt();
             }
             return;
@@ -587,6 +602,7 @@ public class Gamemode : MonoBehaviour
         {
             if (Input.GetKeyDown("joystick button 2"))
             {
+                es.SetSelectedGameObject(null);
                 MainMenu();
             }
             return;
@@ -597,6 +613,7 @@ public class Gamemode : MonoBehaviour
             {
                 if (Input.GetKeyDown("joystick button 2") || Input.GetKeyDown(KeyCode.Escape))
                 {
+                    es.SetSelectedGameObject(null);
                     UnPauseGameBut();
                 }
             }
@@ -936,6 +953,8 @@ public class Gamemode : MonoBehaviour
         }
         es.SetSelectedGameObject(retryBtn.gameObject);
         retryBtn.OnSelect(null);
+
+        UIHover(retryBtn.gameObject);
     }
     // Replay button
     public void Replay()
@@ -1095,11 +1114,14 @@ public class Gamemode : MonoBehaviour
         }
         es.SetSelectedGameObject(menuBtn.gameObject);
         menuBtn.OnSelect(null);
+
+        UIHover(menuBtn.gameObject);
     }
 
     // Happens when the player presses quit
     public void ExitGamePrompt()
     {
+        Debug.Log("hey");
         mainMenuUI.SetActive(false);
         exitPromptUI.SetActive(true);
 
@@ -1132,6 +1154,8 @@ public class Gamemode : MonoBehaviour
         }
         es.SetSelectedGameObject(yesBtn.gameObject);
         yesBtn.OnSelect(null);
+
+        UIHover(yesBtn.gameObject);
     }
 
     // Happens when the player presses YES when asked are you sure you want to quit
@@ -1244,6 +1268,8 @@ public class Gamemode : MonoBehaviour
         }
         es.SetSelectedGameObject(map1Btn.gameObject);
         map1Btn.OnSelect(null);
+
+        UIHover(map1Btn.gameObject);
     }
     public void MainMenu()
     {
@@ -1299,6 +1325,8 @@ public class Gamemode : MonoBehaviour
         }
         es.SetSelectedGameObject(playBtn.gameObject);
         playBtn.OnSelect(null);
+
+        UIHover(playBtn.gameObject);
     }
 
     public void EndTrack(bool retry)
@@ -1592,6 +1620,8 @@ public class Gamemode : MonoBehaviour
         }
         es.SetSelectedGameObject(continueBtn.gameObject);
         continueBtn.OnSelect(null);
+
+        UIHover(continueBtn.gameObject);
     }
 
     // This exists so the continue button in the pause menu can be linked to this
@@ -1659,5 +1689,145 @@ public class Gamemode : MonoBehaviour
             activeScene = "Game";
         }
 
+    }
+
+    public void UIHover(GameObject btn)
+    {
+        if (btn.name.Contains("Map"))
+        {
+            // Change the size of the button
+            LeanTween.scale(btn, new Vector3(1f, 1f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+            // Change the colour of the button
+            btn.GetComponent<Image>().color = highlightedColor;
+            for (int i = 0; i < btn.transform.childCount; i++)
+            {
+                btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+            }
+        }
+        else
+        {
+            // Change the size of the button
+            LeanTween.scale(btn, new Vector3(1.2f, 1.2f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+            // Change the colour of the button
+            btn.GetComponent<Image>().color = highlightedColor;
+            btn.transform.GetChild(0).GetComponent<Text>().color = Color.white;
+        }
+    }
+
+    public void UILeave(GameObject btn)
+    {
+        if (btn.name.Contains("Map"))
+        {
+            // Change the size of the button
+            LeanTween.scale(btn, new Vector3(.75f, .75f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+            btn.GetComponent<UI>().selected = false;
+
+            // Change the colour of the button
+            btn.GetComponent<Image>().color = defMapColor;
+            for (int i = 0; i < btn.transform.childCount; i++)
+            {
+                btn.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+            }
+        }
+        else
+        {
+            // Change the colour of the button
+            btn.GetComponent<Image>().color = defColor;
+            btn.transform.GetChild(0).GetComponent<Text>().color = Color.black;
+
+            // Change the size of the button
+            LeanTween.scale(btn, new Vector3(1f, 1f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+        }
+    }
+
+    public void UISelected(GameObject btn)
+    {
+        if (btn.name.Contains("Map"))
+        {
+            // Change the size of the button
+            LeanTween.scale(btn, new Vector3(.75f, .75f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+            if (btn.GetComponent<UI>().selected == true)
+            {
+                btn.GetComponent<UI>().selected = false;
+                tc.LoadTrack();
+
+            }
+            else
+            {
+                btn.GetComponent<UI>().selected = true;
+            }
+
+            // Change the colour of the button
+            btn.GetComponent<Image>().color = defMapColor;
+
+            for (int i = 0; i < btn.transform.childCount; i++)
+            {
+                btn.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+            }
+        }
+        else
+        {
+            // Change the size of the button
+            LeanTween.scale(btn, new Vector3(1f, 1f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+            // Change the colour of the button
+            btn.GetComponent<Image>().color = defColor;
+            btn.transform.GetChild(0).GetComponent<Text>().color = Color.black;
+        }
+
+        if (btn.name.Contains("Quit"))
+        {
+            ExitGamePrompt();
+            return;
+        }
+        else if (btn.name.Contains("Play"))
+        {
+            MapSelection();
+            return;
+        }
+        else if (btn.name.Contains("Yes"))
+        {
+            ExitGame();
+            return;
+        }
+        else if (btn.name.Contains("No"))
+        {
+            CancelGamePrompt();
+            return;
+        }
+        else if (btn.name.Contains("Retry") || btn.name.Contains("Replay"))
+        {
+            Replay();
+            return;
+        }
+        else if (btn.name.Contains("Menu"))
+        {
+            MapSelection();
+            return;
+        }
+        else if (btn.name.Contains("Map"))
+        {
+            tc.SelectMap(btn.GetComponent<Button>());
+            return;
+        }
+        else if (btn.name.Contains("Back"))
+        {
+            MainMenu();
+            return;
+        }
+        else if (btn.name.Contains("Start"))
+        {
+            tc.LoadTrack();
+            return;
+        }
+        else if (btn.name.Contains("Continue"))
+        {
+            UnPauseGameBut();
+            return;
+        }
     }
 }

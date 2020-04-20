@@ -1139,15 +1139,8 @@ public class TrackCreator : MonoBehaviour
         // Initialize what map was selected
         selectedMap = button.GetComponent<MapInfo>().map;
 
-        gm.mapSelectText.text = "Title " + selectedMap.title +
-            "\nBPM " + selectedMap.bpm + "\nDifficulty " + selectedMap.difficulty +
-            "\nLength " + selectedMap.length + "\nGenre " + selectedMap.subGenre;
+        gm.mapSelectText.text = "Select again to Continue!";
 
-        // Enable the start button if it isn't already
-        if (!gm.startBtn.activeSelf)
-        {
-            gm.startBtn.SetActive(true);
-        }
     }
 
     // Happens when the player presses the start button
