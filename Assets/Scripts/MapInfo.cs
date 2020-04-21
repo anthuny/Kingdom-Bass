@@ -13,6 +13,8 @@ public class MapInfo : MonoBehaviour
     public Text subGenreText;
     public Text bpmText;
 
+    public bool selected;
+
     private void Start()
     {
         titleText.text = map.title;

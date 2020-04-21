@@ -56,8 +56,8 @@ public class Jet : MonoBehaviour
         {
             float difference = Mathf.Abs(pScript.nearestBlast.transform.position.z - player.transform.position.z);
             Note nearestBlast = pScript.nearestBlastScript;
-            float bigMath = (gm.noteDistForAim * (1 + (1 - ((tcScript.selectedMap.noteTimeTaken - ((1 - (tcScript.selectedMap.noteTimeTaken / 7))) * 6) / 7))) * (1 + ((1 * (tcScript.selectedMap.bpm / 128)))));
-            if (difference <= bigMath && !nearestBlast.usedForJetAim)
+  
+            if (difference <= tcScript.selectedMap.jetAimRange && !nearestBlast.usedForJetAim)
             {
                 nearestBlast.usedForJetAim = true;
                 StartCoroutine(Shoot());

@@ -1203,7 +1203,6 @@ public class Player : MonoBehaviour
             else
             {
                 Missed(false, nearestNoteGameScript, gameObject.name);
-                Debug.Log("7");
                 return;
             }
         }

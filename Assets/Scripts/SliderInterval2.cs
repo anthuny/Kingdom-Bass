@@ -71,6 +71,8 @@ public class SliderInterval2 : MonoBehaviour
             {              
                 noteScript.bombHitPlayer = true;
                 player.Missed(true, noteScript, gameObject.name);
+                noteScript.bombObj.GetComponent<Animator>().SetTrigger("Hit");
+                noteScript.Invoke("DestroyBomb", .2f);
             }
         }
         else

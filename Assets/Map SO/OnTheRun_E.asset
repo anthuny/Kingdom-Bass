@@ -22,6 +22,7 @@ MonoBehaviour:
   timeBeforeStart: 1
   sliderFastSpeed: 8
   healthDrain: 0
+  jetAimRange: 33
   track: {fileID: 8300000, guid: ef199e99fdb6ddb4e92bce160ec003d7, type: 3}
   trackLoop: {fileID: 0}
   mapXML: {fileID: 4900000, guid: 79fbf713c20ee244db35b3a324563776, type: 3}

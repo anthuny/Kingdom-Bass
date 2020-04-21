@@ -17,6 +17,7 @@ public class Map : ScriptableObject
     public int sliderFastSpeed;
     [Tooltip("1 is normal, higher = more health loss upon bad performance, lower = less health loss upon bad performance")]
     public float healthDrain;
+    public int jetAimRange;
 
     [Header("Track")]
     public AudioClip track;

@@ -94,6 +94,8 @@ public class Note : MonoBehaviour
     public bool bombHitPlayer;
     public List<int> nextBombLane = new List<int>();
     public bool clone;
+    public GameObject explosionParticle;
+    public GameObject fuseParticle;
 
     [Header("Slider")]
     public Note nextNoteScript;
@@ -159,6 +161,11 @@ public class Note : MonoBehaviour
         {
             gm.totalNotes++;
             noteNumber = gm.totalNotes;
+        }
+
+        if (noteType == "bomb")
+        {
+            gm.am.PlaySound("Bomb_Fuse");
         }
 
         gm.totalAllNotes++;
@@ -534,10 +541,15 @@ public class Note : MonoBehaviour
                 gm.am.PlaySound("NoteHit");
                 return;
             }
-            else if (noteType != "slider")
+            else if (noteType == "note")
             {
                 gm.am.PlaySound("NoteHit");
                 return;
+            }
+            else if (noteType == "launch")
+            {
+                gm.am.PlaySound("NoteHit");
+                gm.am.PlaySound("Launch_Hit");
             }
         }
     }
@@ -603,7 +615,7 @@ public class Note : MonoBehaviour
             transform.position = pos;
         }
 
-        if (curTime >= 1)
+        if (curTime >= 1 && !bombHitPlayer)
         {
             doneOnce2 = true;
 
@@ -854,12 +866,25 @@ public class Note : MonoBehaviour
             player.activeNotes.Remove(this.gameObject.transform);
         }
 
+        if (noteType == "bomb")
+        {
+            gm.am.StopSound("Bomb_Fuse");
+        }
 
         // remove this note from the 'noteBehind' list
         player.notesInfront.Remove(this.gameObject.transform);
         tc.notes.Remove(this.gameObject);
 
         Destroy(this.gameObject);
+    }
+
+    public void DestroyBomb()
+    {
+        gm.am.PlaySound("Bomb_Hit");
+        explosionParticle.SetActive(true);
+        bombObj.GetComponent<MeshRenderer>().enabled = false;
+        gm.am.StopSound("Bomb_Fuse");
+        Destroy(gameObject);
     }
 }
 
