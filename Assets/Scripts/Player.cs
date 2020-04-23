@@ -117,6 +117,8 @@ public class Player : MonoBehaviour
     private Coroutine blockCoroutine;
     private Coroutine diminishAccuracyUI;
     private Coroutine turnOffShield;
+
+    public TrailRenderer trail;
     // Start is called before the first frame update
     void Start()
     {
@@ -162,10 +164,22 @@ public class Player : MonoBehaviour
         CheckMissForSlider();
         Shield();
         ShieldCheck();
+        Trail();
 
         missCurrentPointInBeats = tc.trackPosInBeatsGame;
     }
 
+    void Trail()
+    {
+        if (isShielding && trail.enabled)
+        {
+            trail.enabled = false;
+        }
+        else if (!isShielding && !trail.enabled)
+        {
+            trail.enabled = true;
+        }
+    }
     void ShieldCheck()
     {
         // Sometimes the shield object is off and cant easily turn back on, this stops it
@@ -179,15 +193,13 @@ public class Player : MonoBehaviour
 
     }
 
-    public IEnumerator RepositionPlayerSlider(Note noteScript)
+    public IEnumerator RepositionModSlider(Note noteScript)
     {
         yield return new WaitForSeconds(gm.tutPosResetTime);
         for (int i = 1; i < 6; i++)
         {
-            Debug.Log("b");
             if (noteScript.laneNumber == i)
             {
-                Debug.Log("moving Player asdasd");
                 playerPos.x = pathWidth * (i - 1);
                 transform.position = playerPos;
                 pm.FindNearestPath(false);
@@ -195,7 +207,7 @@ public class Player : MonoBehaviour
             }
         }
     }
-    public IEnumerator RepositionPlayerTut(Note noteScript)
+    public IEnumerator RepositionMod(Note noteScript)
     {
         yield return new WaitForSeconds(gm.tutPosResetTime);
 
@@ -546,9 +558,16 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber && !blastInput && isShielding)
         {
             movingRight = true;
+
+            // Reposition player for the first 2 stages of the tutorial
+            if (tc.selectedMap.title == "Tutorial" && gm.tutorialStage <= 2)
+            {
+                Invoke("RepositionPlayer", .2f);
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.L) && nearestLaneNumber != pm.maxPathNumber && !blastInput && !isShielding)
+        if (Input.GetKeyDown(KeyCode.L) && nearestLaneNumber != pm.maxPathNumber && !blastInput && !isShielding ||
+            Input.GetKeyDown(KeyCode.L) && nearestLaneNumber != pm.maxPathNumber && !blastInput && !isShielding)
         {
             movingRightNoShield = true;
         }
@@ -564,9 +583,16 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A) && !movingRight && !movingLeft && nearestLaneNumber != 1 && !blastInput && isShielding)
         {
             movingLeft = true;
+
+            // Reposition player for the first 2 stages of the tutorial
+            if (tc.selectedMap.title == "Tutorial" && gm.tutorialStage <= 2)
+            {
+                Invoke("RepositionPlayer", .2f);
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.A) && nearestLaneNumber != 1 && !blastInput && !isShielding)
+        if (Input.GetKeyDown(KeyCode.A) && nearestLaneNumber != 1 && !blastInput && !isShielding ||
+            Input.GetKeyDown(KeyCode.A) && nearestLaneNumber != 1 && !blastInput && !isShielding)
         {
             movingLeftNoShield = true;
         }
@@ -608,13 +634,13 @@ public class Player : MonoBehaviour
 
         #region Shielding Input
         // if the play inputs to stop shielding stop shielding
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) && tc.selectedMap.title != "Tutorial" || Input.GetKey(KeyCode.Space) && gm.tutorialStage >= 8)
         {
             isShielding = false;
         }
 
         // Shield is active when the shield button is not being held down
-        else
+        else if (!Input.GetKey(KeyCode.Space))
         {
             isShielding = true;
         }
@@ -882,7 +908,7 @@ public class Player : MonoBehaviour
 
         #region Normal - Moving Right
         // Functionality of moving right with shield
-        if (movingRight && isShielding && tc.selectedMap.trackCodeName != "Tutorial" || gm.tutorialStage >= 3 && movingRight && isShielding)
+        if (movingRight && isShielding)
         {
             movingRight = false;
             movingLeft = false;
@@ -902,7 +928,7 @@ public class Player : MonoBehaviour
         }
 
         // Functionality of moving right without shield   
-        else if (movingRightNoShield && !isShielding && tc.selectedMap.trackCodeName != "Tutorial" && transform.position.x < 5.7f || gm.tutorialStage >= 3 && movingRight && !isShielding && transform.position.x < 5.7f)
+        else if (movingRightNoShield && !isShielding && transform.position.x < 5.7f)
         {
             movingRight = false;
             movingLeft = false;
@@ -919,52 +945,10 @@ public class Player : MonoBehaviour
         }
 
         #endregion
-        #region Tutorial - Moving Right
-        // Functionality of moving right with shield during first few stages of tutorial
-        if (movingRight && isShielding && tc.selectedMap.trackCodeName == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
-        {
-            //Debug.Log("2");
-            movingRight = false;
-            movingLeft = false;
-            validMovement = true;
-
-            pm.FindNearestPath(false);
-            //Debug.Log("called nearestlanenumberfunction");
-
-            playerPos.x = pathWidth * nearestLaneNumber;
-            transform.position = playerPos;
-
-            pm.FindNearestPath(true);
-            //Debug.Log("called nearestlanenumberfunction");
-
-            yield return new WaitForSeconds(gm.timeForMoveBack);
-
-            playerPos.x = 3;
-            transform.position = playerPos;
-
-            pm.FindNearestPath(false);
-            //Debug.Log("called nearestlanenumberfunction");
-        }
-
-        // Functionality of moving right WITHOUT shield during first few stages of tutorial
-        if (movingRightNoShield && !isShielding && tc.selectedMap.trackCodeName == "Tutorial" && gm.tutorialStage >= 8 && transform.position.x < 5.7f)
-        {
-            movingRight = false;
-            movingLeft = false;
-            validMovement = false;
-
-            playerPos.x += (gm.shieldOffSpeed * gm.slowSpeedMultCur) * Time.deltaTime;
-
-            animator.SetTrigger("isMovingRightNSFast");
-
-            ControllerInputsPost();
-        }
-        #endregion
         #region Normal - Moving Left
         // Functionality of moving left with shield
-        if (movingLeft && isShielding && tc.selectedMap.trackCodeName != "Tutorial" || gm.tutorialStage >= 3 && movingLeft && isShielding)
+        if (movingLeft && isShielding)
         {
-            //Debug.Log("1");
             movingLeft = false;
             movingRight = false;
             validMovement = true;
@@ -983,7 +967,7 @@ public class Player : MonoBehaviour
 
 
         // Functionality of moving left without shield
-        if (movingLeftNoShield && !isShielding && tc.selectedMap.trackCodeName != "Tutorial" && transform.position.x > 0.3f || gm.tutorialStage >= 3 && movingLeft && !isShielding && transform.position.x > 0.3f)
+        if (movingLeftNoShield && !isShielding && transform.position.x > 0.3f)
         {
             movingLeft = false;
             movingRight = false;
@@ -997,48 +981,6 @@ public class Player : MonoBehaviour
             movingNoShield = true;
 
             pm.FindNearestPath(false);
-        }
-
-        #endregion
-        #region Tutorial - Moving Left
-        // Functionality of moving left with shield during first few stages of tutorial
-        if (movingLeft && isShielding && tc.selectedMap.trackCodeName == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
-        {
-            movingRight = false;
-            movingLeft = false;
-            validMovement = true;
-
-            pm.FindNearestPath(false);
-            //Debug.Log("called nearestlanenumberfunction");
-
-            playerPos.x = pathWidth * (nearestLaneNumber - 2);
-            transform.position = playerPos;
-
-            pm.FindNearestPath(true);
-            //Debug.Log("called nearestlanenumberfunction");
-
-            yield return new WaitForSeconds(gm.timeForMoveBack);
-
-            playerPos.x = 3;
-            transform.position = playerPos;
-
-            pm.FindNearestPath(false);
-            //Debug.Log("called nearestlanenumberfunction");
-        }
-
-
-        // Functionality of moving left without shield during first few stages of tutorial
-        if (movingLeftNoShield && !isShielding && tc.selectedMap.trackCodeName == "Tutorial" && gm.tutorialStage >= 8 && transform.position.x > 0.3f)
-        {
-            movingRight = false;
-            movingLeft = false;
-            validMovement = false;
-
-            playerPos.x -= (gm.shieldOffSpeed * gm.slowSpeedMultCur) * Time.deltaTime;
-
-            animator.SetTrigger("isMovingLeftNSFast");
-
-            ControllerInputsPost();
         }
 
         #endregion
@@ -1302,20 +1244,37 @@ public class Player : MonoBehaviour
     }
     IEnumerator DoShieldBlock()
     {
-        am.PlaySound("Shield_Block");
-
-        shieldAnimator.SetBool("Idle", false);
-        shieldAnimator.SetTrigger("Block");
-
-        yield return new WaitForSeconds(.2f);
-
-        shieldAnimator.SetBool("Idle", true);
-
-        // Sometimes the visual for shield stays on after blocking, even when not shielding anymore, this stops it
-        if (!isShielding && shield.activeSelf)
+        if (tc.selectedMap.title != "Tutorial")
         {
-            shield.SetActive(false);
+            am.PlaySound("Shield_Block");
+
+            shieldAnimator.SetBool("Idle", false);
+            shieldAnimator.SetTrigger("Block");
+
+            yield return new WaitForSeconds(.2f);
+
+            shieldAnimator.SetBool("Idle", true);
+
+            // Sometimes the visual for shield stays on after blocking, even when not shielding anymore, this stops it
+            if (!isShielding && shield.activeSelf)
+            {
+                shield.SetActive(false);
+            }
         }
+    }
+
+    public IEnumerator FixVisibility()
+    {
+        shield.GetComponent<MeshRenderer>().enabled = false;
+        animator.gameObject.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+
+        animator.SetBool("isIdle", false);
+        animator.SetTrigger("isMovingLeft");
+
+        yield return new WaitForSeconds(.25f);
+
+        animator.gameObject.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
+        shield.GetComponent<MeshRenderer>().enabled = true;
     }
 
     public void HitPerfect()
@@ -1528,7 +1487,7 @@ public class Player : MonoBehaviour
                 {
                     if (tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>().noteDir != "down")
                     {
-                        StartCoroutine("RepositionPlayerTut", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
+                        StartCoroutine("RepositionMod", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
                     }
                 }
 
@@ -1583,7 +1542,7 @@ public class Player : MonoBehaviour
                         {
                             if (tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>().noteDir != "down")
                             {
-                                StartCoroutine("RepositionPlayerTut", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
+                                StartCoroutine("RepositionMod", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
                             }
                         }
                     }
@@ -1625,7 +1584,7 @@ public class Player : MonoBehaviour
                     {
                         if (tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>().noteDir != "down")
                         {
-                            StartCoroutine("RepositionPlayerTut", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
+                            StartCoroutine("RepositionMod", tc.notesObj.transform.GetChild(index + 1).GetComponent<Note>());
                         }
                     }
                 }

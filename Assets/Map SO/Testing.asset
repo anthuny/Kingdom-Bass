@@ -22,7 +22,7 @@ MonoBehaviour:
   noteTimeTaken: 7
   timeBeforeStart: 5
   sliderFastSpeed: 0
-  healthDrain: 1
+  healthDrain: 0
   jetAimRange: 30
   track: {fileID: 8300000, guid: f593d2d2dc372974fac9c5ef277e6c67, type: 3}
   trackPreview: {fileID: 0}

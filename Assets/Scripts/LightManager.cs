@@ -125,6 +125,7 @@ public class LightManager : MonoBehaviour
     {
         bgLight.SetActive(true);
         bgLightAnimator.SetTrigger("TurnOn");
+
         gm.am.PlaySound("Light_BG_On");
 
         yield return new WaitForSeconds(2f);

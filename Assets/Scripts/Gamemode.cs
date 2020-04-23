@@ -406,6 +406,8 @@ public class Gamemode : MonoBehaviour
     [Header("Mods")]
     public bool reposition;
     public bool noFail;
+    public GameObject repositionImage;
+    public GameObject nofailImage;
 
     private void Awake()
     {
@@ -1140,6 +1142,13 @@ public class Gamemode : MonoBehaviour
         {
             StartCoroutine("EndingMapContr");
         }
+
+        #region Enabling mod images
+
+        nofailImage.SetActive(noFail);    
+        repositionImage.SetActive(reposition);
+
+        #endregion
     }
 
     IEnumerator EndingMapContr()
@@ -1368,6 +1377,8 @@ public class Gamemode : MonoBehaviour
 
     public void EndTrack(bool retry)
     {
+        StartCoroutine(playerScript.FixVisibility());
+
         CancelInvoke();
 
         AudioListener.pause = false;

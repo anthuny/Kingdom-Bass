@@ -21,7 +21,7 @@ MonoBehaviour:
   subGenre: N/A
   noteTimeTaken: 9
   timeBeforeStart: 1
-  sliderFastSpeed: 0
+  sliderFastSpeed: 10
   healthDrain: 0
   jetAimRange: 30
   track: {fileID: 8300000, guid: 757476ad5826eb7459986bf94dabb8e1, type: 3}

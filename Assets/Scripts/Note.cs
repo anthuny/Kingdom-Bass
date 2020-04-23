@@ -659,6 +659,12 @@ public class Note : MonoBehaviour
 
     void TurnFanLightOff()
     {
+        if (tc.selectedMap.title == "Tutorial")
+        {
+            gm.lm.turningOffFanLight = true;
+            return;
+        }
+
         if (noteDir == "down" && gm.lm.fanLight.activeSelf)
         {
             // Disable all other lights as the fan light turns off
@@ -678,7 +684,7 @@ public class Note : MonoBehaviour
 
     void RepositionPlayerForSliderEnd()
     {
-        StartCoroutine(player.RepositionPlayerTut(nextNoteScript));
+        StartCoroutine(player.RepositionModSlider(nextNoteScript));
     }
 
     void ReachedPlayer()

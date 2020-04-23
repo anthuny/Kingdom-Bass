@@ -113,7 +113,7 @@ public class Jet : MonoBehaviour
 
         animator.SetBool("Idle", true);
 
-        yield return new WaitForSeconds(.7f);
+        yield return new WaitForSeconds(.3f);
 
         // Trigger the laser point for jet
         laserPoint.gameObject.SetActive(false);
@@ -148,6 +148,7 @@ public class Jet : MonoBehaviour
         animator.SetTrigger("Activate");
         gm.am.PlaySound("Jet_Activate");
         yield return new WaitForSeconds(1.2f);
+        // Turn on lights
         StartCoroutine(gm.lm.TurnOnLights());
     }
 }

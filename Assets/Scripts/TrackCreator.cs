@@ -709,8 +709,8 @@ public class TrackCreator : MonoBehaviour
             gm.controllerImageAnimator.SetBool("Double", true); 
             gm.keyAnimator.SetBool("Double", false);
 
-            gm.key.transform.GetChild(0).GetComponent<Text>().text = "Hold";
-            gm.keyDouble.transform.GetChild(0).GetComponent<Text>().text = "Hold";
+            gm.key.transform.GetChild(1).GetComponent<Text>().text = "Hold";
+            gm.keyDouble.transform.GetChild(1).GetComponent<Text>().text = "Hold";
 
             yield return new WaitForSeconds(23.9f);
 
@@ -765,8 +765,8 @@ public class TrackCreator : MonoBehaviour
             gm.controllerImageAnimator.SetBool("Double", true);
             gm.keyAnimator.SetBool("Double", false);
 
-            gm.key.transform.GetChild(0).GetComponent<Text>().text = "Hold";
-            gm.keyDouble.transform.GetChild(0).GetComponent<Text>().text = "Hold";
+            gm.key.transform.GetChild(1).GetComponent<Text>().text = "Hold";
+            gm.keyDouble.transform.GetChild(1).GetComponent<Text>().text = "Hold";
 
             yield return new WaitForSeconds(25.9f);
 
