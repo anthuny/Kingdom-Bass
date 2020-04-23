@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Tutorial
   m_EditorClassIdentifier: 
   title: Tutorial
+  trackCodeName: Tutorial
   bpm: 120
   length: 5:41
   difficulty: Easy
-  starCount: 0
+  starCount: 0.5
   subGenre: N/A
   noteTimeTaken: 9
   timeBeforeStart: 1
@@ -24,5 +25,5 @@ MonoBehaviour:
   healthDrain: 0
   jetAimRange: 30
   track: {fileID: 8300000, guid: 757476ad5826eb7459986bf94dabb8e1, type: 3}
-  trackLoop: {fileID: 0}
+  trackPreview: {fileID: 8300000, guid: c80d6922bd6efa04e986280c6b3fe828, type: 3}
   mapXML: {fileID: 4900000, guid: fd60d372c335f3248b717054b4ffc850, type: 3}

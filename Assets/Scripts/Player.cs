@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
     public float missCurrentPointInBeats;
 
     public List<Transform> activeNotes = new List<Transform>();
+    public List<Transform> activeAllNotes = new List<Transform>();
     public List<Transform> notesInfront = new List<Transform>();
     public List<GameObject> electricNotes = new List<GameObject>();
     public GameObject OldClosestNoteInFront;
@@ -69,6 +70,7 @@ public class Player : MonoBehaviour
     // the nearest NON bomb note
     public Transform nearestNote;
     public Transform nearestBlast;
+    public Transform nearestBomb;
     public Note nearestBlastScript;
     public Transform nearestSlider;
     public GameObject closestBehindNote;
@@ -154,7 +156,7 @@ public class Player : MonoBehaviour
         ControllerInputs();
         StartCoroutine("KeyBoardMovement");
         FindNearestNote();
-        UpdateNotesInFront();
+        UpdateNoteCollection();
         AssignMisses();
         IncMaxAcc();
         CheckMissForSlider();
@@ -169,7 +171,7 @@ public class Player : MonoBehaviour
         // Sometimes the shield object is off and cant easily turn back on, this stops it
         if (tc.selectedMap)
         {
-            if (!shield.activeSelf && isShielding && tc.selectedMap.title != "Tutorial")
+            if (!shield.activeSelf && isShielding && tc.selectedMap.trackCodeName != "Tutorial" && !gm.playerDead)
             {
                 shield.SetActive(true);
             }
@@ -332,14 +334,6 @@ public class Player : MonoBehaviour
             {
                 tc.nextNoteInBeats = tc.selectedMap.noteTimeTaken + notesInfront[0].GetComponent<Note>().beatWaitCur;
             }
-            else
-            {
-                //tc.nextNoteInBeats = tc.beatWaitCountAccum[gm.totalAllNotes - 5];
-                //float valueTemp = tc.beatWaitCountAccum.IndexOf(gm.totalAllNotes - 5);
-                //Debug.Log(valueTemp);
-                //Debug.Log("index " + temp);
-                //Debug.Log("value " + tc.beatWaitCountAccum[temp(int)]);
-            }
 
             // i think this is for the last note of the map
             if (nearestNoteScript.noteNumber == tc.noteLanes.Count && nearestNoteScript.behindPlayer)
@@ -398,7 +392,6 @@ public class Player : MonoBehaviour
         {
             nearestAnyNoteScript = nearestAnyNote.gameObject.GetComponent<Note>();
         }
-
 
         float minDist2 = Mathf.Infinity;
         float minDist4 = Mathf.Infinity;
@@ -485,19 +478,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void UpdateNotesInFront()
+    public void UpdateNoteCollection()
     {
         // If the track is not in progress
         // OR there is less then 1 active note, stop
         if (!tc.trackInProgress || activeNotes.Count < 1)
         {
             return;
-        }
-
-        if (notesInfront.Count == 1)
-        {
-            //gm.doneOnce2 = true;
-           // gm.noNotesInFront = true;
         }
 
         else if (notesInfront.Count > 1)
@@ -650,9 +637,15 @@ public class Player : MonoBehaviour
 
     void Shield()
     {
+        if (gm.playerDead && shield.activeSelf)
+        {
+            shield.SetActive(false);
+            return;
+        }
+
         if (tc.selectedMap)
         {
-            if (tc.selectedMap.title == "Tutorial" && gm.tutorialStage <= 7)
+            if (tc.selectedMap.trackCodeName == "Tutorial" && gm.tutorialStage <= 7)
             {
                 if (shield.activeSelf)
                 {
@@ -889,7 +882,7 @@ public class Player : MonoBehaviour
 
         #region Normal - Moving Right
         // Functionality of moving right with shield
-        if (movingRight && isShielding && tc.selectedMap.title != "Tutorial" || gm.tutorialStage >= 3 && movingRight && isShielding)
+        if (movingRight && isShielding && tc.selectedMap.trackCodeName != "Tutorial" || gm.tutorialStage >= 3 && movingRight && isShielding)
         {
             movingRight = false;
             movingLeft = false;
@@ -909,7 +902,7 @@ public class Player : MonoBehaviour
         }
 
         // Functionality of moving right without shield   
-        else if (movingRightNoShield && !isShielding && tc.selectedMap.title != "Tutorial" && transform.position.x < 5.7f || gm.tutorialStage >= 3 && movingRight && !isShielding && transform.position.x < 5.7f)
+        else if (movingRightNoShield && !isShielding && tc.selectedMap.trackCodeName != "Tutorial" && transform.position.x < 5.7f || gm.tutorialStage >= 3 && movingRight && !isShielding && transform.position.x < 5.7f)
         {
             movingRight = false;
             movingLeft = false;
@@ -928,7 +921,7 @@ public class Player : MonoBehaviour
         #endregion
         #region Tutorial - Moving Right
         // Functionality of moving right with shield during first few stages of tutorial
-        if (movingRight && isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
+        if (movingRight && isShielding && tc.selectedMap.trackCodeName == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
         {
             //Debug.Log("2");
             movingRight = false;
@@ -954,7 +947,7 @@ public class Player : MonoBehaviour
         }
 
         // Functionality of moving right WITHOUT shield during first few stages of tutorial
-        if (movingRightNoShield && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage >= 8 && transform.position.x < 5.7f)
+        if (movingRightNoShield && !isShielding && tc.selectedMap.trackCodeName == "Tutorial" && gm.tutorialStage >= 8 && transform.position.x < 5.7f)
         {
             movingRight = false;
             movingLeft = false;
@@ -969,7 +962,7 @@ public class Player : MonoBehaviour
         #endregion
         #region Normal - Moving Left
         // Functionality of moving left with shield
-        if (movingLeft && isShielding && tc.selectedMap.title != "Tutorial" || gm.tutorialStage >= 3 && movingLeft && isShielding)
+        if (movingLeft && isShielding && tc.selectedMap.trackCodeName != "Tutorial" || gm.tutorialStage >= 3 && movingLeft && isShielding)
         {
             //Debug.Log("1");
             movingLeft = false;
@@ -990,7 +983,7 @@ public class Player : MonoBehaviour
 
 
         // Functionality of moving left without shield
-        if (movingLeftNoShield && !isShielding && tc.selectedMap.title != "Tutorial" && transform.position.x > 0.3f || gm.tutorialStage >= 3 && movingLeft && !isShielding && transform.position.x > 0.3f)
+        if (movingLeftNoShield && !isShielding && tc.selectedMap.trackCodeName != "Tutorial" && transform.position.x > 0.3f || gm.tutorialStage >= 3 && movingLeft && !isShielding && transform.position.x > 0.3f)
         {
             movingLeft = false;
             movingRight = false;
@@ -1009,7 +1002,7 @@ public class Player : MonoBehaviour
         #endregion
         #region Tutorial - Moving Left
         // Functionality of moving left with shield during first few stages of tutorial
-        if (movingLeft && isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
+        if (movingLeft && isShielding && tc.selectedMap.trackCodeName == "Tutorial" && gm.tutorialStage > 0 && gm.tutorialStage < 3)
         {
             movingRight = false;
             movingLeft = false;
@@ -1035,7 +1028,7 @@ public class Player : MonoBehaviour
 
 
         // Functionality of moving left without shield during first few stages of tutorial
-        if (movingLeftNoShield && !isShielding && tc.selectedMap.title == "Tutorial" && gm.tutorialStage >= 8 && transform.position.x > 0.3f)
+        if (movingLeftNoShield && !isShielding && tc.selectedMap.trackCodeName == "Tutorial" && gm.tutorialStage >= 8 && transform.position.x > 0.3f)
         {
             movingRight = false;
             movingLeft = false;
@@ -1185,7 +1178,6 @@ public class Player : MonoBehaviour
             else
             {
                 Missed(false, nearestNoteGameScript, gameObject.name);
-                Debug.Log("6");
                 return;
             }
         }
@@ -1322,7 +1314,6 @@ public class Player : MonoBehaviour
         // Sometimes the visual for shield stays on after blocking, even when not shielding anymore, this stops it
         if (!isShielding && shield.activeSelf)
         {
-            Debug.Log("needed to turn shield visual off");
             shield.SetActive(false);
         }
     }
@@ -1365,6 +1356,13 @@ public class Player : MonoBehaviour
         }
 
         validMovement = false;
+
+        if (gm.lm.activeCoroutine != null)
+        {
+            StopCoroutine(gm.lm.activeCoroutine);
+        }
+
+        gm.lm.activeCoroutine = StartCoroutine(gm.lm.JetLights(nearestNoteGameScript.noteType, nearestNoteGameScript.noteDir));
     }
     private void HitGreat()
     {
@@ -1403,7 +1401,13 @@ public class Player : MonoBehaviour
         }
 
         validMovement = false;
-        //Debug.Break();
+
+        if (gm.lm.activeCoroutine != null)
+        {
+            StopCoroutine(gm.lm.activeCoroutine);
+        }
+
+        gm.lm.activeCoroutine = StartCoroutine(gm.lm.JetLights(nearestNoteGameScript.noteType, nearestNoteGameScript.noteDir));
     }
     private void HitGood()
     {
@@ -1442,6 +1446,13 @@ public class Player : MonoBehaviour
         }
         validMovement = false;
         //Debug.Break();
+
+        if (gm.lm.activeCoroutine != null)
+        {
+            StopCoroutine(gm.lm.activeCoroutine);
+        }
+
+        gm.lm.activeCoroutine = StartCoroutine(gm.lm.JetLights(nearestNoteGameScript.noteType, nearestNoteGameScript.noteDir));
     }
 
     void CheckMissForSlider()
@@ -1511,7 +1522,7 @@ public class Player : MonoBehaviour
             gm.comboMulti = 1;
             gm.updateGameUI();
 
-            if (gm.resetPosition)
+            if (gm.reposition)
             {
                 if (tc.notesObj.transform.childCount >= 2)
                 {
@@ -1566,7 +1577,7 @@ public class Player : MonoBehaviour
                     gm.comboMulti = 1;
                     gm.updateGameUI();
 
-                    if (gm.resetPosition)
+                    if (gm.reposition)
                     {
                         if (tc.notesObj.transform.childCount >= 2)
                         {
@@ -1608,7 +1619,7 @@ public class Player : MonoBehaviour
                 gm.comboMulti = 1;
                 gm.updateGameUI();
 
-                if (gm.resetPosition)
+                if (gm.reposition)
                 {
                     if (tc.notesObj.transform.childCount >= 2)
                     {

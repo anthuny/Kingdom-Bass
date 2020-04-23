@@ -7,6 +7,7 @@ public class Map : ScriptableObject
 {
     [Header("General Info")]
     public string title;
+    public string trackCodeName;
     public int bpm;
     public string length;
     public string difficulty;
@@ -18,9 +19,10 @@ public class Map : ScriptableObject
     [Tooltip("1 is normal, higher = more health loss upon bad performance, lower = less health loss upon bad performance")]
     public float healthDrain;
     public int jetAimRange;
+    
 
     [Header("Track")]
     public AudioClip track;
-    public AudioClip trackLoop;
+    public AudioClip trackPreview;
     public TextAsset mapXML;
 }

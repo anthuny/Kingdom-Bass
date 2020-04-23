@@ -254,9 +254,9 @@ public class TrackCreator : MonoBehaviour
             player.oldNearestLaneNumber = player.nearestLaneNumber;
         }
 
-        if (selectedMap.title != "Tutorial" && !gm.jet.activeSelf)
+        if (selectedMap.trackCodeName != "Tutorial" && !gm.jet.activeSelf)
         {
-            jScript.EnableJet();
+            gm.jScript.EnableJet();
         }
     }
 
@@ -287,18 +287,18 @@ public class TrackCreator : MonoBehaviour
         // Start the track timer?
         dspTrackTime = (float)AudioSettings.dspTime;
 
-        if (selectedMap.title == "Tutorial")
+        if (selectedMap.trackCodeName == "Tutorial")
         {
             UpdateTutorialSlides();        
 
             // Disable game UI
             gm.gameUI.SetActive(false);
 
-            am.PlaySound(selectedMap.title);
+            am.PlaySound(selectedMap.trackCodeName);
         }
         else
         {
-            am.PlaySound(selectedMap.title);
+            am.PlaySound(selectedMap.trackCodeName);
 
             // Display all game UI
             gm.gameUI.SetActive(true);
@@ -310,7 +310,7 @@ public class TrackCreator : MonoBehaviour
         // Get access to the active track playing
         foreach (AudioSource aSource in am.gameObject.GetComponents<AudioSource>())
         {
-            if (aSource.clip.name == selectedMap.title)
+            if (aSource.clip.name == selectedMap.trackCodeName)
             {
                 if (aSource.isPlaying)
                 {
@@ -801,7 +801,7 @@ public class TrackCreator : MonoBehaviour
             {
                 gm.doneTutStageCount++;
 
-                gm.resetPosition = true;
+                gm.reposition = true;
 
                 gm.noteDoubleKB.SetActive(false);
                 gm.keyDouble.SetActive(false);
@@ -1069,11 +1069,10 @@ public class TrackCreator : MonoBehaviour
 
     void QueueNoteSpawns()
     {
-        if (selectedMap)
+        if (selectedMap & !gm.mapSelectionUI.activeSelf)
         {
             foreach (AudioSource aSource in am.gameObject.GetComponents<AudioSource>())
             {
-                //Debug.Log(aSource);
                 if (aSource.clip.name == selectedMap.title)
                 {
                     if (!aSource.isPlaying)
@@ -1137,9 +1136,9 @@ public class TrackCreator : MonoBehaviour
     public void SelectMap(Button button)
     {
         // Initialize what map was selected
-        selectedMap = button.GetComponent<MapInfo>().map;
+        selectedMap = button.GetComponent<MapDetails>().map;
 
-        gm.mapSelectText.text = "Select again to Continue!";
+        gm.mapSelectText.text = "Select map again to Confirm!";
 
     }
 

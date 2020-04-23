@@ -9,7 +9,7 @@ public class Jet : MonoBehaviour
     private Player pScript;
     private AudioManager amScript;
     private TrackCreator tcScript;
-    private Animator animator;
+    public Animator animator;
 
     [Header("Laser")]
     public Transform laserHolder;
@@ -21,11 +21,6 @@ public class Jet : MonoBehaviour
 
     private bool shooting;
     private bool decLaserSize;
-
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-    }
 
     public void AssignVariables()
     {
@@ -42,6 +37,10 @@ public class Jet : MonoBehaviour
     public void EnableJet()
     {
         gameObject.SetActive(true);
+
+        animator = GetComponent<Animator>();
+
+        StartCoroutine(SpawnJet());
     }
 
     public void DisableJet()
@@ -52,6 +51,10 @@ public class Jet : MonoBehaviour
     public void CheckToAim()
     {
         // If a note is close enough to the player, play Jet's aim animation
+        if (!pScript)
+        {
+            return;
+        }
         if (pScript.nearestBlast)
         {
             float difference = Mathf.Abs(pScript.nearestBlast.transform.position.z - player.transform.position.z);
@@ -138,6 +141,14 @@ public class Jet : MonoBehaviour
             laser.startWidth -= laserDecSizeSpeed * Time.deltaTime;
             laser.endWidth -= laserDecSizeSpeed * Time.deltaTime;
         }
+    }
+
+    public IEnumerator SpawnJet()
+    {
+        animator.SetTrigger("Activate");
+        gm.am.PlaySound("Jet_Activate");
+        yield return new WaitForSeconds(1.2f);
+        StartCoroutine(gm.lm.TurnOnLights());
     }
 }
 

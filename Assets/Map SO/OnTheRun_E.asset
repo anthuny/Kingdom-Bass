@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5b8352aeabc9964db506d7ca70b2d4e, type: 3}
   m_Name: OnTheRun_E
   m_EditorClassIdentifier: 
-  title: On The Run
+  title: OnTheRun
+  trackCodeName: OnTheRun
   bpm: 174
   length: 1:30
   difficulty: Easy
-  starCount: 0
+  starCount: 1
   subGenre: Drum 'n Bass
-  noteTimeTaken: 9
-  timeBeforeStart: 1
-  sliderFastSpeed: 8
-  healthDrain: 0
-  jetAimRange: 33
+  noteTimeTaken: 8
+  timeBeforeStart: 5
+  sliderFastSpeed: 10
+  healthDrain: 0.75
+  jetAimRange: 38
   track: {fileID: 8300000, guid: ef199e99fdb6ddb4e92bce160ec003d7, type: 3}
-  trackLoop: {fileID: 0}
-  mapXML: {fileID: 4900000, guid: 79fbf713c20ee244db35b3a324563776, type: 3}
+  trackPreview: {fileID: 8300000, guid: c535ff494ff9b82429f336904ad55307, type: 3}
+  mapXML: {fileID: 4900000, guid: aaa4cfaad1515b342a353a2fe6f9b644, type: 3}

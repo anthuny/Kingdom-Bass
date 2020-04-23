@@ -85,16 +85,6 @@ public class SliderInterval2 : MonoBehaviour
                 slider.missedOn = true;
                 slider.Missed();
 
-                if (player.isShielding)
-                {
-                    //Debug.Log("not shielding when you should be");
-                }
-                else
-                {
-                    //Debug.Log("too far from interval " + distFromPlayer + " " + parent.name);
-                    //Debug.Break();
-                }
-
                 Destroy();
                 return;
             }
@@ -102,7 +92,25 @@ public class SliderInterval2 : MonoBehaviour
             else if (gm.maxDistInterval > distFromPlayer && !player.isShielding && !slider.missedOn && !doneOnce2 && slider.sliderIntervalsInFront.Count == 1)
             {
                 player.HitPerfect();
+
                 //Debug.Log("hit perfect");
+            }
+            else if (gm.maxDistInterval > distFromPlayer && !player.isShielding && !slider.missedOn && !doneOnce2)
+            {
+                if (noteScript.noteDir == "up" && noteScript.nextNoteScript.laneNumber > noteScript.laneNumber)
+                {
+                    gm.lm.TriggerFan(true, "right");
+                }
+
+                else if (noteScript.noteDir == "up" && noteScript.nextNoteScript.laneNumber < noteScript.laneNumber)
+                {
+                    gm.lm.TriggerFan(true, "left");
+                }
+
+                else if (noteScript.noteDir == "up" && noteScript.nextNoteScript.laneNumber == noteScript.laneNumber)
+                {
+                    gm.lm.TriggerFan(true, "straight");
+                }
             }
             Destroy();
         }

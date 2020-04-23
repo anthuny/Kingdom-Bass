@@ -180,7 +180,6 @@ public class Gamemode : MonoBehaviour
     public int doneTutStageCount;
 
     public float tutPosResetTime;
-    public bool resetPosition;
     public GameObject laneSwitching;
     public Text tutAreaText;
     //[HideInInspector]
@@ -315,8 +314,6 @@ public class Gamemode : MonoBehaviour
     float t = 1;
     float y = 1;
 
-    //public Map retryingMap;
-
     public float health;
     public bool playerDead;
     public bool killingPlayer;
@@ -400,6 +397,16 @@ public class Gamemode : MonoBehaviour
     [Header("SceneChanging")]
     public string oldScene;
 
+    [Header("Lights")]
+    public LightManager lm;
+
+    [Header("Main Menu")]
+    public Animator MainMenuAnimator;
+
+    [Header("Mods")]
+    public bool reposition;
+    public bool noFail;
+
     private void Awake()
     {
         controls = new Controller();
@@ -429,24 +436,16 @@ public class Gamemode : MonoBehaviour
     void OnEnable()
     {
         controls.Gameplay.Enable();
-        //Debug.Log("yes");
-        //Cursor.visible = false;
-        //screenCanvas.GetComponent<GraphicRaycaster>().enabled = false;
     }
 
     void OnDisable()
     {
         controls.Gameplay.Disable();
-        //Debug.Log("yes");
-        //Cursor.visible = true;
-        //screenCanvas.GetComponent<GraphicRaycaster>().enabled = true;
     }
 
     void Start()
     {
         QualitySettings.vSyncCount = 0;
-
-        UICam.SetActive(true);
 
         player = FindObjectOfType<Player>().gameObject;
         playerScript = player.GetComponent<Player>();
@@ -509,11 +508,14 @@ public class Gamemode : MonoBehaviour
             }
         }
     }
-    
+   
     public void StartGame()
     {
         if (!firstStart)
         {
+            mainMenuUI.SetActive(true);
+            MainMenuAnimator.SetTrigger("Activate");
+
             firstStart = true;
 
             tutorialUI.SetActive(false);
@@ -522,6 +524,7 @@ public class Gamemode : MonoBehaviour
 
             MainMenu();
         }
+
         totalAccuracy = 100;
         totalAccuracyText.text = totalAccuracy.ToString() + "%";
 
@@ -585,7 +588,7 @@ public class Gamemode : MonoBehaviour
 
                 if (lastSelectedButton)
                 {
-                    lastSelectedButton.GetComponent<MapInfo>().selected = false;
+                    lastSelectedButton.GetComponent<MapDetails>().selected = false;
                     lastSelectedButton = null;
                 }
 
@@ -602,7 +605,7 @@ public class Gamemode : MonoBehaviour
 
                 if (lastSelectedButton)
                 {
-                    lastSelectedButton.GetComponent<MapInfo>().selected = false;
+                    lastSelectedButton.GetComponent<MapDetails>().selected = false;
                     lastSelectedButton = null;
                 }
 
@@ -713,12 +716,16 @@ public class Gamemode : MonoBehaviour
 
     void UpdateElectricity()
     {
+        if (!tc)
+        {
+            return;
+        }
         if (!tc.selectedMap)
         {
             return;
         }
 
-        if (tc.selectedMap.title == "Tutorial" && tutorialStage < 9 || playerDead)
+        if (tc.selectedMap.trackCodeName == "Tutorial" && tutorialStage < 9 || playerDead)
         {
             ElectrictyBallPS.gameObject.SetActive(false);
             return;
@@ -870,12 +877,19 @@ public class Gamemode : MonoBehaviour
 
     public void UpdateHealth(float amount)
     {
-        if (health <= 0 && !playerDead)
+        if (health <= 0 && !playerDead && !noFail)
         {
             killingPlayer = true;
             health = 0f;
             am.PlaySound("TrackDeath");
             playerScript.KillPlayer();
+
+            // Turn the fan light off if it's on when player dies
+            if (lm.fanLight.activeSelf)
+            {
+                lm.TriggerFan(false, "straight");
+            }
+
             return;
         }
         else if (health > healthMax)
@@ -926,8 +940,6 @@ public class Gamemode : MonoBehaviour
                     killingPlayer = false;
                     GameOver();
                     y = 1;
-
-                    CancelInvoke("UpdateHealthRegen");
                 }
             }
         }
@@ -1004,11 +1016,20 @@ public class Gamemode : MonoBehaviour
             }
         }
 
+        // Destroy all remaining sliders
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Slider"))
+        {
+            Destroy(go);
+        }
+
+        sliders.Clear();
+
         DestroyAllNotes(true);
 
         tc.notes.Clear();
         playerScript.closestBehindNote = null;
         playerScript.activeNotes.Clear();
+        playerScript.activeAllNotes.Clear();
         playerScript.notesInfront.Clear();
         playerScript.electricNotes.Clear();
         // remove this note from the 'furthestbehindnote' variable
@@ -1033,7 +1054,7 @@ public class Gamemode : MonoBehaviour
         missAmountText.text = misses.ToString() + "x";
         postComboText.text = comboMulti.ToString() + "x";
 
-        trackName.text = tc.selectedMap.title.ToString() + " - " + tc.selectedMap.difficulty.ToString();
+        trackName.text = tc.selectedMap.trackCodeName.ToString() + " - " + tc.selectedMap.difficulty.ToString();
 
         #region Calculation for Rank Letter
 
@@ -1097,7 +1118,7 @@ public class Gamemode : MonoBehaviour
 
     void EndingMap()
     {
-        if (tc.selectedMap.title == "Tutorial")
+        if (tc.selectedMap.trackCodeName == "Tutorial")
         {
             am.StopSound("Tutorial");
             am.StopSound("Tut_Stage_" + tutorialStage.ToString());
@@ -1227,7 +1248,7 @@ public class Gamemode : MonoBehaviour
         canReturn = false;
 
         // Stop the tutorial's UI from displaying after the map has been closed
-        if (tc.selectedMap && tc.selectedMap.title == "Tutorial")
+        if (tc.selectedMap && tc.selectedMap.trackCodeName == "Tutorial")
         {
             am.StopSound("Tut_Stage_" + tutorialStage.ToString());
             if (tc.activeCoroutine != null)
@@ -1347,6 +1368,9 @@ public class Gamemode : MonoBehaviour
 
     public void EndTrack(bool retry)
     {
+        CancelInvoke();
+
+        AudioListener.pause = false;
         #region Tutorial reset
         doneTutStageCount = 0;
         if (tc.activeCoroutine != null)
@@ -1354,6 +1378,8 @@ public class Gamemode : MonoBehaviour
             StopCoroutine(tc.activeCoroutine);
         }
         #endregion
+
+        lm.DisableAllLights();
 
         jScript.DisableJet();
         //Debug.Log("ending");
@@ -1422,7 +1448,6 @@ public class Gamemode : MonoBehaviour
         tc.beatWaitAccum = 0;
         tc.newStartingInt = 0;
         tc.index = 1;
-        resetPosition = false;
 
         score = 0;
         perfects = 0;
@@ -1441,6 +1466,7 @@ public class Gamemode : MonoBehaviour
         noNotesInFront = false;
 
         playerScript.activeNotes.Clear();
+        playerScript.activeAllNotes.Clear();
         playerScript.notesInfront.Clear();
         playerScript.newPerfect = 0;
         playerScript.newGood = 0;
@@ -1484,7 +1510,6 @@ public class Gamemode : MonoBehaviour
         }
         else
         {
-            //DestroyAllRemainingNotes();
             StartCoroutine(tc.LoadTrackCo());
         }
 
@@ -1546,7 +1571,7 @@ public class Gamemode : MonoBehaviour
                 // Input to pause the game
                 if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown("joystick button 9") && !mapSelectionUI.activeSelf && !countingDown && !gamePaused && !tc.allNotes[tc.allNotes.Count - 1].GetComponent<Note>().behindPlayer)
                 {
-                    if (tc.selectedMap.title == "Tutorial")
+                    if (tc.selectedMap.trackCodeName == "Tutorial")
                     {
                         PauseGame(false);
                     }
@@ -1593,7 +1618,7 @@ public class Gamemode : MonoBehaviour
         StartCoroutine(enableReturnFromPause());
 
 
-        am.PauseSound(tc.selectedMap.title);
+        am.PauseSound(tc.selectedMap.trackCodeName);
 
         AudioListener.pause = true;
 
@@ -1602,7 +1627,6 @@ public class Gamemode : MonoBehaviour
             am.menuSources[i].ignoreListenerPause = true;
         }
 
-        //Time.timeScale = 0;
         // Enable the blur background image
         if (!blur.activeSelf)
         {
@@ -1651,7 +1675,7 @@ public class Gamemode : MonoBehaviour
     // This exists so the continue button in the pause menu can be linked to this
     public void UnPauseGameBut()
     {
-        if (tc.selectedMap.title == "Tutorial")
+        if (tc.selectedMap.trackCodeName == "Tutorial")
         {
             StartCoroutine(UnpauseGame(true));
         }
@@ -1693,7 +1717,7 @@ public class Gamemode : MonoBehaviour
             cantPause = false;
 
             AudioListener.pause = false;
-            am.UnPause(tc.selectedMap.title);
+            am.UnPause(tc.selectedMap.trackCodeName);
 
             activeScene = "Game";
         }
@@ -1705,7 +1729,7 @@ public class Gamemode : MonoBehaviour
             cantPause = false;
 
             AudioListener.pause = false;
-            am.UnPause(tc.selectedMap.title);
+            am.UnPause(tc.selectedMap.trackCodeName);
 
             am.UnPause("Tut_Stage_" + tutorialStage.ToString());
 
@@ -1720,15 +1744,36 @@ public class Gamemode : MonoBehaviour
         {
             return;
         }
-        
+
         am.PlaySound("UI_Hover");
+
+        #region mods
+        if (btn.name.Contains("Mod") && btn.GetComponent<Image>().color != selectedColor)
+        {
+            // Change the size of the button
+            LeanTween.scale(btn, new Vector3(.6f, .6f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+            // Change the colour of the button
+            btn.GetComponent<Image>().color = highlightedColor;
+
+            for (int i = 0; i < btn.transform.childCount; i++)
+            {
+                btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+            }
+            return;
+        }
+        
+        else if (btn.name.Contains("Mod"))
+        {
+            return;
+        }
+        #endregion
 
         if (btn.name.Contains("Map"))
         {
             // Change the size of the button
-            LeanTween.scale(btn, new Vector3(1f, 1f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
-
-            
+            LeanTween.scale(btn, new Vector3(.7f, .75f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+         
             // Change the colour of the button
             btn.GetComponent<Image>().color = highlightedColor;
             for (int i = 0; i < btn.transform.childCount; i++)
@@ -1767,13 +1812,35 @@ public class Gamemode : MonoBehaviour
 
         if (lastSelectedButton)
         {
-            lastSelectedButton.GetComponent<MapInfo>().selected = false;
+            lastSelectedButton.GetComponent<MapDetails>().selected = false;
         }
+
+        #region mods
+        if (btn.name.Contains("Mod") && btn.GetComponent<Image>().color == highlightedColor)
+        {
+            // Change the size of the button
+            LeanTween.scale(btn, new Vector3(.5f, .5f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+            // Change the colour of the button
+            btn.GetComponent<Image>().color = defColor;
+
+            for (int i = 0; i < btn.transform.childCount; i++)
+            {
+                btn.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+            }
+            return;
+        }
+
+        else if (btn.name.Contains("Mod"))
+        {
+            return;
+        }
+        #endregion
 
         if (btn.name.Contains("Map"))
         {
             // Change the size of the button
-            LeanTween.scale(btn, new Vector3(.75f, .75f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+            LeanTween.scale(btn, new Vector3(.6f, .7f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
 
             // Change the colour of the button
             btn.GetComponent<Image>().color = defMapColor;
@@ -1807,12 +1874,64 @@ public class Gamemode : MonoBehaviour
     {
         am.PlaySound("UI_Select");
 
+        #region mods
+        if (btn.name.Contains("Mod") && btn.GetComponent<Image>().color != selectedColor)
+        {
+            // Change the size of the button
+            LeanTween.scale(btn, new Vector3(.5f, .5f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+            // Change the colour of the button
+            btn.GetComponent<Image>().color = selectedColor;
+
+            for (int i = 0; i < btn.transform.childCount; i++)
+            {
+                btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+            }
+
+            if (btn.name.Contains("Reposition"))
+            {
+                reposition = true;
+            }
+            if (btn.name.Contains("No Fail"))
+            {
+                noFail = true;
+            }
+
+            return;
+        }
+
+        else if (btn.name.Contains("Mod") && btn.GetComponent<Image>().color == selectedColor)
+        {
+            // Change the size of the button
+            LeanTween.scale(btn, new Vector3(.5f, .5f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+            // Change the colour of the button
+            btn.GetComponent<Image>().color = defColor;
+
+            for (int i = 0; i < btn.transform.childCount; i++)
+            {
+                btn.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+            }
+
+            if (btn.name.Contains("Reposition"))
+            {
+                reposition = false;
+            }
+            if (btn.name.Contains("No Fail"))
+            {
+                noFail = false;
+            }
+
+            return;
+        }
+        #endregion
+
         if (lastSelectedButton)
         {
             if (lastSelectedButton != btn)
             {
                 // Change the size of the button
-                LeanTween.scale(lastSelectedButton, new Vector3(.75f, .75f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+                LeanTween.scale(lastSelectedButton, new Vector3(.6f, .7f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
 
                 // Change the colour of the button
                 lastSelectedButton.GetComponent<Image>().color = defMapColor;
@@ -1825,17 +1944,59 @@ public class Gamemode : MonoBehaviour
 
         if (btn.name.Contains("Map"))
         {
+            tc.SelectMap(btn.GetComponent<Button>());
+
+            if (btn.GetComponent<MapDetails>().selected)
+            {
+                // Change the size of the button
+                LeanTween.scale(lastSelectedButton, new Vector3(.75f, .75f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+                // Change the colour of the button
+                lastSelectedButton.GetComponent<Image>().color = defMapColor;
+                for (int i = 0; i < lastSelectedButton.transform.childCount; i++)
+                {
+                    lastSelectedButton.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                }
+
+                lastSelectedButton.GetComponent<MapDetails>().selected = false;
+                lastSelectedButton = null;
+
+                am.StopSound(btn.GetComponent<MapDetails>().map.trackCodeName + "_Preview");
+                btn.GetComponent<MapDetails>().selected = false;
+
+                // Change the size of the button
+                LeanTween.scale(btn, new Vector3(.6f, .7f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+
+                // Change the colour of the button
+                btn.GetComponent<Image>().color = defMapColor;
+
+                tc.LoadTrack();
+                return;
+            }
+
+            // If there is a last selected button, stop the preview track from playing now that a new map has been selected
+            if (lastSelectedButton != null)
+            {
+                am.StopSound(lastSelectedButton.GetComponent<MapDetails>().map.trackCodeName + "_Preview");
+                lastSelectedButton.GetComponent<MapDetails>().selected = false;
+            }
+
+            btn.GetComponent<MapDetails>().selected = true;
+
+            // Play this map's preview track
+            am.PlaySound(btn.GetComponent<MapDetails>().map.trackCodeName + "_Preview");
+
             if (lastSelectedButton != btn)
             {
                 lastSelectedButton = btn;
             }
             else
             {
-                lastSelectedButton.GetComponent<MapInfo>().selected = true;
+                am.PlaySound(lastSelectedButton.GetComponent<MapDetails>().map.trackCodeName + "_Preview");
             }
 
             // Change the size of the button
-            LeanTween.scale(btn, new Vector3(.9f, .9f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
+            LeanTween.scale(btn, new Vector3(.6f, .7f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
 
             // Change the colour of the button
             btn.GetComponent<Image>().color = selectedColor;
@@ -1893,28 +2054,6 @@ public class Gamemode : MonoBehaviour
         else if (btn.name.Contains("Menu"))
         {
             MapSelection();
-            return;
-        }
-        else if (btn.name.Contains("Map"))
-        {
-            tc.SelectMap(btn.GetComponent<Button>());
-            if (lastSelectedButton.GetComponent<MapInfo>().selected)
-            {
-                // Change the size of the button
-                LeanTween.scale(lastSelectedButton, new Vector3(.75f, .75f, 1), .2f).setEase(LeanTweenType.easeInOutBack);
-
-                // Change the colour of the button
-                lastSelectedButton.GetComponent<Image>().color = defMapColor;
-                for (int i = 0; i < lastSelectedButton.transform.childCount; i++)
-                {
-                    lastSelectedButton.transform.GetChild(i).GetComponent<Text>().color = Color.black;
-                }
-
-                lastSelectedButton.GetComponent<MapInfo>().selected = false;
-                lastSelectedButton = null;
-
-                tc.LoadTrack();
-            }
             return;
         }
         else if (btn.name.Contains("Back"))

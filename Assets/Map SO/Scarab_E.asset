@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Scarab_E
   m_EditorClassIdentifier: 
   title: Scarab
+  trackCodeName: Scarab
   bpm: 128
   length: 2:37
   difficulty: Easy
-  starCount: 0
+  starCount: 1.5
   subGenre: House
   noteTimeTaken: 7
-  timeBeforeStart: 1
+  timeBeforeStart: 5
   sliderFastSpeed: 13
-  healthDrain: 0
+  healthDrain: 0.75
   jetAimRange: 30
   track: {fileID: 8300000, guid: f593d2d2dc372974fac9c5ef277e6c67, type: 3}
-  trackLoop: {fileID: 0}
+  trackPreview: {fileID: 8300000, guid: 885d229e32b14bd4dbc7465e2a5c882a, type: 3}
   mapXML: {fileID: 4900000, guid: 9b0c9e562c42e2d4fbd8203c8b6e7d52, type: 3}

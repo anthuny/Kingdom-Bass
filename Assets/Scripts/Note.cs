@@ -320,6 +320,8 @@ public class Note : MonoBehaviour
                         sliderLr = Instantiate(gm.sliderRef, transform.position, Quaternion.identity);
                         gm.sliders.Add(sliderLr.gameObject.transform);
 
+                        sliderLr.gameObject.transform.tag = "Slider";
+
                         sliderScript = sliderLr.gameObject.GetComponent<Slider>();
                         sliderScript.gm = gm;
                         sliderScript.tc = tc;
@@ -571,6 +573,7 @@ public class Note : MonoBehaviour
         // Happens once when canMove is triggered true
         if (canMove && !doneOnce)
         {
+            player.activeAllNotes.Add(gameObject.transform);
             if (noteType != "bomb")
             {
                 doneOnce = true;
@@ -586,7 +589,7 @@ public class Note : MonoBehaviour
                 //Debug.Break();
                 // Add this note to the active notes array
                 //player.activeNotes.Add(this.gameObject.transform);
-                player.activeNotes.Add(this.gameObject.transform);
+                player.activeNotes.Add(gameObject.transform);
             }
             else
             {
@@ -654,7 +657,25 @@ public class Note : MonoBehaviour
         }
     }
 
-    
+    void TurnFanLightOff()
+    {
+        if (noteDir == "down" && gm.lm.fanLight.activeSelf)
+        {
+            // Disable all other lights as the fan light turns off
+            for (int i = 0; i < gm.lm.sideLights.Count; i++)
+            {
+                gm.lm.sideLights[i].SetActive(true);
+            }
+
+            for (int i = 0; i < gm.lm.jetBackLights.Count; i++)
+            {
+                gm.lm.jetBackLights[i].SetActive(true);
+            }
+
+            gm.lm.turningOffFanLight = true;
+        }
+    }
+
     void RepositionPlayerForSliderEnd()
     {
         StartCoroutine(player.RepositionPlayerTut(nextNoteScript));
@@ -668,6 +689,7 @@ public class Note : MonoBehaviour
             gm.notesPassedPlayer++;
 
             CheckToPlayHitSound();
+            TurnFanLightOff();
 
             //Debug.Log(177 - gm.notesLeftInfront);
 
@@ -716,7 +738,7 @@ public class Note : MonoBehaviour
             hitMarker.GetComponent<Image>().color = gm.missedNoteC;
         }
 
-        if (noteDir == "down" && !doneOnce7 && doneOnce3 && sliderScript.missed && gm.resetPosition)
+        if (noteDir == "down" && !doneOnce7 && doneOnce3 && sliderScript.missed && gm.reposition)
         {
             doneOnce7 = true;
             RepositionPlayerForSliderEnd();
@@ -863,8 +885,10 @@ public class Note : MonoBehaviour
         if (noteType != "bomb")
         {
             // remove this note to the 'activeNotes' list
-            player.activeNotes.Remove(this.gameObject.transform);
+            player.activeNotes.Remove(gameObject.transform);
         }
+
+        player.activeAllNotes.Remove(gameObject.transform);
 
         if (noteType == "bomb")
         {
@@ -872,10 +896,10 @@ public class Note : MonoBehaviour
         }
 
         // remove this note from the 'noteBehind' list
-        player.notesInfront.Remove(this.gameObject.transform);
-        tc.notes.Remove(this.gameObject);
+        player.notesInfront.Remove(gameObject.transform);
+        tc.notes.Remove(gameObject);
 
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     public void DestroyBomb()
@@ -883,8 +907,25 @@ public class Note : MonoBehaviour
         gm.am.PlaySound("Bomb_Hit");
         explosionParticle.SetActive(true);
         bombObj.GetComponent<MeshRenderer>().enabled = false;
-        gm.am.StopSound("Bomb_Fuse");
-        Destroy(gameObject);
+
+        player.activeAllNotes.Remove(gameObject.transform); 
+
+        // Only stop the fuze sfx if there are no other active bombs
+        for (int i = 0; i < player.activeAllNotes.Count; i++)
+        {
+            if (player.activeAllNotes[i].GetComponent<Note>().noteType == "bomb")
+            {
+                break;
+            }
+            else
+            {
+                gm.am.StopSound("Bomb_Fuse");
+                break;
+            }
+        }
+
+        Destroy(fuseParticle);
+        Destroy(gameObject, 1.5f);
     }
 }
 

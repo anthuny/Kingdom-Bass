@@ -9,6 +9,7 @@ TagManager:
   - NoteWall
   - DeadNote
   - KILL
+  - Slider
   layers:
   - Default
   - TransparentFX
