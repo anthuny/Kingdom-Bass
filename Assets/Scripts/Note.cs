@@ -744,10 +744,13 @@ public class Note : MonoBehaviour
             hitMarker.GetComponent<Image>().color = gm.missedNoteC;
         }
 
-        if (noteDir == "down" && !doneOnce7 && doneOnce3 && sliderScript.missed && gm.reposition)
+        if (gm.reposition)
         {
-            doneOnce7 = true;
-            RepositionPlayerForSliderEnd();
+            if (noteDir == "down" && !doneOnce7 && doneOnce3 && sliderScript.missed)
+            {
+                doneOnce7 = true;
+                RepositionPlayerForSliderEnd();
+            }
         }
     }
 
