@@ -49,7 +49,7 @@ public class LightManager : MonoBehaviour
     {
         for (int i = 0; i < allLights.Count; i++)
         {
-            allLights[i].SetActive(false);
+            allLights[i].GetComponent<MeshRenderer>().enabled = false;
         }
 
         fanLightAnimator = fanLight.GetComponent<Animator>();
@@ -80,23 +80,23 @@ public class LightManager : MonoBehaviour
     {
         for (int i = 0; i < allLights.Count; i++)
         {
-            allLights[i].SetActive(false);
+            allLights[i].GetComponent<MeshRenderer>().enabled = false;
         }
     }
     public void TriggerFan(bool power, string dir)
     {
         for (int i = 0; i < sideLights.Count; i++)
         {
-            sideLights[i].SetActive(false);
+            sideLights[i].GetComponent<MeshRenderer>().enabled = false;
         }
 
         for (int i = 0; i < jetBackLights.Count; i++)
         {
-            jetBackLights[i].SetActive(false);
+            jetBackLights[i].GetComponent<MeshRenderer>().enabled = false;
         }
 
-        fanLight.SetActive(true);
-        
+        fanLight.GetComponent<MeshRenderer>().enabled = true;
+
         if (dir == "left")
         {
             panSpeed = 20;
@@ -115,15 +115,18 @@ public class LightManager : MonoBehaviour
 
     void UpdateFan()
     {
-        if (fanLight.activeSelf)
+        if (gm.playerScript.nearestNoteGameScript.noteType == "slider")
         {
-            fanLight.transform.parent.transform.Rotate(new Vector3(0, 0, panSpeed) * Time.deltaTime);
+            if (fanLight.GetComponent<MeshRenderer>().enabled)
+            {
+                fanLight.transform.parent.transform.Rotate(new Vector3(0, 0, panSpeed) * Time.deltaTime);
+            }
         }
     }
 
     public IEnumerator TurnOnLights()
     {
-        bgLight.SetActive(true);
+        bgLight.GetComponent<MeshRenderer>().enabled = true;
         bgLightAnimator.SetTrigger("TurnOn");
 
         gm.am.PlaySound("Light_BG_On");
@@ -132,7 +135,7 @@ public class LightManager : MonoBehaviour
 
         for (int i = 0; i < jetBackLights.Count; i++)
         {
-            jetBackLights[i].SetActive(true);
+            jetBackLights[i].GetComponent<MeshRenderer>().enabled = true;
             gm.am.PlaySound("Light_Def_On");
         }
 
@@ -140,11 +143,14 @@ public class LightManager : MonoBehaviour
 
         for (int i = 0; i < sideLights.Count; i++)
         {
-            sideLights[i].SetActive(true);
+            sideLights[i].GetComponent<MeshRenderer>().enabled = true;
             gm.am.PlaySound("Light_Def_On");
 
             yield return new WaitForSeconds(.2f);
         }
+
+        // Allow the play to pause
+        gm.cantPause = false;
     }
 
     public void TurnOffLight()
@@ -155,7 +161,7 @@ public class LightManager : MonoBehaviour
             if (fanScript.fadeOutValue >= 1)
             {
                 fanScript.fadeOutValue = 1;
-                fanLight.SetActive(false);
+                fanLight.GetComponent<MeshRenderer>().enabled = false;
                 fanScript.fadeOutValue = 0;
                 turningOffFanLight = false;
             }

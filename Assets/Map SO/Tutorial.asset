@@ -17,7 +17,7 @@ MonoBehaviour:
   bpm: 120
   length: 5:41
   difficulty: Easy
-  starCount: 0.5
+  starCount: 0.25
   subGenre: N/A
   noteTimeTaken: 9
   timeBeforeStart: 1

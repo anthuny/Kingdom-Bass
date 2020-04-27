@@ -538,12 +538,16 @@ public class Note : MonoBehaviour
 
         if (noteType != "bomb" && noteType != "blast" && !missed)
         {
-            if (noteType == "slider" && !player.nearestSliderStartEnd.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missed)
+            if (player.nearestSliderStartEnd)
             {
-                gm.am.PlaySound("NoteHit");
-                return;
+                if (noteType == "slider" && !player.nearestSliderStartEnd.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>().missed)
+                {
+                    gm.am.PlaySound("NoteHit");
+                    return;
+                }
             }
-            else if (noteType == "note")
+
+            if (noteType == "note")
             {
                 gm.am.PlaySound("NoteHit");
                 return;
@@ -670,12 +674,12 @@ public class Note : MonoBehaviour
             // Disable all other lights as the fan light turns off
             for (int i = 0; i < gm.lm.sideLights.Count; i++)
             {
-                gm.lm.sideLights[i].SetActive(true);
+                gm.lm.sideLights[i].GetComponent<MeshRenderer>().enabled = true;
             }
 
             for (int i = 0; i < gm.lm.jetBackLights.Count; i++)
             {
-                gm.lm.jetBackLights[i].SetActive(true);
+                gm.lm.jetBackLights[i].GetComponent<MeshRenderer>().enabled = true;
             }
 
             gm.lm.turningOffFanLight = true;
@@ -891,17 +895,20 @@ public class Note : MonoBehaviour
             }
         }
 
-        if (noteType != "bomb")
+        if (this.gameObject.transform)
         {
-            // remove this note to the 'activeNotes' list
-            player.activeNotes.Remove(gameObject.transform);
-        }
+            if (noteType != "bomb")
+            {
+                // remove this note to the 'activeNotes' list
+                player.activeNotes.Remove(gameObject.transform);
+            }
 
-        player.activeAllNotes.Remove(gameObject.transform);
+            player.activeAllNotes.Remove(gameObject.transform);
 
-        if (noteType == "bomb")
-        {
-            gm.am.StopSound("Bomb_Fuse");
+            if (noteType == "bomb")
+            {
+                gm.am.StopSound("Bomb_Fuse");
+            }
         }
 
         // remove this note from the 'noteBehind' list

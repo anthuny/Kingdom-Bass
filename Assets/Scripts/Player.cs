@@ -143,7 +143,10 @@ public class Player : MonoBehaviour
         playerPos.x = 3;
         transform.position = playerPos;
 
-        pm.FindNearestPath(false);
+        if (pm)
+        {
+            pm.FindNearestPath(false);
+        }
     }
 
     // Update is called once per frame
@@ -165,8 +168,19 @@ public class Player : MonoBehaviour
         Shield();
         ShieldCheck();
         Trail();
+        EndMapCheck();
 
         missCurrentPointInBeats = tc.trackPosInBeatsGame;
+    }
+
+    void EndMapCheck()
+    {
+        if (gm.notesLeftInfront <= 0 && gm.activeScene == "Game" && !gm.forceEndedGame && tc.selectedMap)
+        {
+            Debug.Log("Force ending map");
+            gm.forceEndedGame = true;
+            gm.EndTrackNote();
+        }
     }
 
     void Trail()
@@ -390,13 +404,16 @@ public class Player : MonoBehaviour
         // Detect the nearest note's position
         foreach (Transform t in activeNotes)
         {
-            float dist = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
-                            new Vector3(transform.position.x, transform.position.y, transform.position.z));
-
-            if (minDist > dist)
+            if (t)
             {
-                nearestAnyNote = t;
-                minDist = dist;
+                float dist = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
+                new Vector3(transform.position.x, transform.position.y, transform.position.z));
+
+                if (minDist > dist)
+                {
+                    nearestAnyNote = t;
+                    minDist = dist;
+                }
             }
         }
 
@@ -412,35 +429,38 @@ public class Player : MonoBehaviour
         // Detect the nearest non note position
         foreach (Transform t in activeNotes)
         {
-            float dist2 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
-                            new Vector3(transform.position.x, transform.position.y, transform.position.z));
-
-            float dist4 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
-                            new Vector3(transform.position.x, transform.position.y, transform.position.z));
-
-            float dist5 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
-                            new Vector3(transform.position.x, transform.position.y, transform.position.z));
-
-            if (minDist5 > dist5 && t.GetComponent<Note>().noteType == "blast")
+            if (t)
             {
-                nearestBlast = t;
-                nearestBlastScript = nearestBlast.GetComponent<Note>();
-                minDist5 = dist5;
-            }
+                float dist2 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
+                                 new Vector3(transform.position.x, transform.position.y, transform.position.z));
 
-            if (minDist2 > dist2 && t.GetComponent<Note>().noteType != "bomb")
-            {
-                nearestNote = t;
-                minDist2 = dist2;
-            }
+                float dist4 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
+                                new Vector3(transform.position.x, transform.position.y, transform.position.z));
 
-            if (minDist4 > dist4 && t.GetComponent<Note>().isEndOfSlider || t.GetComponent<Note>().isStartOfSlider && minDist4 > dist4)
-            {
-                if (t.gameObject.GetComponent<Note>().sliderLr)
+                float dist5 = Vector3.Distance(new Vector3(transform.position.x, transform.position.y, t.position.z),
+                                new Vector3(transform.position.x, transform.position.y, transform.position.z));
+
+                if (minDist5 > dist5 && t.GetComponent<Note>().noteType == "blast")
                 {
-                    nearestSliderStartEnd = t;
-                    nearestSliderScript = t.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>();
-                    minDist4 = dist4;
+                    nearestBlast = t;
+                    nearestBlastScript = nearestBlast.GetComponent<Note>();
+                    minDist5 = dist5;
+                }
+
+                if (minDist2 > dist2 && t.GetComponent<Note>().noteType != "bomb")
+                {
+                    nearestNote = t;
+                    minDist2 = dist2;
+                }
+
+                if (minDist4 > dist4 && t.GetComponent<Note>().isEndOfSlider || t.GetComponent<Note>().isStartOfSlider && minDist4 > dist4)
+                {
+                    if (t.gameObject.GetComponent<Note>().sliderLr)
+                    {
+                        nearestSliderStartEnd = t;
+                        nearestSliderScript = t.gameObject.GetComponent<Note>().sliderLr.gameObject.GetComponent<Slider>();
+                        minDist4 = dist4;
+                    }
                 }
             }
         }
@@ -535,15 +555,19 @@ public class Player : MonoBehaviour
         }
 
         //float closestDistance = 0;
-        foreach (Transform Object in activeNotes)
+        foreach (Transform obj in activeNotes)
         {
-            //float ObjectDistance = Vector3.Distance(transform.position, Object.transform.position);
-            if (Object.gameObject.transform.position.z < transform.position.z)
+            if (obj)
             {
-                closestBehindNote = Object.gameObject;
-                closestBehindNoteScript = closestBehindNote.GetComponent<Note>();
-                //closestDistance = ObjectDistance;
+                //float ObjectDistance = Vector3.Distance(transform.position, Object.transform.position);
+                if (obj.gameObject.transform.position.z < transform.position.z)
+                {
+                    closestBehindNote = obj.gameObject;
+                    closestBehindNoteScript = closestBehindNote.GetComponent<Note>();
+                    //closestDistance = ObjectDistance;
+                }
             }
+
         }
     }
     void Inputs()

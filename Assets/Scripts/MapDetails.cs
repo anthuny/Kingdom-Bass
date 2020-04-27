@@ -13,6 +13,7 @@ public class MapDetails : MonoBehaviour
     public Text lengthText;
     public Text subGenreText;
     public Text bpmText;
+    public Image stars;
 
     public bool selected;
 
@@ -23,5 +24,6 @@ public class MapDetails : MonoBehaviour
         lengthText.text = map.length.ToString();
         subGenreText.text = map.subGenre;
         bpmText.text = "BPM " + map.bpm.ToString() + "  |";
+        stars.fillAmount = map.starCount / 8;
     }
 }

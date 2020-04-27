@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5b8352aeabc9964db506d7ca70b2d4e, type: 3}
+  m_Name: SpritualConfinement_E
+  m_EditorClassIdentifier: 
+  title: Spiritual Confinement
+  trackCodeName: Spiritual Confinement
+  bpm: 150
+  length: 1:42
+  difficulty: Easy
+  starCount: 0.5
+  subGenre: Dubstep
+  noteTimeTaken: 8
+  timeBeforeStart: 5
+  sliderFastSpeed: 3
+  healthDrain: 1
+  jetAimRange: 30
+  track: {fileID: 8300000, guid: dfddd104d3cdefd4b891b49913a4426f, type: 3}
+  trackPreview: {fileID: 8300000, guid: e772e2d8215bfc94db7fb60099c4788d, type: 3}
+  mapXML: {fileID: 4900000, guid: 811acbdc57d2cdd459c53d288547d136, type: 3}

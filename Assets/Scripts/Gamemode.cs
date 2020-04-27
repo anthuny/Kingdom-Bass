@@ -212,6 +212,7 @@ public class Gamemode : MonoBehaviour
     public Vector3 originalSecondUIPos;
 
     [Header("Other")]
+    public bool forceEndedGame;
     public int debugUICounter = 1;
     bool displayDebugUI;
     public float currentFps;
@@ -303,7 +304,7 @@ public class Gamemode : MonoBehaviour
     public float minPitchDec;
     public float minPitchVolDecStart;
     public GameObject gameOverUI;
-    [HideInInspector]
+    //[HideInInspector]
     public AudioSource activeTrack;
     private float regenPerfectOri;
     private float regenGreatOri;
@@ -1353,7 +1354,6 @@ public class Gamemode : MonoBehaviour
 
         cantPause = true;
         tc.selectedMap = null;
-        startBtn.SetActive(false);
     }
 
     IEnumerator MainMenuContr()
@@ -1427,6 +1427,11 @@ public class Gamemode : MonoBehaviour
             activeTrack.Stop();
         }
 
+
+
+        notesLeftInfront = 0;
+        forceEndedGame = false;
+
         tc.loadingTrack = false;
         tc.notesSpawned = 0;
         tc.allNotes.Clear();
@@ -1488,6 +1493,7 @@ public class Gamemode : MonoBehaviour
         playerScript.nearestAnyNote = null;
         playerScript.nearestAnyNoteScript = null;
 
+        am.StopSound("Bomb_Fuse");
 
         if (!retry)
         {
@@ -1594,7 +1600,7 @@ public class Gamemode : MonoBehaviour
             }
 
             // Input to resume the game
-            else if (Input.GetKeyDown(KeyCode.Escape) || (Input.GetKeyDown("joystick button 2")) && gamePaused && !countingDown)
+            else if (Input.GetKeyDown(KeyCode.Escape) && gamePaused && !countingDown || (Input.GetKeyDown("joystick button 2")) && gamePaused && !countingDown)
             {
                 //Debug.Log("2");
                 UnPauseGameBut();
@@ -1769,7 +1775,10 @@ public class Gamemode : MonoBehaviour
 
             for (int i = 0; i < btn.transform.childCount; i++)
             {
-                btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+                if (!btn.transform.GetChild(i).name.Contains("Stars"))
+                {
+                    btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+                }
             }
             return;
         }
@@ -1789,7 +1798,10 @@ public class Gamemode : MonoBehaviour
             btn.GetComponent<Image>().color = highlightedColor;
             for (int i = 0; i < btn.transform.childCount; i++)
             {
-                btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+                if (!btn.transform.GetChild(i).name.Contains("Stars"))
+                {
+                    btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+                }
             }
         }
         else if (!btn.name.Contains("Back"))
@@ -1837,12 +1849,14 @@ public class Gamemode : MonoBehaviour
 
             for (int i = 0; i < btn.transform.childCount; i++)
             {
-                btn.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                if (!btn.transform.GetChild(i).name.Contains("Stars"))
+                {
+                    btn.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                }
             }
-            return;
         }
 
-        else if (btn.name.Contains("Mod"))
+        if (btn.name.Contains("Mod"))
         {
             return;
         }
@@ -1857,7 +1871,10 @@ public class Gamemode : MonoBehaviour
             btn.GetComponent<Image>().color = defMapColor;
             for (int i = 0; i < btn.transform.childCount; i++)
             {
-                btn.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                if (!btn.transform.GetChild(i).name.Contains("Stars"))
+                {
+                    btn.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                }
             }
         }
         else if (!btn.name.Contains("Back"))
@@ -1896,7 +1913,10 @@ public class Gamemode : MonoBehaviour
 
             for (int i = 0; i < btn.transform.childCount; i++)
             {
-                btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+                if (!btn.transform.GetChild(i).name.Contains("Stars"))
+                {
+                    btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+                }
             }
 
             if (btn.name.Contains("Reposition"))
@@ -1921,7 +1941,10 @@ public class Gamemode : MonoBehaviour
 
             for (int i = 0; i < btn.transform.childCount; i++)
             {
-                btn.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                if (!btn.transform.GetChild(i).name.Contains("Stars"))
+                {
+                    btn.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                }
             }
 
             if (btn.name.Contains("Reposition"))
@@ -1946,9 +1969,13 @@ public class Gamemode : MonoBehaviour
 
                 // Change the colour of the button
                 lastSelectedButton.GetComponent<Image>().color = defMapColor;
-                for (int i = 0; i < lastSelectedButton.transform.childCount; i++)
+
+                for (int i = 0; i < btn.transform.childCount; i++)
                 {
-                    lastSelectedButton.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                    if (!lastSelectedButton.transform.GetChild(i).name.Contains("Stars"))
+                    {
+                        lastSelectedButton.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                    }
                 }
             }
         }
@@ -1964,9 +1991,12 @@ public class Gamemode : MonoBehaviour
 
                 // Change the colour of the button
                 lastSelectedButton.GetComponent<Image>().color = defMapColor;
-                for (int i = 0; i < lastSelectedButton.transform.childCount; i++)
+                for (int i = 0; i < btn.transform.childCount; i++)
                 {
-                    lastSelectedButton.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                    if (!lastSelectedButton.transform.GetChild(i).name.Contains("Stars"))
+                    {
+                        lastSelectedButton.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                    }
                 }
 
                 lastSelectedButton.GetComponent<MapDetails>().selected = false;
@@ -2014,7 +2044,10 @@ public class Gamemode : MonoBehaviour
 
             for (int i = 0; i < btn.transform.childCount; i++)
             {
-                btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+                if (!btn.transform.GetChild(i).name.Contains("Stars"))
+                {
+                    btn.transform.GetChild(i).GetComponent<Text>().color = Color.white;
+                }
             }
         }
         else if (!btn.name.Contains("Back"))

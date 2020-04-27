@@ -249,6 +249,7 @@ public class TrackCreator : MonoBehaviour
         // Ensure that the ui flip to in-game mode only happens once, rather then for every note in the song
         if (!mapHasBeenSelected)
         {
+
             UpdateMapSelectionUI();
 
             player.oldNearestLaneNumber = player.nearestLaneNumber;
@@ -268,8 +269,6 @@ public class TrackCreator : MonoBehaviour
 
         trackInProgress = true;
 
-        gm.startBtn.SetActive(false);
-
         StartCoroutine("StartSong");
     }
 
@@ -280,9 +279,6 @@ public class TrackCreator : MonoBehaviour
 
         // Incase the audio Listener was paused, activate it now
         AudioListener.pause = false;
-
-        // Allow the play to pause
-        gm.cantPause = false;
 
         // Start the track timer?
         dspTrackTime = (float)AudioSettings.dspTime;
@@ -1100,7 +1096,6 @@ public class TrackCreator : MonoBehaviour
         // Spawn a note
         if (trackPos > (lastBeat + ((beatsBeforeStart - 1) * secPerBeat)) + (secPerBeat * beatWaitCount[curNoteCount]))
         {
-            //Debug.Break();
             SpawnNotes();
 
             lastBeat += secPerBeat * beatWaitCount[curNoteCount];

@@ -126,7 +126,7 @@ public class SliderInterval2 : MonoBehaviour
             slider.sliderIntervalsInFront.Remove(parent);
         }
 
-        Invoke("Kill", 1.75f);
+        Invoke("Kill", 1f);
     }
 
     void Kill()
