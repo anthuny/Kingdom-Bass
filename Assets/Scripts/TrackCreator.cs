@@ -255,7 +255,7 @@ public class TrackCreator : MonoBehaviour
             player.oldNearestLaneNumber = player.nearestLaneNumber;
         }
 
-        if (selectedMap.trackCodeName != "Tutorial" && !gm.jet.activeSelf)
+        if (selectedMap.title != "Tutorial" && !gm.jet.activeSelf)
         {
             gm.jScript.EnableJet();
         }
@@ -283,18 +283,21 @@ public class TrackCreator : MonoBehaviour
         // Start the track timer?
         dspTrackTime = (float)AudioSettings.dspTime;
 
-        if (selectedMap.trackCodeName == "Tutorial")
+        if (selectedMap.title == "Tutorial")
         {
             UpdateTutorialSlides();        
 
             // Disable game UI
             gm.gameUI.SetActive(false);
 
-            am.PlaySound(selectedMap.trackCodeName);
+            am.PlaySound(selectedMap.title);
+
+            // Allow the play to pause
+            gm.cantPause = false;
         }
         else
         {
-            am.PlaySound(selectedMap.trackCodeName);
+            am.PlaySound(selectedMap.title);
 
             // Display all game UI
             gm.gameUI.SetActive(true);
@@ -306,7 +309,7 @@ public class TrackCreator : MonoBehaviour
         // Get access to the active track playing
         foreach (AudioSource aSource in am.gameObject.GetComponents<AudioSource>())
         {
-            if (aSource.clip.name == selectedMap.trackCodeName)
+            if (aSource.clip.name == selectedMap.title)
             {
                 if (aSource.isPlaying)
                 {
@@ -774,6 +777,10 @@ public class TrackCreator : MonoBehaviour
 
             gm.tutTextAnimator.SetBool("Side", true);
 
+            yield return new WaitForSeconds(20);
+
+            gm.noFail = false;
+
             yield break;
         }
     }
@@ -1143,6 +1150,8 @@ public class TrackCreator : MonoBehaviour
         // Used to ensure the button is pressed once.
         if (!loadingTrack)
         {
+            gm.cursor.SetActive(false);
+
             gm.blur.SetActive(false);
 
             loadingTrack = true;

@@ -41,6 +41,8 @@ public class PathManager : MonoBehaviour
     private float n;
     private bool spawningPaths;
 
+    public GameObject underPathsBlock;
+
     // Start is called before the first frame update
 
     private void Awake()
@@ -60,8 +62,7 @@ public class PathManager : MonoBehaviour
 
         SpawnFirstPath();
 
-        //Set old nearest path to the first path that spawns
-        oldNearestPath = paths[0];
+        underPathsBlock.SetActive(true);
     }
 
     void BeginPathSpawn()
@@ -107,7 +108,6 @@ public class PathManager : MonoBehaviour
             return;
         }
         //FindNearestPath();
-        DestroyPathsBehind();
         ElapsePathSpawn();
         BeginPathSpawn();
     }
@@ -290,28 +290,6 @@ public class PathManager : MonoBehaviour
             laneNumbers.Sort();
 
             maxPathNumber = laneNumbers[laneNumbers.Count - 1];
-        }
-    }
-
-    void DestroyPathsBehind()
-    {
-        // Send a raycast x amounts of segments behind where the player currently is.
-        // Find the segment number of that path
-        // If the difference between that path's segment, and the player's nearest path
-        // segment is larger then x. Destroy all paths in that behind segment
-        // Find the path the player is on
-
-        pathLength = paths[totalPaths].GetComponent<Path>().pathLength;
-
-        RaycastHit hit;
-        if (Physics.Raycast(new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z - (pathLength * pathDestroySegment)), Vector3.down, out hit))
-        {
-            pathToDestroy = hit.collider.gameObject;
-            Destroy(pathToDestroy.transform.parent.gameObject);
-        }
-        else
-        {
-            return;
         }
     }
 }

@@ -603,11 +603,11 @@ public class Note : MonoBehaviour
         }
 
         // Calculate the percantage of completion of the note on the lane - not currently used
-        percDistance = Mathf.Abs((transform.position.z - player.transform.position.z) / pm.pathLength) * 100;
+        percDistance = Mathf.Abs((transform.position.z - player.transform.position.z) / 70) * 100;
 
         // Determine the speed the note needs to use to get to the player on the beat
         //gm.noteSpeed = pm.pathLength / (tc.timeToWait * tc.noteTimeToArriveMult);
-        gm.noteSpeed = pm.pathLength / (tc.secPerBeat * tc.selectedMap.noteTimeTaken);
+        gm.noteSpeed = 70 / (tc.secPerBeat * tc.selectedMap.noteTimeTaken);
 
         if (curTime <= 1 && !doneOnce2)
         {

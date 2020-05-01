@@ -119,6 +119,8 @@ public class Player : MonoBehaviour
     private Coroutine turnOffShield;
 
     public TrailRenderer trail;
+
+    public bool turnedShieldOnTut;
     // Start is called before the first frame update
     void Start()
     {
@@ -177,7 +179,6 @@ public class Player : MonoBehaviour
     {
         if (gm.notesLeftInfront <= 0 && gm.activeScene == "Game" && !gm.forceEndedGame && tc.selectedMap)
         {
-            Debug.Log("Force ending map");
             gm.forceEndedGame = true;
             gm.EndTrackNote();
         }
@@ -199,7 +200,7 @@ public class Player : MonoBehaviour
         // Sometimes the shield object is off and cant easily turn back on, this stops it
         if (tc.selectedMap)
         {
-            if (!shield.activeSelf && isShielding && tc.selectedMap.trackCodeName != "Tutorial" && !gm.playerDead)
+            if (!shield.activeSelf && isShielding && tc.selectedMap.title != "Tutorial" && !gm.playerDead)
             {
                 shield.SetActive(true);
             }
@@ -209,7 +210,7 @@ public class Player : MonoBehaviour
 
     public IEnumerator RepositionModSlider(Note noteScript)
     {
-        yield return new WaitForSeconds(gm.tutPosResetTime);
+        yield return new WaitForSeconds(gm.repositionTime);
         for (int i = 1; i < 6; i++)
         {
             if (noteScript.laneNumber == i)
@@ -223,7 +224,7 @@ public class Player : MonoBehaviour
     }
     public IEnumerator RepositionMod(Note noteScript)
     {
-        yield return new WaitForSeconds(gm.tutPosResetTime);
+        yield return new WaitForSeconds(gm.repositionTime);
 
         if (noteScript.noteDir == "up" && noteScript.noteType == "note" || noteScript.noteType == "slider" && noteScript.isStartOfSlider)
         {
@@ -573,111 +574,103 @@ public class Player : MonoBehaviour
     void Inputs()
     {
         // Do not allow any player movements if the game is paused
-        if (gm.gamePaused || gm.controllerConnected || gm.activeScene != "Game")
+        if (gm.gamePaused || gm.activeScene != "Game")
         {
             return;
         }
 
-        #region Moving Right Input
-        if (Input.GetKeyDown(KeyCode.L) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber && !blastInput && isShielding)
+        if (!gm.controllerConnected)
         {
-            movingRight = true;
-
-            // Reposition player for the first 2 stages of the tutorial
-            if (tc.selectedMap.title == "Tutorial" && gm.tutorialStage <= 2)
+            #region Moving Right Input
+            if (Input.GetKeyDown(KeyCode.L) && !movingLeft && !movingRight && nearestLaneNumber != pm.maxPathNumber && !blastInput && isShielding)
             {
-                Invoke("RepositionPlayer", .2f);
+                movingRight = true;
             }
-        }
 
-        if (Input.GetKeyDown(KeyCode.L) && nearestLaneNumber != pm.maxPathNumber && !blastInput && !isShielding ||
-            Input.GetKeyDown(KeyCode.L) && nearestLaneNumber != pm.maxPathNumber && !blastInput && !isShielding)
-        {
-            movingRightNoShield = true;
-        }
-
-        if (Input.GetKeyUp(KeyCode.L))
-        {
-            movingRightNoShield = false;
-        }
-
-        #endregion
-
-        #region Moving Left Input
-        if (Input.GetKeyDown(KeyCode.A) && !movingRight && !movingLeft && nearestLaneNumber != 1 && !blastInput && isShielding)
-        {
-            movingLeft = true;
-
-            // Reposition player for the first 2 stages of the tutorial
-            if (tc.selectedMap.title == "Tutorial" && gm.tutorialStage <= 2)
+            if (Input.GetKeyDown(KeyCode.L) && nearestLaneNumber != pm.maxPathNumber && !blastInput && !isShielding ||
+                Input.GetKeyDown(KeyCode.L) && nearestLaneNumber != pm.maxPathNumber && !blastInput && !isShielding)
             {
-                Invoke("RepositionPlayer", .2f);
+                movingRightNoShield = true;
             }
-        }
 
-        if (Input.GetKeyDown(KeyCode.A) && nearestLaneNumber != 1 && !blastInput && !isShielding ||
-            Input.GetKeyDown(KeyCode.A) && nearestLaneNumber != 1 && !blastInput && !isShielding)
-        {
-            movingLeftNoShield = true;
-        }
-
-        if (Input.GetKeyUp(KeyCode.A))
-        {
-            movingLeftNoShield = false;
-        }
-        #endregion
-
-        #region Slider Speed alteration
-        if (Input.GetKey(KeyCode.S) || (Input.GetKey(KeyCode.K)))
-        {
-            gm.slowSpeedMultCur = gm.slowSpeedMult;
-        }
-        else
-        {
-            gm.slowSpeedMultCur = 1;
-        }
-        #endregion
-
-        #region Blast Input
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            blastInput = true;
-            if (nearestNoteGame)
+            if (Input.GetKeyUp(KeyCode.L))
             {
-                if (nearestNoteGameScript.noteType == "blast")
+                movingRightNoShield = false;
+            }
+
+            #endregion
+
+            #region Moving Left Input
+            if (Input.GetKeyDown(KeyCode.A) && !movingRight && !movingLeft && nearestLaneNumber != 1 && !blastInput && isShielding)
+            {
+                movingLeft = true;
+            }
+
+            if (Input.GetKeyDown(KeyCode.A) && nearestLaneNumber != 1 && !blastInput && !isShielding ||
+                Input.GetKeyDown(KeyCode.A) && nearestLaneNumber != 1 && !blastInput && !isShielding)
+            {
+                movingLeftNoShield = true;
+            }
+
+            if (Input.GetKeyUp(KeyCode.A))
+            {
+                movingLeftNoShield = false;
+            }
+            #endregion
+
+            #region Slider Speed alteration
+            if (Input.GetKey(KeyCode.S) || (Input.GetKey(KeyCode.K)))
+            {
+                gm.slowSpeedMultCur = gm.slowSpeedMult;
+            }
+            else
+            {
+                gm.slowSpeedMultCur = 1;
+            }
+            #endregion
+
+            #region Blast Input
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                blastInput = true;
+                if (nearestNoteGame)
                 {
-                    AssignHitLocation(true);
+                    if (nearestNoteGameScript.noteType == "blast")
+                    {
+                        AssignHitLocation(true);
+                    }
                 }
             }
+            else
+            {
+                blastInput = false;
+            }
+            #endregion
         }
-        else
-        {
-            blastInput = false;
-        }
-        #endregion
+
 
         #region Shielding Input
         // if the play inputs to stop shielding stop shielding
-        if (Input.GetKey(KeyCode.Space) && tc.selectedMap.title != "Tutorial" || Input.GetKey(KeyCode.Space) && gm.tutorialStage >= 8)
+        if (Input.GetKey(KeyCode.Space) && tc.selectedMap.title != "Tutorial" || Input.GetKey(KeyCode.Space) && gm.tutorialStage >= 8 || gm.shieldingVal == 1 && tc.selectedMap.title != "Tutorial" || gm.shieldingVal == 1 && gm.tutorialStage >= 8 && tc.selectedMap.title == "Tutorial")
         {
             isShielding = false;
         }
 
         // Shield is active when the shield button is not being held down
-        else if (!Input.GetKey(KeyCode.Space))
+        else if (!Input.GetKey(KeyCode.Space) && !gm.controllerConnected || gm.shieldingVal == 0 && gm.controllerConnected)
         {
             isShielding = true;
         }
         #endregion  
     }
 
-    void ControllerInputsPost()
+    void ControllerNoShieldInputsPost()
     {
         transform.position = playerPos;
 
         movingNoShield = true;
 
-        pm.FindNearestPath(true);
+        pm.FindNearestPath(false);
     }
 
     void MoveShieldSFX()
@@ -702,6 +695,14 @@ public class Player : MonoBehaviour
                     shield.SetActive(false);
                 }
                 return;
+            }
+            else if (tc.selectedMap.trackCodeName == "Tutorial" && gm.tutorialStage >= 8 && !turnedShieldOnTut)
+            {
+                turnedShieldOnTut = true;
+                if (!shield.activeSelf)
+                {
+                    shield.SetActive(true);
+                }
             }
         }
 
@@ -779,20 +780,6 @@ public class Player : MonoBehaviour
             return;
         }
 
-        // Stops strange drifting behaviour
-        //Vector3 playerPos2 = transform.position;
-        //playerPos2.z = 1;
-        //transform.position = playerPos2;
-
-        if (gm.shieldingVal == 0)
-        {
-            isShielding = true;
-        }
-        else if (gm.shieldingVal == 1)
-        {
-            isShielding = false;
-        }
-
         #region Moving Horizontally with no shield
         #region Moving slowest speed
 
@@ -803,7 +790,7 @@ public class Player : MonoBehaviour
             playerPos.x -= gm.shieldOffSpeed * gm.lowSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
             animator.SetTrigger("isMovingLeftNSSlow");
-            ControllerInputsPost();
+            ControllerNoShieldInputsPost();
         }
         // If moving right
         else if (gm.noShieldMove.x > 0 && gm.noShieldMove.x < .9f && !isShielding && transform.position.x < 5.7f)
@@ -811,7 +798,7 @@ public class Player : MonoBehaviour
             playerPos.x += gm.shieldOffSpeed * gm.lowSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
             animator.SetTrigger("isMovingRightNSSlow");
-            ControllerInputsPost();
+            ControllerNoShieldInputsPost();
         }
         #endregion
         #region Moving fastest speed
@@ -823,7 +810,12 @@ public class Player : MonoBehaviour
             playerPos.x -= gm.shieldOffSpeed * gm.maxSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
             animator.SetTrigger("isMovingLeftNSFast");
-            ControllerInputsPost();
+
+            transform.position = playerPos;
+            movingNoShield = true;
+
+            pm.FindNearestPath(false);
+            return;
         }
         // If moving right
         else if (gm.noShieldMove.x > .9f && !isShielding && transform.position.x < 5.7f)
@@ -831,7 +823,12 @@ public class Player : MonoBehaviour
             playerPos.x += gm.shieldOffSpeed * gm.maxSpeed * Time.deltaTime;
             //Debug.Log(gm.noShieldMove.x);
             animator.SetTrigger("isMovingRightNSFast");
-            ControllerInputsPost();
+
+            transform.position = playerPos;
+            movingNoShield = true;
+
+            pm.FindNearestPath(false);
+            return;
         }
         #endregion
         #endregion
@@ -894,7 +891,6 @@ public class Player : MonoBehaviour
             attemptedBlast = true;
             AssignHitLocation(true);
         }
-
 
         #region Resetting player position to middle of lane
         // Reset player's postiion to middle of lane when shielding
@@ -1198,7 +1194,6 @@ public class Player : MonoBehaviour
             else
             {
                 Missed(false, nearestNoteGameScript, gameObject.name);
-                Debug.Log("9");
                 return;
             }
         }
@@ -1346,6 +1341,11 @@ public class Player : MonoBehaviour
         }
 
         gm.lm.activeCoroutine = StartCoroutine(gm.lm.JetLights(nearestNoteGameScript.noteType, nearestNoteGameScript.noteDir));
+
+        if (tc.selectedMap.title == "Tutorial" && gm.tutorialStage <= 2)
+        {
+            Invoke("RepositionPlayer", .1f);
+        }
     }
     private void HitGreat()
     {
@@ -1391,6 +1391,11 @@ public class Player : MonoBehaviour
         }
 
         gm.lm.activeCoroutine = StartCoroutine(gm.lm.JetLights(nearestNoteGameScript.noteType, nearestNoteGameScript.noteDir));
+
+        if (tc.selectedMap.title == "Tutorial" && gm.tutorialStage <= 2)
+        {
+            Invoke("RepositionPlayer", .1f);
+        }
     }
     private void HitGood()
     {
@@ -1436,6 +1441,11 @@ public class Player : MonoBehaviour
         }
 
         gm.lm.activeCoroutine = StartCoroutine(gm.lm.JetLights(nearestNoteGameScript.noteType, nearestNoteGameScript.noteDir));
+
+        if (tc.selectedMap.title == "Tutorial" && gm.tutorialStage <= 2)
+        {
+            Invoke("RepositionPlayer", .1f);
+        }
     }
 
     void CheckMissForSlider()

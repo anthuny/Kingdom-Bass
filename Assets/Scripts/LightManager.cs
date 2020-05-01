@@ -115,11 +115,17 @@ public class LightManager : MonoBehaviour
 
     void UpdateFan()
     {
-        if (gm.playerScript.nearestNoteGameScript.noteType == "slider")
+        if (gm.playerScript)
         {
-            if (fanLight.GetComponent<MeshRenderer>().enabled)
+            if (gm.playerScript.nearestNoteGameScript)
             {
-                fanLight.transform.parent.transform.Rotate(new Vector3(0, 0, panSpeed) * Time.deltaTime);
+                if (gm.playerScript.nearestNoteGameScript.noteType == "slider")
+                {
+                    if (fanLight.GetComponent<MeshRenderer>().enabled)
+                    {
+                        fanLight.transform.parent.transform.Rotate(new Vector3(0, 0, panSpeed) * Time.deltaTime);
+                    }
+                }
             }
         }
     }

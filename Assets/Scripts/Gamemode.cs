@@ -89,7 +89,7 @@ public class Gamemode : MonoBehaviour
 
     public float startTime;
 
-    [HideInInspector]
+    //[HideInInspector]
     public float noteSpeed;
 
     public int score = 0;
@@ -179,7 +179,7 @@ public class Gamemode : MonoBehaviour
     public GameObject blur;
     public int doneTutStageCount;
 
-    public float tutPosResetTime;
+    public float repositionTime;
     public GameObject laneSwitching;
     public Text tutAreaText;
     //[HideInInspector]
@@ -191,7 +191,6 @@ public class Gamemode : MonoBehaviour
     public int oldTutorialStage;
     public int maxTutorialStages;
     public int[] nextStageThreshholdBeats;
-    public float timeForMoveBack;
     public GameObject tutorialUI;
     public GameObject[] allVisuals;
     public Text[] keyTexts;
@@ -369,7 +368,7 @@ public class Gamemode : MonoBehaviour
     public Controller controls;
     [HideInInspector]
     public Vector2 move, noShieldMove;
-    [HideInInspector]
+    //[HideInInspector]
     public float shieldingVal;
     [HideInInspector]
     public float blastLVal, blastRVal;
@@ -476,8 +475,8 @@ public class Gamemode : MonoBehaviour
 
         jScript.DisableJet();
 
+        InvokeRepeating("FindControllers", 1, 2f);
         StartGame();
-        InvokeRepeating("FindControllers", 0, 2f);
     }
 
 
@@ -486,7 +485,6 @@ public class Gamemode : MonoBehaviour
     {
         //Get Joystick Names
         string[] temp = Input.GetJoystickNames();
-        //Debug.Log(temp[1]);
 
         if (temp.Length > 0)
         {
@@ -585,14 +583,14 @@ public class Gamemode : MonoBehaviour
     {
         if (activeScene == "MapSelection")
         {
-            if (Input.GetKeyDown("joystick button 2"))
+            if (Input.GetKeyDown("joystick button 2") || Input.GetKeyDown(KeyCode.Escape))
             {
                 es.SetSelectedGameObject(null);
 
                 if (lastSelectedButton)
                 {
                     lastSelectedButton.GetComponent<MapDetails>().selected = false;
-                    lastSelectedButton = null;
+                    //lastSelectedButton = null;
                 }
 
                 MainMenu();
@@ -602,14 +600,14 @@ public class Gamemode : MonoBehaviour
 
         else if (activeScene == "MainMenu")
         {
-            if (Input.GetKeyDown("joystick button 2"))
+            if (Input.GetKeyDown("joystick button 2") || Input.GetKeyDown(KeyCode.Escape))
             {
                 es.SetSelectedGameObject(null);
 
                 if (lastSelectedButton)
                 {
                     lastSelectedButton.GetComponent<MapDetails>().selected = false;
-                    lastSelectedButton = null;
+                    //lastSelectedButton = null;
                 }
 
                 ExitGamePrompt();
@@ -619,7 +617,7 @@ public class Gamemode : MonoBehaviour
 
         else if (activeScene == "ExitGamePrompt")
         {
-            if (Input.GetKeyDown("joystick button 2"))
+            if (Input.GetKeyDown("joystick button 2") || Input.GetKeyDown(KeyCode.Escape))
             {
                 es.SetSelectedGameObject(null);
                 MainMenu();
@@ -644,7 +642,10 @@ public class Gamemode : MonoBehaviour
         {
             if (EventSystem.current.currentSelectedGameObject == null)
             {
-                EventSystem.current.SetSelectedGameObject(lastSelectedBtn.gameObject);
+                if (lastSelectedBtn)
+                {
+                    EventSystem.current.SetSelectedGameObject(lastSelectedBtn.gameObject);
+                }
             }
             else
             {
@@ -728,7 +729,7 @@ public class Gamemode : MonoBehaviour
             return;
         }
 
-        if (tc.selectedMap.trackCodeName == "Tutorial" && tutorialStage < 9 || playerDead)
+        if (tc.selectedMap.title == "Tutorial" && tutorialStage < 9 || playerDead)
         {
             ElectrictyBallPS.gameObject.SetActive(false);
             return;
@@ -953,6 +954,8 @@ public class Gamemode : MonoBehaviour
     {
         activeScene = "GameOver";
 
+        cursor.SetActive(true);
+
         // Enable the blue background image
         if (!blur.activeSelf)
         {
@@ -1057,7 +1060,7 @@ public class Gamemode : MonoBehaviour
         missAmountText.text = misses.ToString() + "x";
         postComboText.text = comboMulti.ToString() + "x";
 
-        trackName.text = tc.selectedMap.trackCodeName.ToString() + " - " + tc.selectedMap.difficulty.ToString();
+        trackName.text = tc.selectedMap.title.ToString() + " - " + tc.selectedMap.difficulty.ToString();
 
         #region Calculation for Rank Letter
 
@@ -1121,13 +1124,15 @@ public class Gamemode : MonoBehaviour
 
     void EndingMap()
     {
-        if (tc.selectedMap.trackCodeName == "Tutorial")
+        if (tc.selectedMap.title == "Tutorial")
         {
             am.StopSound("Tutorial");
             am.StopSound("Tut_Stage_" + tutorialStage.ToString());
         }
         // Enable the post map stats UI to see
         postMapStatsUI.SetActive(true);
+
+        cursor.SetActive(true);
 
         // Enable post map buttons to see
         postMapUI.SetActive(true);
@@ -1234,8 +1239,11 @@ public class Gamemode : MonoBehaviour
         }
     }
 
-    public void PlayBtn()
+    // map selection button
+    public void MapSelection()
     {
+        canReturn = false;
+
         mapSelectionUI.SetActive(true);
 
         if (controllerConnected)
@@ -1250,15 +1258,9 @@ public class Gamemode : MonoBehaviour
         }
 
         activeScene = "MapSelection";
-    }
-
-    // map selection button
-    public void MapSelection()
-    {
-        canReturn = false;
 
         // Stop the tutorial's UI from displaying after the map has been closed
-        if (tc.selectedMap && tc.selectedMap.trackCodeName == "Tutorial")
+        if (tc.selectedMap && tc.selectedMap.title == "Tutorial")
         {
             am.StopSound("Tut_Stage_" + tutorialStage.ToString());
             if (tc.activeCoroutine != null)
@@ -1322,6 +1324,38 @@ public class Gamemode : MonoBehaviour
     }
     public void MainMenu()
     {
+        #region Map selection UI management
+        // Stop the last map selection preview sfx from continuing to play
+        if (lastSelectedButton)
+        {
+            am.StopSound(lastSelectedButton.GetComponent<MapDetails>().map.title + "_Preview");
+            
+            // Allow the last selected button to be in the default state, rather then selected 
+            lastSelectedButton = null;
+        }
+
+        for (int x = 0; x < mapButtons.Length; x++)
+        {
+            am.StopSound(mapButtons[x].gameObject.GetComponent<MapDetails>().map.title + "_Preview");
+
+            mapButtons[x].gameObject.GetComponent<Image>().color = defMapColor;
+
+            // Change the size of the button
+            LeanTween.scale(mapButtons[x].gameObject, new Vector3(.6f, .7f, 1), 0);
+
+            // Change the text colour of each map button 
+            for (int i = 0; i < mapButtons[x].gameObject.transform.childCount; i++)
+            {
+                // Avoid accessing the stars component
+                if (i != 5)
+                {
+                    mapButtons[x].gameObject.transform.GetChild(i).GetComponent<Text>().color = Color.black;
+                }
+
+            }
+        }
+        #endregion
+
         if (mapSelectionUI.activeSelf)
         {
             mapSelectionUI.SetActive(false);
@@ -1380,7 +1414,7 @@ public class Gamemode : MonoBehaviour
         StartCoroutine(playerScript.FixVisibility());
 
         CancelInvoke();
-
+        InvokeRepeating("FindControllers", 1, 2f);
         AudioListener.pause = false;
         #region Tutorial reset
         doneTutStageCount = 0;
@@ -1427,7 +1461,9 @@ public class Gamemode : MonoBehaviour
             activeTrack.Stop();
         }
 
+        playerScript.turnedShieldOnTut = false;
 
+        cursor.SetActive(true);
 
         notesLeftInfront = 0;
         forceEndedGame = false;
@@ -1588,7 +1624,7 @@ public class Gamemode : MonoBehaviour
                 // Input to pause the game
                 if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown("joystick button 9") && !mapSelectionUI.activeSelf && !countingDown && !gamePaused && !tc.allNotes[tc.allNotes.Count - 1].GetComponent<Note>().behindPlayer)
                 {
-                    if (tc.selectedMap.trackCodeName == "Tutorial")
+                    if (tc.selectedMap.title == "Tutorial")
                     {
                         PauseGame(false);
                     }
@@ -1606,20 +1642,6 @@ public class Gamemode : MonoBehaviour
                 UnPauseGameBut();
             }
         }
-
-        // If player presses escape in the main menu screen, send to exit game prompt
-        if (Input.GetKeyDown(KeyCode.Escape) && mainMenuUI.activeSelf)
-        {
-            //Debug.Log("3");
-            ExitGamePrompt();
-        }
-
-        // If player presses escape in the map selection screen, send to main menu
-        if (Input.GetKeyDown(KeyCode.Escape) && mapSelectionUI.activeSelf)
-        {
-            //Debug.Log("4");
-            MainMenu();
-        }
     }
 
     IEnumerator enableReturnFromPause()
@@ -1634,8 +1656,9 @@ public class Gamemode : MonoBehaviour
     {
         StartCoroutine(enableReturnFromPause());
 
+        cursor.SetActive(true);
 
-        am.PauseSound(tc.selectedMap.trackCodeName);
+        am.PauseSound(tc.selectedMap.title);
 
         AudioListener.pause = true;
 
@@ -1692,7 +1715,9 @@ public class Gamemode : MonoBehaviour
     // This exists so the continue button in the pause menu can be linked to this
     public void UnPauseGameBut()
     {
-        if (tc.selectedMap.trackCodeName == "Tutorial")
+        cursor.SetActive(false);
+
+        if (tc.selectedMap.title == "Tutorial")
         {
             StartCoroutine(UnpauseGame(true));
         }
@@ -1734,7 +1759,7 @@ public class Gamemode : MonoBehaviour
             cantPause = false;
 
             AudioListener.pause = false;
-            am.UnPause(tc.selectedMap.trackCodeName);
+            am.UnPause(tc.selectedMap.title);
 
             activeScene = "Game";
         }
@@ -1746,7 +1771,7 @@ public class Gamemode : MonoBehaviour
             cantPause = false;
 
             AudioListener.pause = false;
-            am.UnPause(tc.selectedMap.trackCodeName);
+            am.UnPause(tc.selectedMap.title);
 
             am.UnPause("Tut_Stage_" + tutorialStage.ToString());
 
@@ -2002,7 +2027,7 @@ public class Gamemode : MonoBehaviour
                 lastSelectedButton.GetComponent<MapDetails>().selected = false;
                 lastSelectedButton = null;
 
-                am.StopSound(btn.GetComponent<MapDetails>().map.trackCodeName + "_Preview");
+                am.StopSound(btn.GetComponent<MapDetails>().map.title + "_Preview");
                 btn.GetComponent<MapDetails>().selected = false;
 
                 // Change the size of the button
@@ -2018,14 +2043,14 @@ public class Gamemode : MonoBehaviour
             // If there is a last selected button, stop the preview track from playing now that a new map has been selected
             if (lastSelectedButton != null)
             {
-                am.StopSound(lastSelectedButton.GetComponent<MapDetails>().map.trackCodeName + "_Preview");
+                am.StopSound(lastSelectedButton.GetComponent<MapDetails>().map.title + "_Preview");
                 lastSelectedButton.GetComponent<MapDetails>().selected = false;
             }
 
             btn.GetComponent<MapDetails>().selected = true;
 
             // Play this map's preview track
-            am.PlaySound(btn.GetComponent<MapDetails>().map.trackCodeName + "_Preview");
+            am.PlaySound(btn.GetComponent<MapDetails>().map.title + "_Preview");
 
             if (lastSelectedButton != btn)
             {
@@ -2033,7 +2058,7 @@ public class Gamemode : MonoBehaviour
             }
             else
             {
-                am.PlaySound(lastSelectedButton.GetComponent<MapDetails>().map.trackCodeName + "_Preview");
+                am.PlaySound(lastSelectedButton.GetComponent<MapDetails>().map.title + "_Preview");
             }
 
             // Change the size of the button
